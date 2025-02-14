@@ -24,7 +24,7 @@ export class ProjectAccessGuard implements CanActivate {
 
     const { projectId } = params
 
-    const userRole = await this.prismaService.userRole.findFirstOrThrow({
+    const userRole = await this.prismaService.role.findFirstOrThrow({
       where: {
         userToProject: {
           some: {

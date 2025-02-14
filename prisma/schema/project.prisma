@@ -4,7 +4,7 @@ model Project {
   description String
   createdAt   DateTime @default(now())
 
-  userRole      UserRole[]
+  userRole      Role[]
   apiKey        ApiKey[]
   strategy      Strategy[]
   userToProject UserToProject[]

@@ -4,6 +4,6 @@ model RolePermission {
   userPermissionId Int
   granted          Boolean
 
-  userRoles      UserRole       @relation(fields: [userRoleId], references: [id])
-  userPermission UserPermission @relation(fields: [userPermissionId], references: [id])
+  userRoles      Role       @relation(fields: [userRoleId], references: [id])
+  userPermission Permission @relation(fields: [userPermissionId], references: [id])
 }

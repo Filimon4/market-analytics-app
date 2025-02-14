@@ -29,10 +29,10 @@ export class ApiKeyController {
     return this.apiKeyService.getList(dto);
   }
 
-  @Post()
-  create(@User() user, @Body() dto: CreateApiKeyDto) {
-    return this.apiKeyService.create(user, dto);
-  }
+  // @Post()
+  // create(@User() user, @Body() dto: CreateApiKeyDto) {
+  //   return this.apiKeyService.create(user, dto);
+  // }
 
   @Patch(':id')
   update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateApiKeyDto) {

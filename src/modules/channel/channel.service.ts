@@ -39,7 +39,7 @@ export class ChannelService {
       strategy: {
         ...channel.strategy,
         id: channel.strategy.id.toString(),
-        ownerUserId: channel.strategy.ownerUserId.toString(),
+        projectId: channel.strategy.projectId.toString()
       },
     }));
   }
@@ -59,7 +59,7 @@ export class ChannelService {
       strategy: {
         ...channel.strategy,
         id: channel.strategy.id.toString(),
-        ownerUserId: channel.strategy.ownerUserId.toString(),
+        projectId: channel.strategy.projectId.toString()
       },
     };
   }

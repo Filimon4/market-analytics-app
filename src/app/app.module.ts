@@ -7,6 +7,7 @@ import { ChannelModule } from 'src/modules/channel/channel.module';
 import { ChannelPerformanceModule } from 'src/modules/channelPerformance/channelPerformance.module';
 import { StrategyModule } from 'src/modules/strategy/strategy.module';
 import { UserModule } from 'src/modules/user/user.module';
+import { TenantModule } from 'src/shared/tenant/tenant.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { UserModule } from 'src/modules/user/user.module';
       isGlobal: true,
     }),
     DbModule,
+    TenantModule,
     UserModule,
     ApiKeyModule,
     StrategyModule,

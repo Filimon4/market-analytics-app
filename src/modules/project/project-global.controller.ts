@@ -26,31 +26,28 @@ export class ProjectGlobalController {
         }
       })
 
-      const roles = await mng.userRole.createManyAndReturn({
-        data: [
-          {
-            code: 'owner',
-            projectId: project.id,
-            default: true
-          },
-          {
-            code: 'analytic',
-            projectId: project.id,
-            default: true
-          },
-          {
-            code: 'marketing',
-            projectId: project.id,
-            default: true
-          }
-        ],
+      const defaultRoles = [
+        {code: "owner"},
+        {code: "analytic"},
+        {code: "marketing"},
+      ]
+
+      const roles = await mng.role.createManyAndReturn({
+        data: defaultRoles.map((rol) => ({
+          code: rol.code,
+          projectId: project.id,
+          default: true
+        }) as Prisma.RoleCreateManyInput),
         skipDuplicates: true,
         select: {
-          id: true
+          id: true,
+          code: true
         }
       })
 
-      const userPersmissions = await mng.userPermission.findMany({
+      const owner = roles.find((r) => r.code === 'owner')
+
+      const userPersmissions = await mng.permission.findMany({
         select: {
           id: true
         }
@@ -67,7 +64,7 @@ export class ProjectGlobalController {
           blocked: false,
           projectId: project.id,
           userId: user.id,
-          roleId: roles[0].id
+          roleId: owner.id
         }
       })
 

@@ -6,6 +6,6 @@ model UserToProject {
   blocked   Boolean
 
   user       User       @relation(fields: [userId], references: [id])
-  userRole   UserRole   @relation(fields: [roleId], references: [id])
+  userRole   Role   @relation(fields: [roleId], references: [id])
   project    Project    @relation(fields: [projectId], references: [id])
 }

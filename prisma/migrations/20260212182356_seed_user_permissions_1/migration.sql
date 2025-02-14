@@ -1,6 +1,6 @@
 -- This is an empty migration.
 insert into public."UserPermission" ("id", "name", description, code, "parentId") values
-(1, 'Раздел "Маркетинг"', 'Доступ к маккетингу в панели','PANEL_MARKETING', null),
+(1, 'Раздел "Маркетинг"', 'Доступ к марккетингу в панели','PANEL_MARKETING', null),
 (2, 'Опция "Страетгии"', 'Доступ к опции марктинга "Стратегии" в панели', 'PANEL_MARKETING_STRATEGY', 1),
 (3, 'Опция "Каналы трафика"', 'Доступ к опции марктинга "Каналы трафика" в панели', 'PANEL_MARKETING_CHANNELS', 1),
 (4, 'Опция "Результаты трафика"', 'Доступ к опции марктинга "Результаты трафика" в панели', 'PANEL_MARKETING_CHANNELS_PERFORMANCE', 1),
