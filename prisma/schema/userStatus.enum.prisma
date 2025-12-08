@@ -1,0 +1,7 @@
+model UserStatus {
+  id    Int     @id
+  code  String
+  users User[]
+
+  @@map("user_status")
+}

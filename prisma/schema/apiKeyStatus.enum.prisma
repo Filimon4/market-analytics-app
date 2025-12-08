@@ -1,0 +1,7 @@
+model ApiKeyStatus {
+  id     Int      @id
+  code   String
+  apiKeys ApiKey[]
+
+  @@map("api_key_status")
+}

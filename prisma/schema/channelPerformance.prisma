@@ -1,0 +1,18 @@
+model ChannelPerformance {
+  id          String   @id @default(cuid())
+  name        String
+  source      String
+  medium      String?
+  startDate   DateTime
+  endDate     DateTime
+  impressions Int      @default(0)
+  clicks      Int      @default(0)
+  spend       Float    @default(0)
+  conversions Int      @default(0)
+  revenue     Float    @default(0)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+	@@map("channel_performance")
+}

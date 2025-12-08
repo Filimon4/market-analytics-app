@@ -1,0 +1,12 @@
+model Strategy {
+  id           BigInt   @id @default(autoincrement())
+  ownerUserId BigInt @map("owner_user_id")
+  name         String
+  description  String
+  createdAt   DateTime @map("created_at")
+
+  owner    User      @relation(fields: [ownerUserId], references: [id])
+  channels Channel[]
+
+  @@map("strategy")
+}

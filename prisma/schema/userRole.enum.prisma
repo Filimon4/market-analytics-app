@@ -1,0 +1,7 @@
+model UserRole {
+  id    Int     @id
+  code  String
+  users User[]
+
+  @@map("user_role")
+}
