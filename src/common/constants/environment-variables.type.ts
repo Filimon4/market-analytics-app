@@ -1,0 +1,9 @@
+export enum EnvironmentVariablesType {
+  HTTP_DOMAIN = 'HTTP_DOMAIN',
+  HTTP_HOST = 'HTTP_HOST',
+  HTTP_PORT = 'HTTP_PORT',
+
+  NODE_ENV = 'NODE_ENV',
+
+  HTTP_OPEN_API_PREFIX = 'HTTP_OPEN_API_PREFIX',
+}
