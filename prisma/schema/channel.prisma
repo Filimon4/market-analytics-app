@@ -1,17 +1,10 @@
 model Channel {
-  id           BigInt   @id @default(autoincrement())
-  strategyId  BigInt
-  periodStart DateTime
-  periodEnd   DateTime
-  trafficSource String
-  budgetSpent Int
-  impressions  Int
-  clicks       Int
-  leads        Int
-  conversions  Int
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt()
+  id                  BigInt   @id @default(autoincrement())
+  strategyId          BigInt
+  trafficSource       String
 
-  strategy Strategy @relation(fields: [strategyId], references: [id])
+  createdAt           DateTime @default(now())
+
+  strategy            Strategy @relation(fields: [strategyId], references: [id])
   channelPerformances ChannelPerformance[]
 }

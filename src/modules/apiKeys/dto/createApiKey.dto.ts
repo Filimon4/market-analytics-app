@@ -1,11 +1,9 @@
-import { IsString, IsDateString, IsNumber } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsString, IsDateString, IsNumber, IsNotEmpty } from 'class-validator';
 
 export class CreateApiKeyDto {
   @IsString()
   name: string;
-
-  @IsString()
-  key: string;
 
   @IsString()
   permissions: string;
@@ -13,6 +11,8 @@ export class CreateApiKeyDto {
   @IsDateString()
   expiresAt: string;
 
+  @IsNotEmpty()
+  @Type(() => Number)
   @IsNumber()
   statusId: number;
 }

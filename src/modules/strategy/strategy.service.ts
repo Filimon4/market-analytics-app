@@ -1,29 +1,55 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateStrategyDto } from './dto/create-strategy.dto.js';
-import { UpdateStrategyDto } from './dto/update-strategy.dto.js';
+import { CreateStrategyDto } from './dto/createStrategy.dto.js';
+import { UpdateStrategyDto } from './dto/updateStrategy.dto.js';
 import { PrismaService } from '../../common/db/prisma.service.js';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class StrategyService {
   constructor(private prisma: PrismaService) {}
 
-  async create(dto: CreateStrategyDto) {
-    return this.prisma.strategy.create({ data: dto });
+  async create(user: User, dto: CreateStrategyDto) {
+    const strategy = await this.prisma.strategy.create({
+      data: {
+        description: dto.description,
+        name: dto.name,
+        owner: {
+          connect: {
+            id: user.id,
+          },
+        },
+      },
+    });
+
+    return {
+      ...strategy,
+      id: strategy.id.toString(),
+      ownerUserId: strategy.ownerUserId.toString(),
+    };
   }
 
   async findAll() {
-    return this.prisma.strategy.findMany({
-      include: { channels: true, owner: true },
-    });
+    const list = await this.prisma.strategy.findMany();
+
+    return list.map((str) => ({
+      ...str,
+      id: str.id.toString(),
+      ownerUserId: str.ownerUserId.toString(),
+    }));
   }
 
   async findOne(id: bigint) {
     const strategy = await this.prisma.strategy.findUnique({
       where: { id },
-      include: { channels: true, owner: true },
     });
+
     if (!strategy) throw new NotFoundException('Strategy not found');
-    return strategy;
+
+    return {
+      ...strategy,
+      id: strategy.id.toString(),
+      ownerUserId: strategy.ownerUserId.toString(),
+    };
   }
 
   async update(id: bigint, dto: UpdateStrategyDto) {

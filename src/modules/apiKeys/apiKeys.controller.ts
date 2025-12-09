@@ -9,11 +9,12 @@ import {
   ParseIntPipe,
 } from '@nestjs/common';
 
-import { GetApiKeyDto } from './dto/get-api-key.dto';
-import { CreateApiKeyDto } from './dto/create-api-key.dto';
-import { UpdateApiKeyDto } from './dto/update-api-key.dto';
+import { GetApiKeyDto } from './dto/getApiKey.dto';
+import { CreateApiKeyDto } from './dto/createApiKey.dto';
+import { UpdateApiKeyDto } from './dto/updateApiKey.dto';
 import { ApiKeyService } from './apiKeys.service';
 import { User } from 'src/common/decorators/user.decorator';
+import { ApiSecurity } from '@nestjs/swagger';
 
 @Controller('api-keys')
 export class ApiKeyController {
@@ -30,7 +31,7 @@ export class ApiKeyController {
   }
 
   @Post()
-  create(@Body() dto: CreateApiKeyDto, @User() user) {
+  create(@User() user, @Body() dto: CreateApiKeyDto) {
     return this.apiKeyService.create(user, dto);
   }
 

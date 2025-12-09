@@ -11,12 +11,11 @@ export class ClientMiddleware implements NestMiddleware {
       const userId = req.headers['x-user-id'] as string;
       if (!userId) {
         req.user = null;
-        return next();
+        return;
       }
 
       const user = await this.prisma.user.findUnique({
         where: { id: BigInt(userId) },
-        include: { role: true, status: true },
       });
 
       req.user = user ?? null;

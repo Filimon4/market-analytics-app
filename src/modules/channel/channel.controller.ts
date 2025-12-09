@@ -8,8 +8,8 @@ import {
   Delete,
 } from '@nestjs/common';
 import { ChannelService } from './channel.service';
-import { CreateChannelDto } from './dto/create-channel.dto';
-import { UpdateChannelDto } from './dto/update-channel.dto';
+import { CreateChannelDto } from './dto/createChannel.dto';
+import { UpdateChannelDto } from './dto/updateChannel.dto';
 
 @Controller('channel')
 export class ChannelController {

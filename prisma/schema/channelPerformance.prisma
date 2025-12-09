@@ -1,9 +1,7 @@
 model ChannelPerformance {
-  id          String   @id @default(cuid())
-  channelId     BigInt
+  id          BigInt   @id @default(autoincrement())
+  channelId   BigInt
   name        String
-  source      String
-  medium      String?
   startDate   DateTime
   endDate     DateTime
   impressions Int      @default(0)
@@ -15,5 +13,5 @@ model ChannelPerformance {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  channel Channel @relation(fields: [channelId], references: [id])
+  channel     Channel @relation(fields: [channelId], references: [id])
 }

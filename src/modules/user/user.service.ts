@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from 'src/common/db/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -8,29 +12,38 @@ export class UserService {
   constructor(private prisma: PrismaService) {}
 
   async create(dto: CreateUserDto) {
-    return this.prisma.user.create({
+    const user = await this.prisma.user.create({
       data: {
         email: dto.email,
         name: dto.name,
         password: dto.password,
         role: {
           connect: {
-            id: Number(dto.roleId),
+            id: dto.roleId,
           },
         },
         status: {
           connect: {
-            id: Number(dto.statusId),
+            id: dto.statusId,
           },
         },
       },
     });
+
+    if (!user) throw new BadRequestException('Failed to create user');
+
+    return {
+      ...user,
+      id: user.id.toString(),
+    };
   }
 
   async findAll() {
-    return this.prisma.user.findMany({
+    const list = await this.prisma.user.findMany({
       include: { role: true, status: true, strategies: true, apiKeys: true },
     });
+
+    return list.map((usr) => ({ ...usr, id: usr.id.toString() }));
   }
 
   async findOne(id: bigint) {
@@ -41,7 +54,7 @@ export class UserService {
 
     if (!user) throw new NotFoundException('User not found');
 
-    return user;
+    return { ...user, id: user.id.toString() };
   }
 
   async update(id: bigint, dto: UpdateUserDto) {

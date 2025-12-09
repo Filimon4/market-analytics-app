@@ -1,11 +1,11 @@
 import { Injectable, NotFoundException, UseGuards } from '@nestjs/common';
 import { PrismaService } from '../../common/db/prisma.service.js';
-import { CreateApiKeyDto } from './dto/create-api-key.dto.js';
-import { UpdateApiKeyDto } from './dto/update-api-key.dto.js';
-import { GetApiKeyDto } from './dto/get-api-key.dto.js';
+import { CreateApiKeyDto } from './dto/createApiKey.dto.js';
+import { UpdateApiKeyDto } from './dto/updateApiKey.dto.js';
+import { GetApiKeyDto } from './dto/getApiKey.dto.js';
 import { User } from '@prisma/client';
-import { StatusGuard } from '../user/guards/status.guard.js';
 import { RoleGuard } from '../user/guards/role.guard.js';
+import { randomUUID } from 'crypto';
 
 @Injectable()
 export class ApiKeyService {
@@ -14,16 +14,19 @@ export class ApiKeyService {
   async getById(id: bigint) {
     const record = await this.prismaService.apiKey.findUnique({
       where: { id },
-      include: { creator: true, status: true },
     });
 
     if (!record) throw new NotFoundException('API Key not found');
 
-    return record;
+    return {
+      ...record,
+      id: record.id.toString(),
+      createdBy: record.createdBy.toString(),
+    };
   }
 
   async getList(dto: GetApiKeyDto) {
-    return this.prismaService.apiKey.findMany({
+    const list = await this.prismaService.apiKey.findMany({
       where: {
         name: dto.search
           ? { contains: dto.search, mode: 'insensitive' }
@@ -32,23 +35,42 @@ export class ApiKeyService {
       },
       orderBy: { createdAt: 'desc' },
     });
+
+    return list.map((key) => ({
+      ...key,
+      id: key.id.toString(),
+      createdBy: key.createdBy.toString(),
+    }));
   }
 
   @UseGuards(RoleGuard('2'))
   async create(user: User, dto: CreateApiKeyDto) {
-    const now = new Date();
-    return await this.prismaService.apiKey.create({
+    const key = `api_${Date.now()}_${randomUUID()}`;
+
+    const apiKey = await this.prismaService.apiKey.create({
       data: {
         name: dto.name,
-        key: dto.key,
+        key: key,
         permissions: dto.permissions,
-        expiresAt: new Date(dto.expiresAt),
-        statusId: dto.statusId,
-        createdBy: user.id,
-        createdAt: now,
-        updatedAt: now,
+        expiresAt: dto.expiresAt,
+        status: {
+          connect: {
+            id: dto.statusId,
+          },
+        },
+        creator: {
+          connect: {
+            id: user.id,
+          },
+        },
       },
     });
+
+    return {
+      ...apiKey,
+      id: apiKey.id.toString(),
+      createdBy: apiKey.createdBy.toString(),
+    };
   }
 
   async update(id: bigint, dto: UpdateApiKeyDto) {

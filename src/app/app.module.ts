@@ -4,6 +4,7 @@ import { DbModule } from 'src/common/db/db.module';
 import { ClientMiddleware } from 'src/common/middleware/client.middleware';
 import { ApiKeyModule } from 'src/modules/apiKeys/apiKeys.module';
 import { ChannelModule } from 'src/modules/channel/channel.module';
+import { ChannelPerformanceModule } from 'src/modules/channelPerformance/channelPerformance.module';
 import { StrategyModule } from 'src/modules/strategy/strategy.module';
 import { UserModule } from 'src/modules/user/user.module';
 
@@ -17,6 +18,7 @@ import { UserModule } from 'src/modules/user/user.module';
     ApiKeyModule,
     StrategyModule,
     ChannelModule,
+    ChannelPerformanceModule,
   ],
 })
 export class AppModule implements NestModule {

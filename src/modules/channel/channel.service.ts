@@ -1,22 +1,16 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateChannelDto } from './dto/create-channel.dto.js';
+import { CreateChannelDto } from './dto/createChannel.dto.js';
 import { PrismaService } from '../../common/db/prisma.service.js';
-import { UpdateChannelDto } from './dto/update-channel.dto.js';
+import { UpdateChannelDto } from './dto/updateChannel.dto.js';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class ChannelService {
   constructor(private prisma: PrismaService) {}
 
   async create(dto: CreateChannelDto) {
-    return this.prisma.channel.create({
+    const channel = await this.prisma.channel.create({
       data: {
-        budgetSpent: dto.budgetSpent,
-        clicks: dto.clicks,
-        conversions: dto.conversions,
-        impressions: dto.impressions,
-        leads: dto.leads,
-        periodEnd: dto.periodEnd,
-        periodStart: dto.periodStart,
         trafficSource: dto.trafficSource,
         strategy: {
           connect: {
@@ -25,10 +19,33 @@ export class ChannelService {
         },
       },
     });
+
+    console.log(channel);
+
+    return {
+      ...channel,
+      id: channel.id.toString(),
+      strategyId: channel.strategyId.toString(),
+    };
   }
 
   async findAll() {
-    return this.prisma.channel.findMany({ include: { strategy: true } });
+    const list = await this.prisma.channel.findMany({
+      include: { strategy: true },
+    });
+
+    console.log(list);
+
+    return list.map((channel) => ({
+      ...channel,
+      id: channel.id.toString(),
+      strategyId: channel.strategyId.toString(),
+      strategy: {
+        ...channel.strategy,
+        id: channel.strategy.id.toString(),
+        ownerUserId: channel.strategy.ownerUserId.toString(),
+      },
+    }));
   }
 
   async findOne(id: bigint) {
@@ -36,8 +53,19 @@ export class ChannelService {
       where: { id },
       include: { strategy: true },
     });
+
     if (!channel) throw new NotFoundException('Channel not found');
-    return channel;
+
+    return {
+      ...channel,
+      id: channel.id.toString(),
+      strategyId: channel.strategyId.toString(),
+      strategy: {
+        ...channel.strategy,
+        id: channel.strategy.id.toString(),
+        ownerUserId: channel.strategy.ownerUserId.toString(),
+      },
+    };
   }
 
   async update(id: bigint, dto: UpdateChannelDto) {

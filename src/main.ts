@@ -26,23 +26,12 @@ async function bootstrap() {
   )!;
 
   const config = new DocumentBuilder()
+    .setTitle('My API')
     .setVersion('1.0')
-    .addApiKey(
-      {
-        type: 'apiKey',
-        name: 'x-api-key',
-        in: 'header',
-      },
-      'x-api-key',
-    )
-    .addApiKey(
-      {
-        type: 'apiKey',
-        name: 'x-user-id',
-        in: 'header',
-      },
-      'x-user-id',
-    )
+    .addApiKey({ type: 'apiKey', name: 'x-api-key', in: 'header' }, 'x-api-key')
+    .addApiKey({ type: 'apiKey', name: 'x-user-id', in: 'header' }, 'x-user-id')
+    .addSecurityRequirements('x-api-key')
+    .addSecurityRequirements('x-user-id')
     .build();
   await SwaggerModule.loadPluginMetadata(metadata);
   const document = SwaggerModule.createDocument(app, config);
