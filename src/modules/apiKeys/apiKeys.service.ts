@@ -1,8 +1,11 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, UseGuards } from '@nestjs/common';
 import { PrismaService } from '../../common/db/prisma.service.js';
 import { CreateApiKeyDto } from './dto/create-api-key.dto.js';
 import { UpdateApiKeyDto } from './dto/update-api-key.dto.js';
 import { GetApiKeyDto } from './dto/get-api-key.dto.js';
+import { User } from '@prisma/client';
+import { StatusGuard } from '../user/guards/status.guard.js';
+import { RoleGuard } from '../user/guards/role.guard.js';
 
 @Injectable()
 export class ApiKeyService {
@@ -31,7 +34,8 @@ export class ApiKeyService {
     });
   }
 
-  async create(dto: CreateApiKeyDto, createdBy: bigint) {
+  @UseGuards(RoleGuard('2'))
+  async create(user: User, dto: CreateApiKeyDto) {
     const now = new Date();
     return await this.prismaService.apiKey.create({
       data: {
@@ -40,7 +44,7 @@ export class ApiKeyService {
         permissions: dto.permissions,
         expiresAt: new Date(dto.expiresAt),
         statusId: dto.statusId,
-        createdBy,
+        createdBy: user.id,
         createdAt: now,
         updatedAt: now,
       },

@@ -8,7 +8,23 @@ export class ChannelService {
   constructor(private prisma: PrismaService) {}
 
   async create(dto: CreateChannelDto) {
-    return this.prisma.channel.create({ data: dto });
+    return this.prisma.channel.create({
+      data: {
+        budgetSpent: dto.budgetSpent,
+        clicks: dto.clicks,
+        conversions: dto.conversions,
+        impressions: dto.impressions,
+        leads: dto.leads,
+        periodEnd: dto.periodEnd,
+        periodStart: dto.periodStart,
+        trafficSource: dto.trafficSource,
+        strategy: {
+          connect: {
+            id: dto.strategyId,
+          },
+        },
+      },
+    });
   }
 
   async findAll() {

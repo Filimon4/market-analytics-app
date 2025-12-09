@@ -35,6 +35,14 @@ async function bootstrap() {
       },
       'x-api-key',
     )
+    .addApiKey(
+      {
+        type: 'apiKey',
+        name: 'x-user-id',
+        in: 'header',
+      },
+      'x-user-id',
+    )
     .build();
   await SwaggerModule.loadPluginMetadata(metadata);
   const document = SwaggerModule.createDocument(app, config);

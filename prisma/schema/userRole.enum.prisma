@@ -1,5 +1,5 @@
 model UserRole {
-  id    Int     @id
+  id    Int     @id @default(autoincrement())
   code  String
   users User[]
 }

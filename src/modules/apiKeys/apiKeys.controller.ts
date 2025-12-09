@@ -13,6 +13,7 @@ import { GetApiKeyDto } from './dto/get-api-key.dto';
 import { CreateApiKeyDto } from './dto/create-api-key.dto';
 import { UpdateApiKeyDto } from './dto/update-api-key.dto';
 import { ApiKeyService } from './apiKeys.service';
+import { User } from 'src/common/decorators/user.decorator';
 
 @Controller('api-keys')
 export class ApiKeyController {
@@ -29,9 +30,8 @@ export class ApiKeyController {
   }
 
   @Post()
-  create(@Body() dto: CreateApiKeyDto) {
-    const createdBy = BigInt(1);
-    return this.apiKeyService.create(dto, createdBy);
+  create(@Body() dto: CreateApiKeyDto, @User() user) {
+    return this.apiKeyService.create(user, dto);
   }
 
   @Patch(':id')

@@ -9,8 +9,8 @@ model Channel {
   clicks       Int
   leads        Int
   conversions  Int
-  createdAt   DateTime
-  updatedAt   DateTime
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt()
 
   strategy Strategy @relation(fields: [strategyId], references: [id])
   channelPerformances ChannelPerformance[]
