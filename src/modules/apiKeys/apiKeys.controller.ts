@@ -9,10 +9,10 @@ import {
   ParseIntPipe,
 } from '@nestjs/common';
 
-import { GetApiKeyDto } from './dto/get-api-key.dto.js';
-import { CreateApiKeyDto } from './dto/create-api-key.dto.js';
-import { UpdateApiKeyDto } from './dto/update-api-key.dto.js';
-import { ApiKeyService } from './apiKeys.service.js';
+import { GetApiKeyDto } from './dto/get-api-key.dto';
+import { CreateApiKeyDto } from './dto/create-api-key.dto';
+import { UpdateApiKeyDto } from './dto/update-api-key.dto';
+import { ApiKeyService } from './apiKeys.service';
 
 @Controller('api-keys')
 export class ApiKeyController {

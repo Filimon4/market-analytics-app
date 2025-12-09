@@ -1,13 +1,11 @@
 model UserSession {
   id           String   @id @default(cuid())
   user         User     @relation(fields: [userId], references: [id])
-  userId       BigInt @map("user_id")
+  userId       BigInt
   refreshToken String
-  expiresAt    DateTime @map("expires_at")
-  deviceInfo   String? @map("device_info")
+  expiresAt    DateTime
+  deviceInfo   String?
 
-  createdAt    DateTime @default(now()) @map("created_at")
-  updatedAt    DateTime @updatedAt @map("updated_at")
-
-  @@map("user_session")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }

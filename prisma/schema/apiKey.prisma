@@ -1,16 +1,14 @@
 model ApiKey {
   id         BigInt   @id @default(autoincrement())
-  createdBy BigInt @map("created_by")
+  createdBy BigInt
   name       String
   key        String
   permissions String
-  createdAt DateTime @map("created_at")
-  updatedAt DateTime @map("updated_at")
-  expiresAt DateTime @map("expires_at")
-  statusId  Int @map("status_id")
+  createdAt DateTime
+  updatedAt DateTime
+  expiresAt DateTime
+  statusId  Int
 
   creator User         @relation(fields: [createdBy], references: [id])
   status  ApiKeyStatus @relation(fields: [statusId], references: [id])
-
-  @@map("api_key")
 }
