@@ -39,9 +39,7 @@ export class UserService {
   }
 
   async findAll() {
-    const list = await this.prisma.user.findMany({
-      include: { role: true, status: true, strategies: true, apiKeys: true },
-    });
+    const list = await this.prisma.user.findMany({});
 
     return list.map((usr) => ({ ...usr, id: usr.id.toString() }));
   }
