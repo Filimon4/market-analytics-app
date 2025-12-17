@@ -24,7 +24,9 @@ export class StrategyController {
 
   @Get()
   findAll() {
-    return this.strategyService.findAll();
+    const list = this.strategyService.findAll();
+
+    return { list };
   }
 
   @Get(':id')
