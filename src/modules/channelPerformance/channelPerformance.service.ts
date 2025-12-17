@@ -36,7 +36,7 @@ export class ChannelPerformanceService {
 
   async findOne(id: string) {
     const chnlPer = await this.prisma.channelPerformance.findUnique({
-      where: { id },
+      where: { id: BigInt(id) },
       include: { channel: true },
     });
 
@@ -55,10 +55,13 @@ export class ChannelPerformanceService {
   }
 
   async update(id: string, dto: UpdateChannelPerformanceDto) {
-    return this.prisma.channelPerformance.update({ where: { id }, data: dto });
+    return this.prisma.channelPerformance.update({
+      where: { id: BigInt(id) },
+      data: dto,
+    });
   }
 
   async remove(id: string) {
-    return this.prisma.channelPerformance.delete({ where: { id } });
+    return this.prisma.channelPerformance.delete({ where: { id: BigInt(id) } });
   }
 }
