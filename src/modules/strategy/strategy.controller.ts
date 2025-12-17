@@ -23,8 +23,8 @@ export class StrategyController {
   }
 
   @Get()
-  findAll() {
-    const list = this.strategyService.findAll();
+  async findAll() {
+    const list = await this.strategyService.findAll();
 
     return { list };
   }
