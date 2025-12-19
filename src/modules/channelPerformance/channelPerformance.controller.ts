@@ -21,8 +21,10 @@ export class ChannelPerformanceController {
   }
 
   @Get()
-  findAll() {
-    return this.service.findAll();
+  async findAll() {
+    const list = await this.service.findAll();
+
+    return { list };
   }
 
   @Get(':id')

@@ -5,6 +5,7 @@ import { AppModule } from './app/app.module';
 import { ConfigService } from '@nestjs/config';
 import { EnvironmentVariablesType } from './common/constants/environment-variables.type';
 import metadata from './metadata';
+import { ExceptionsLogger } from './common/middleware/exceptions-logger.middleware';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -19,6 +20,8 @@ async function bootstrap() {
     defaultVersion: '1',
     type: VersioningType.URI,
   });
+
+  app.useGlobalFilters(new ExceptionsLogger());
 
   const configService = app.get(ConfigService);
   const swaggerPrefixURL = configService.get<string>(

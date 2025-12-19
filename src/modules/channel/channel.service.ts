@@ -2,7 +2,6 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateChannelDto } from './dto/createChannel.dto.js';
 import { PrismaService } from '../../common/db/prisma.service.js';
 import { UpdateChannelDto } from './dto/updateChannel.dto.js';
-import { User } from '@prisma/client';
 
 @Injectable()
 export class ChannelService {
@@ -17,10 +16,9 @@ export class ChannelService {
             id: dto.strategyId,
           },
         },
+        name: dto.name
       },
     });
-
-    console.log(channel);
 
     return {
       ...channel,
@@ -33,8 +31,6 @@ export class ChannelService {
     const list = await this.prisma.channel.findMany({
       include: { strategy: true },
     });
-
-    console.log(list);
 
     return list.map((channel) => ({
       ...channel,
@@ -69,7 +65,21 @@ export class ChannelService {
   }
 
   async update(id: bigint, dto: UpdateChannelDto) {
-    return this.prisma.channel.update({ where: { id }, data: dto });
+    const strategy = await this.prisma.channel.update({ where: { id }, data: {
+      strategy: {
+        connect: {
+          id: dto.strategyId
+        }
+      },
+      trafficSource: dto.trafficSource,
+      name: dto.name
+    } });
+
+    return {
+      ...strategy,
+      id: strategy.id.toString(),
+      strategyId: strategy.strategyId.toString()
+    }
   }
 
   async remove(id: bigint) {
