@@ -1,8 +1,8 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { DbModule } from 'src/common/db/db.module';
-import { ClientMiddleware } from 'src/common/middleware/client.middleware';
 import { ApiKeyModule } from 'src/modules/apiKeys/apiKeys.module';
+import { AuthModule } from 'src/modules/auth/auth.module';
 import { ChannelModule } from 'src/modules/channel/channel.module';
 import { ChannelPerformanceModule } from 'src/modules/channelPerformance/channelPerformance.module';
 import { StrategyModule } from 'src/modules/strategy/strategy.module';
@@ -19,10 +19,7 @@ import { UserModule } from 'src/modules/user/user.module';
     StrategyModule,
     ChannelModule,
     ChannelPerformanceModule,
+    AuthModule
   ],
 })
-export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(ClientMiddleware).forRoutes('*');
-  }
-}
+export class AppModule  {}

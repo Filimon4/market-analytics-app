@@ -7,10 +7,13 @@ import { PrismaService } from 'src/common/db/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from '@prisma/client';
+import * as bcrypt from 'bcrypt';
+import { ConfigService } from '@nestjs/config';
+import { createCipheriv } from 'crypto';
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService, private readonly configService: ConfigService) {}
 
   async create(dto: CreateUserDto): Promise<User> {
     const user = await this.prisma.user.create({
@@ -29,9 +32,9 @@ export class UserService {
           },
         },
       },
-    });
-
-    if (!user) throw new BadRequestException('Failed to create user');
+    }).catch(() => {
+      throw new BadRequestException('Failed to create user');
+    })
 
     return user
   }
