@@ -20,7 +20,10 @@ export class UserController {
   async create(@Body() dto: CreateUserDto) {
     const createdUser = await this.userService.create(dto);
 
-    return createdUser;
+    return {
+      ...createdUser,
+      id: createdUser.id.toString()
+    };
   }
 
   @Get()
@@ -29,8 +32,13 @@ export class UserController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(BigInt(id));
+  async findOne(@Param('id') id: string) {
+    const user = await this.userService.findById(BigInt(id));
+
+    return {
+      ...user,
+      id: user.id.toString()
+    }
   }
 
   @Patch(':id')

@@ -6,12 +6,13 @@ import {
 import { PrismaService } from 'src/common/db/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class UserService {
   constructor(private prisma: PrismaService) {}
 
-  async create(dto: CreateUserDto) {
+  async create(dto: CreateUserDto): Promise<User> {
     const user = await this.prisma.user.create({
       data: {
         email: dto.email,
@@ -32,10 +33,7 @@ export class UserService {
 
     if (!user) throw new BadRequestException('Failed to create user');
 
-    return {
-      ...user,
-      id: user.id.toString(),
-    };
+    return user
   }
 
   async findAll() {
@@ -44,7 +42,18 @@ export class UserService {
     return list.map((usr) => ({ ...usr, id: usr.id.toString() }));
   }
 
-  async findOne(id: bigint) {
+  async findByEmail(email: string): Promise<User> {
+    const user = await this.prisma.user.findUnique({
+      where: { email },
+      include: { role: true, status: true },
+    });
+
+    if (!user) throw new NotFoundException('User not found');
+
+    return user
+  }
+
+  async findById(id: bigint): Promise<User> {
     const user = await this.prisma.user.findUnique({
       where: { id },
       include: { role: true, status: true },
@@ -52,7 +61,7 @@ export class UserService {
 
     if (!user) throw new NotFoundException('User not found');
 
-    return { ...user, id: user.id.toString() };
+    return user
   }
 
   async update(id: bigint, dto: UpdateUserDto) {
