@@ -10,4 +10,8 @@ export class CreateChannelDto {
   @IsNotEmpty()
   @IsString()
   trafficSource: string;
+
+  @IsNotEmpty()
+  @IsString()
+  name: string;
 }

@@ -55,10 +55,30 @@ export class ChannelPerformanceService {
   }
 
   async update(id: string, dto: UpdateChannelPerformanceDto) {
-    return this.prisma.channelPerformance.update({
+    const performance = await this.prisma.channelPerformance.update({
       where: { id: BigInt(id) },
-      data: dto,
+      data: {
+        channel: {
+          connect: {
+            id: dto.channelId
+          }
+        },
+        clicks: dto.clicks,
+        conversions: dto.conversions,
+        impressions: dto.impressions,
+        name: dto.name,
+        revenue: dto.revenue,
+        spend: dto.spend,
+        startDate: dto.startDate,
+        endDate: dto.endDate
+      },
     });
+
+    return {
+      ...performance,
+      id: performance.id.toString(),
+      channelId: performance.channelId.toString()
+    }
   }
 
   async remove(id: string) {

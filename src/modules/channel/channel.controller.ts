@@ -21,8 +21,10 @@ export class ChannelController {
   }
 
   @Get()
-  findAll() {
-    return this.channelService.findAll();
+  async findAll() {
+    const list = await this.channelService.findAll();
+
+    return { list };
   }
 
   @Get(':id')
