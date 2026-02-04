@@ -6,16 +6,30 @@ import { ConfigService } from '@nestjs/config';
 import { EnvironmentVariablesType } from './common/constants/environment-variables.type';
 import metadata from './metadata';
 import { ExceptionsLogger } from './common/middleware/exceptions-logger.middleware';
+import cookieParser from 'cookie-parser';
+import * as fs from 'fs';
+import { join } from 'path';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  app.enableCors();
+  const app = await NestFactory.create(AppModule, {
+    httpsOptions: {
+      key: fs.readFileSync(join(__dirname, '..', 'certs', 'localhost+2-key.pem')),
+      cert: fs.readFileSync(join(__dirname, '..', 'certs', 'localhost+2.pem')),
+    },
+  });
+  app.use(cookieParser());
+  app.enableCors({
+    origin: true,
+    methods: '*',
+    credentials: true,
+  });
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
       transformOptions: { exposeDefaultValues: true },
     }),
   );
+  app.setGlobalPrefix('api')
   app.enableVersioning({
     defaultVersion: '1',
     type: VersioningType.URI,
@@ -51,9 +65,9 @@ async function bootstrap() {
 
   await app.listen(port, host).then(() => {
     (logger.log(
-      `📚 Swagger доступен по адресу http://127.0.0.1:${port}${swaggerPrefixURL}`,
+      `📚 Swagger доступен по адресу https://127.0.0.1:${port}${swaggerPrefixURL}`,
     ),
-      logger.log(`🚀 Приложение запущено по адресу http://127.0.0.1:${port}`));
+      logger.log(`🚀 Приложение запущено по адресу https://127.0.0.1:${port}`));
   });
 }
 bootstrap();

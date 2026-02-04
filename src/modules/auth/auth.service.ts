@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable, Logger } from "@nestjs/common";
 import { User } from "@prisma/client";
 import { SignUpDto } from "./dto/singup.dto";
 import { SignInDto } from "./dto/singin.dto";
@@ -10,6 +10,8 @@ import { GenerateTokensDto } from "./dto/generateTokens.dto";
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
+
   constructor(private readonly userService: UserService, private readonly encryptionService: EncryptionService, private readonly jwtService: JwtService) {}
 
   async validateUser(email: string, password: string): Promise<User | null> {
@@ -43,7 +45,8 @@ export class AuthService {
       password: encryptedPassword,
       roleId: 1,
       statusId: 1
-    }).catch(() => {
+    }).catch((error) => {
+      this.logger.error(error);
       throw new BadRequestException("Cannot create user")
     })
 

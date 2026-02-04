@@ -13,8 +13,8 @@ import { UserModule } from 'src/modules/user/user.module';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    UserModule,
     DbModule,
+    UserModule,
     ApiKeyModule,
     StrategyModule,
     ChannelModule,
