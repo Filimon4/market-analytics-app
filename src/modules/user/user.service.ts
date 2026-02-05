@@ -6,10 +6,8 @@ import {
 import { PrismaService } from 'src/common/db/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from '@prisma/client';
-import * as bcrypt from 'bcrypt';
+import { Prisma, User } from '@prisma/client';
 import { ConfigService } from '@nestjs/config';
-import { createCipheriv } from 'crypto';
 
 @Injectable()
 export class UserService {
@@ -45,7 +43,7 @@ export class UserService {
     return list.map((usr) => ({ ...usr, id: usr.id.toString() }));
   }
 
-  async findByEmail(email: string): Promise<User> {
+  async findByEmail(email: string): Promise<Prisma.UserGetPayload<{ include: { role: true; status: true } }>> {
     const user = await this.prisma.user.findUnique({
       where: { email },
       include: { role: true, status: true },
@@ -56,7 +54,7 @@ export class UserService {
     return user
   }
 
-  async findById(id: bigint): Promise<User> {
+  async findById(id: bigint): Promise<Prisma.UserGetPayload<{ include: { role: true; status: true } }>> {
     const user = await this.prisma.user.findUnique({
       where: { id },
       include: { role: true, status: true },

@@ -1,0 +1,10 @@
+model Project {
+  id          BigInt   @id
+  name        String
+  description String
+  createdAt   DateTime @default(now())
+
+  apiKey ApiKey[]
+  strategy Strategy[]
+  userToProject UserToProject[]
+}

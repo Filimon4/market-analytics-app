@@ -10,8 +10,8 @@ model ChannelPerformance {
   conversions Int      @default(0)
   revenue     Float    @default(0)
 
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  channel     Channel @relation(fields: [channelId], references: [id])
+  channel Channel @relation(fields: [channelId], references: [id])
 }

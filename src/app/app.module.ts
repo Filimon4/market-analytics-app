@@ -22,4 +22,4 @@ import { UserModule } from 'src/modules/user/user.module';
     AuthModule
   ],
 })
-export class AppModule  {}
+export class AppModule {}

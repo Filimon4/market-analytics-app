@@ -12,7 +12,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService, private readonly configService: ConfigService) {}
 
   @Post('singup')
-  async singup(@Res() res: Response, @Body() dto: SignUpDto) {
+  async singup(@Res({passthrough: true}) res: Response, @Body() dto: SignUpDto) {
     const tokens = await this.authService.signup(dto.name, dto.email, dto.password)
 
     res.cookie('refresh_token', tokens.refreshToken, {
@@ -23,8 +23,9 @@ export class AuthController {
       path: '/',
     });
 
-    res.send({token: tokens.accessToken})
-    res.end()
+    return {
+      token: tokens.accessToken
+    }
   }
 
   @Post('signin')

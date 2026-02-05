@@ -1,5 +1,6 @@
 model ApiKeyStatus {
-  id      Int      @id
-  code    String
+  id   Int    @id
+  code String
+
   apiKeys ApiKey[]
 }

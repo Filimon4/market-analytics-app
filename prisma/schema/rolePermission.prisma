@@ -1,0 +1,9 @@
+model RolePermission {
+  id               Int     @id
+  userRoleId       Int
+  userPermissionId Int
+  granted          Boolean
+
+  userRoles      UserRole       @relation(fields: [userRoleId], references: [id])
+  userPermission UserPermission @relation(fields: [userPermissionId], references: [id])
+}

@@ -1,7 +1,7 @@
-model UserRole {
+model UserPermission {
   id   Int    @id
+  name String
   code String
 
   rolePermission RolePermission[]
-  userToProject  UserToProject[]
 }

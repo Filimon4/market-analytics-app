@@ -7,11 +7,14 @@ import {
   Param,
   Delete,
   UseGuards,
+  Req,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ConfigService } from '@nestjs/config';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { Request } from 'express';
 
 @Controller('user')
 export class UserController {
@@ -30,6 +33,20 @@ export class UserController {
   @Get()
   findAll() {
     return this.userService.findAll();
+  }
+
+  @Get('/current')
+  @UseGuards(JwtAuthGuard)
+  async getCurrent(@Req() req: Request) {
+    const user = await this.userService.findByEmail(req.user.email)
+
+    return {
+      email: user.email,
+      name: user.name,
+      createdAt: user.createdAt,
+      role: user.role.code,
+      status: user.status.code
+    }
   }
 
   @Get(':id')

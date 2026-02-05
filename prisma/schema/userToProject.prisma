@@ -1,0 +1,13 @@
+model UserToProject {
+  id        BigInt  @id
+  roleId    Int
+  statusId  Int
+  projectId BigInt
+  userId    BigInt
+  blocked   Boolean
+
+  user       User @relation(fields: [userId], references: [id])
+  userStatus UserStatus @relation(fields: [statusId], references: [id])
+  userRole   UserRole @relation(fields: [roleId], references: [id])
+  project    Project @relation(fields: [projectId], references: [id])
+}
