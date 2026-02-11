@@ -1,9 +1,6 @@
 import { BadRequestException, Injectable, Logger } from "@nestjs/common";
 import { User } from "@prisma/client";
-import { SignUpDto } from "./dto/singup.dto";
-import { SignInDto } from "./dto/singin.dto";
 import { UserService } from "../user/user.service";
-import * as bcrypt from 'bcrypt';
 import { EncryptionService } from "src/common/utils/encryption/encryption.service";
 import { JwtService } from "src/common/utils/jwt/jwt.service";
 import { GenerateTokensDto } from "./dto/generateTokens.dto";
@@ -43,8 +40,6 @@ export class AuthService {
       email,
       name,
       password: encryptedPassword,
-      roleId: 1,
-      statusId: 1
     }).catch((error) => {
       this.logger.error(error);
       throw new BadRequestException("Cannot create user")

@@ -31,7 +31,7 @@ export class AuthController {
   @Post('signin')
   @UseGuards(LocalAuthGuard)
   async signin(@Res({passthrough: true}) res: Response, @Request() req, @Body() dto: SignInDto) {
-    const tokens = await this.authService.generateTokens({email: dto.email, id: req?.user?.id})
+    const tokens = await this.authService.generateTokens({email: dto.email, id: req?.user?.id })
 
     res.cookie('refresh_token', tokens.refreshToken, {
       httpOnly: true,

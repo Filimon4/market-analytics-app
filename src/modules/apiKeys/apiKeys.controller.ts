@@ -14,7 +14,6 @@ import { CreateApiKeyDto } from './dto/createApiKey.dto';
 import { UpdateApiKeyDto } from './dto/updateApiKey.dto';
 import { ApiKeyService } from './apiKeys.service';
 import { User } from 'src/common/decorators/user.decorator';
-import { ApiSecurity } from '@nestjs/swagger';
 
 @Controller('api-keys')
 export class ApiKeyController {

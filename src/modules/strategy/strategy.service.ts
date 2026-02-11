@@ -13,9 +13,9 @@ export class StrategyService {
       data: {
         description: dto.description,
         name: dto.name,
-        owner: {
+        project: {
           connect: {
-            id: user.id,
+            id: dto.projectId,
           },
         },
       },
@@ -24,7 +24,7 @@ export class StrategyService {
     return {
       ...strategy,
       id: strategy.id.toString(),
-      ownerUserId: strategy.ownerUserId.toString(),
+      projectId: strategy.projectId.toString()
     };
   }
 
@@ -34,7 +34,7 @@ export class StrategyService {
     return list.map((str) => ({
       ...str,
       id: str.id.toString(),
-      ownerUserId: str.ownerUserId.toString(),
+      projectId: str.projectId.toString(),
     }));
   }
 
@@ -48,7 +48,7 @@ export class StrategyService {
     return {
       ...strategy,
       id: strategy.id.toString(),
-      ownerUserId: strategy.ownerUserId.toString(),
+      projectId: strategy.projectId.toString(),
     };
   }
 

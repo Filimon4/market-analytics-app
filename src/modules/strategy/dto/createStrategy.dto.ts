@@ -1,4 +1,5 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class CreateStrategyDto {
   @IsNotEmpty()
@@ -8,4 +9,9 @@ export class CreateStrategyDto {
   @IsNotEmpty()
   @IsString()
   description: string;
+
+  @IsNotEmpty()
+  @Type(() => Number)
+  @IsNumber()
+  projectId: number
 }

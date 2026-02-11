@@ -19,16 +19,6 @@ export class UserService {
         email: dto.email,
         name: dto.name,
         password: dto.password,
-        role: {
-          connect: {
-            id: dto.roleId,
-          },
-        },
-        status: {
-          connect: {
-            id: dto.statusId,
-          },
-        },
       },
     }).catch(() => {
       throw new BadRequestException('Failed to create user');
@@ -43,10 +33,9 @@ export class UserService {
     return list.map((usr) => ({ ...usr, id: usr.id.toString() }));
   }
 
-  async findByEmail(email: string): Promise<Prisma.UserGetPayload<{ include: { role: true; status: true } }>> {
+  async findByEmail(email: string): Promise<User> {
     const user = await this.prisma.user.findUnique({
       where: { email },
-      include: { role: true, status: true },
     });
 
     if (!user) throw new NotFoundException('User not found');
@@ -54,10 +43,9 @@ export class UserService {
     return user
   }
 
-  async findById(id: bigint): Promise<Prisma.UserGetPayload<{ include: { role: true; status: true } }>> {
+  async findById(id: bigint): Promise<User> {
     const user = await this.prisma.user.findUnique({
       where: { id },
-      include: { role: true, status: true },
     });
 
     if (!user) throw new NotFoundException('User not found');

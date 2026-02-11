@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, IsEmail, IsNumber } from "class-validator";
+import { IsNotEmpty, IsString, IsEmail } from "class-validator";
 
 export class GenerateTokensDto {
   @IsNotEmpty()
