@@ -44,8 +44,6 @@ export class UserController {
       email: user.email,
       name: user.name,
       createdAt: user.createdAt,
-      role: user.role.code,
-      status: user.status.code
     }
   }
 

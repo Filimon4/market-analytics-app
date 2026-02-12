@@ -1,10 +1,11 @@
 model Project {
-  id          BigInt   @id
+  id          BigInt   @id @default(autoincrement())
   name        String
   description String
   createdAt   DateTime @default(now())
 
-  apiKey ApiKey[]
-  strategy Strategy[]
+  userRole      UserRole[]
+  apiKey        ApiKey[]
+  strategy      Strategy[]
   userToProject UserToProject[]
 }

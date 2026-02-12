@@ -1,6 +1,0 @@
-model UserStatus {
-  id   Int    @id @default(autoincrement())
-  code String
-
-  userToProject UserToProject[]
-}

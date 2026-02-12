@@ -1,7 +1,12 @@
 model UserPermission {
   id   Int    @id
-  name String
-  code String
+  name String @unique
+  code String @unique
+  description       String?
+
+  parentId          Int?          
+  parent            UserPermission?   @relation("PermissionHierarchy", fields: [parentId], references: [id], onDelete: SetNull)
+  children          UserPermission[]  @relation("PermissionHierarchy")
 
   rolePermission RolePermission[]
 }
