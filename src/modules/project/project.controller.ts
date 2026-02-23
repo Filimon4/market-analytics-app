@@ -7,31 +7,12 @@ import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { CurrentTenant } from "src/shared/tenant/decorators/current-tenant.decorator";
 import { CreateRoleDto } from "./dto/createRole.dto";
 import { ProjectRolesService } from "./project-roles.service";
+import { ProjectAccessGuard } from "./guards/project-access.guard";
 
 @Controller('project')
 @UseGuards(JwtAuthGuard, TenantGuard)
 export class ProjectController {
   constructor(private readonly prismaService: PrismaService, private readonly projectRolesService: ProjectRolesService) {}
-
-  @Get()
-  all(@User() user: UserDB) {
-    return this.prismaService.project.findMany({
-      where: {
-        userToProject: {
-          every: {
-            user: {
-              id: user.id
-            }
-          }
-        }
-      },
-      select: {
-        name: true,
-        description: true,
-        id: true
-      },
-    })
-  }
 
   @Get()
   get(@CurrentTenant() projectId: number, @User() user: UserDB) {
@@ -100,7 +81,7 @@ export class ProjectController {
   }
 
   @Post('role')
-  // gurad
+  @UseGuards(ProjectAccessGuard)
   createRole(@CurrentTenant() projectId: number, @Body() createRoleDto: CreateRoleDto) {
     return this.projectRolesService.createRole(projectId, createRoleDto)
   }

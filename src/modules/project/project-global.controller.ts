@@ -1,9 +1,9 @@
-import { Body, Controller, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Post, UseGuards } from "@nestjs/common";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { PrismaService } from "src/common/db/prisma.service";
 import { User } from "src/common/decorators/user.decorator";
 import { CreateProjectDto } from "./dto/createProject.dto";
-import { Prisma } from "@prisma/client";
+import { Prisma, User as UserDB } from "@prisma/client";
 
 
 @Controller('project')
@@ -11,8 +11,26 @@ import { Prisma } from "@prisma/client";
 export class ProjectGlobalController {
   constructor(private readonly prismaService: PrismaService) {}
 
+  @Get()
+  async all(@User() user: UserDB) {
+    const projects = await this.prismaService.userToProject.findMany({
+      where: {
+        userId: user.id,
+      },
+      select: {
+        blocked: true,
+        projectId: true,
+        roleId: true,
+      }
+    })
+
+    console.log(`projects: ${projects}`)
+
+    return {result: projects}
+  }
+
   @Post()
-  create(@User() user, @Body() createProjectDto: CreateProjectDto) {
+  create(@User() user: UserDB, @Body() createProjectDto: CreateProjectDto) {
     return this.prismaService.$transaction(async (mng) => {
       const project = await mng.project.create({
         data: {

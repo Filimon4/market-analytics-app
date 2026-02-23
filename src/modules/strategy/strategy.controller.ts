@@ -11,14 +11,14 @@ import { StrategyService } from './strategy.service';
 import { CreateStrategyDto } from './dto/createStrategy.dto.js';
 import { UpdateStrategyDto } from './dto/updateStrategy.dto.js';
 import { User } from 'src/common/decorators/user.decorator';
-import type { User as UserType } from '@prisma/client';
+import type { User as UserDB } from '@prisma/client';
 
 @Controller('strategy')
 export class StrategyController {
   constructor(private readonly strategyService: StrategyService) {}
 
   @Post()
-  create(@User() user: UserType, @Body() dto: CreateStrategyDto) {
+  create(@User() user: UserDB, @Body() dto: CreateStrategyDto) {
     return this.strategyService.create(user, dto);
   }
 

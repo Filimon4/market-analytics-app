@@ -37,4 +37,8 @@ export class ProjectRolesService {
       return role
     })
   }
+
+  getPermissionByCode(roleId: number, code: string) {
+    
+  }
 }

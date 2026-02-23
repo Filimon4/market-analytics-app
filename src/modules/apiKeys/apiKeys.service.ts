@@ -1,11 +1,7 @@
 import { Injectable, NotFoundException, UseGuards } from '@nestjs/common';
 import { PrismaService } from '../../common/db/prisma.service.js';
-import { CreateApiKeyDto } from './dto/createApiKey.dto.js';
 import { UpdateApiKeyDto } from './dto/updateApiKey.dto.js';
 import { GetApiKeyDto } from './dto/getApiKey.dto.js';
-import { User } from '@prisma/client';
-import { RoleGuard } from '../user/guards/role.guard.js';
-import { randomUUID } from 'crypto';
 
 @Injectable()
 export class ApiKeyService {
