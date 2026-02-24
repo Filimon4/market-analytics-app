@@ -5,13 +5,12 @@ import { User } from "src/common/decorators/user.decorator";
 import { CreateProjectDto } from "./dto/createProject.dto";
 import { Prisma, User as UserDB } from "@prisma/client";
 
-
 @Controller('project')
 @UseGuards(JwtAuthGuard)
 export class ProjectGlobalController {
   constructor(private readonly prismaService: PrismaService) {}
 
-  @Get()
+  @Get('all')
   async all(@User() user: UserDB) {
     const projects = await this.prismaService.userToProject.findMany({
       where: {
@@ -24,9 +23,7 @@ export class ProjectGlobalController {
       }
     })
 
-    console.log(`projects: ${projects}`)
-
-    return {result: projects}
+    return {result: projects.map((proj) => ({...proj, projectId: proj.projectId.toString(), roleId: proj.roleId.toString()}))}
   }
 
   @Post()
@@ -63,7 +60,7 @@ export class ProjectGlobalController {
         }
       })
 
-      const owner = roles.find((r) => r.code === 'owner')
+      const ownerRole = roles.find((r) => r.code === 'owner')
 
       const userPersmissions = await mng.permission.findMany({
         select: {
@@ -71,22 +68,33 @@ export class ProjectGlobalController {
         }
       })
 
-      for (const role of roles) {
-        await mng.rolePermission.createMany({
-          data: userPersmissions.map(per => ({userRoleId: role.id, userPermissionId: per.id, granted: false}) as Prisma.RolePermissionCreateManyInput)
-        })
-      }
+      await mng.rolePermission.createMany({
+        data: roles.flatMap((role) => userPersmissions.map(per => ({userRoleId: role.id, userPermissionId: per.id, granted: false}) as Prisma.RolePermissionCreateManyInput))
+      })
       
       await mng.userToProject.create({
         data: {
           blocked: false,
-          projectId: project.id,
-          userId: user.id,
-          roleId: owner.id
+          project: {
+            connect: {
+              id: project.id
+            }
+          },
+          user: {
+            connect: {
+              id: user.id,
+              email: user.email
+            }
+          },
+          userRole: {
+            connect: {
+              id: ownerRole.id
+            }
+          }
         }
       })
 
-      return project
+      return {...project, id: String(project.id)}
     })
   }
 

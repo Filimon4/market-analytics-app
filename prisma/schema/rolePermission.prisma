@@ -1,5 +1,5 @@
 model RolePermission {
-  id               Int     @id
+  id               Int     @id @default(autoincrement())
   userRoleId       Int
   userPermissionId Int
   granted          Boolean
