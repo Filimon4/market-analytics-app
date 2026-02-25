@@ -4,6 +4,7 @@ import { PrismaService } from "src/common/db/prisma.service";
 import { User } from "src/common/decorators/user.decorator";
 import { CreateProjectDto } from "./dto/createProject.dto";
 import { Prisma, User as UserDB } from "@prisma/client";
+import { EPermissionCode } from "./constants";
 
 @Controller('project')
 @UseGuards(JwtAuthGuard)
@@ -47,6 +48,20 @@ export class ProjectGlobalController {
         {code: "marketing"},
       ]
 
+      const defaultPermissions = {
+        ['owner']: {
+          [EPermissionCode.PANEL]: true,
+        },
+        ['analytic']: {
+          [EPermissionCode.PANEL]: true,
+          [EPermissionCode.PANEL_PROJECTS]: false,
+        },
+        ['marketing']: {
+          [EPermissionCode.PANEL]: true,
+          [EPermissionCode.PANEL_PROJECTS]: false
+        }
+      }
+
       const roles = await mng.role.createManyAndReturn({
         data: defaultRoles.map((rol) => ({
           code: rol.code,
@@ -64,12 +79,14 @@ export class ProjectGlobalController {
 
       const userPersmissions = await mng.permission.findMany({
         select: {
-          id: true
+          id: true,
+          code: true,
+          parentId: true
         }
       })
 
       await mng.rolePermission.createMany({
-        data: roles.flatMap((role) => userPersmissions.map(per => ({userRoleId: role.id, userPermissionId: per.id, granted: false}) as Prisma.RolePermissionCreateManyInput))
+        data: roles.flatMap((role) => userPersmissions.map(per => ({userRoleId: role.id, userPermissionId: per.id, granted: defaultPermissions[role.code][per.code] || false}) as Prisma.RolePermissionCreateManyInput))
       })
       
       await mng.userToProject.create({
