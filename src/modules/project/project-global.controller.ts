@@ -49,16 +49,19 @@ export class ProjectGlobalController {
       ]
 
       const defaultPermissions = {
-        ['owner']: {
-          [EPermissionCode.PANEL]: true,
-        },
         ['analytic']: {
           [EPermissionCode.PANEL]: true,
-          [EPermissionCode.PANEL_PROJECTS]: false,
+          [EPermissionCode.PANEL_MARKETING]: true,
+          [EPermissionCode.PANEL_MARKETING_CHANNELS]: true,
+          [EPermissionCode.PANEL_MARKETING_CHANNELS_PERFORMANCE]: true,
+          [EPermissionCode.PANEL_MARKETING_STRATEGY]: true,
         },
         ['marketing']: {
           [EPermissionCode.PANEL]: true,
-          [EPermissionCode.PANEL_PROJECTS]: false
+          [EPermissionCode.PANEL_MARKETING]: true,
+          [EPermissionCode.PANEL_MARKETING_CHANNELS]: true,
+          [EPermissionCode.PANEL_MARKETING_CHANNELS_PERFORMANCE]: true,
+          [EPermissionCode.PANEL_MARKETING_STRATEGY]: true,
         }
       }
 
@@ -86,7 +89,7 @@ export class ProjectGlobalController {
       })
 
       await mng.rolePermission.createMany({
-        data: roles.flatMap((role) => userPersmissions.map(per => ({userRoleId: role.id, userPermissionId: per.id, granted: defaultPermissions[role.code][per.code] || false}) as Prisma.RolePermissionCreateManyInput))
+        data: roles.flatMap((role) => userPersmissions.map(per => ({userRoleId: role.id, userPermissionId: per.id, granted: role.code === 'owner' ? true : defaultPermissions[role.code][per.code] || false}) as Prisma.RolePermissionCreateManyInput))
       })
       
       await mng.userToProject.create({

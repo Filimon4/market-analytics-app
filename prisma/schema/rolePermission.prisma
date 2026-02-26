@@ -1,9 +1,9 @@
 model RolePermission {
-  id               Int     @id @default(autoincrement())
-  userRoleId       Int
-  userPermissionId Int
-  granted          Boolean
+  id                Int     @id @default(autoincrement())
+  roleId            Int 
+  permissionId      Int
+  granted           Boolean
 
-  userRoles      Role       @relation(fields: [userRoleId], references: [id])
-  userPermission Permission @relation(fields: [userPermissionId], references: [id])
+  userRoles         Role       @relation(fields: [roleId], references: [id])
+  persmissions      Permission @relation(fields: [permissionId], references: [id])
 }

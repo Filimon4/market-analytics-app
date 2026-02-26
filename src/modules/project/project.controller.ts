@@ -1,18 +1,20 @@
 import { Body, Controller, Get, Post, UseGuards } from "@nestjs/common";
 import { User } from "src/common/decorators/user.decorator";
 import { PrismaService } from "src/common/db/prisma.service";
-import { User as UserDB } from "@prisma/client";
+import { Prisma, User as UserDB } from "@prisma/client";
 import { TenantGuard } from "src/shared/tenant/guards/tenant.guard";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { CurrentTenant } from "src/shared/tenant/decorators/current-tenant.decorator";
 import { CreateRoleDto } from "./dto/createRole.dto";
 import { ProjectRolesService } from "./project-roles.service";
 import { ProjectAccessGuard } from "./guards/project-access.guard";
+import { ApiHeader } from "@nestjs/swagger";
+import { ProjectService } from "./project.service";
 
 @Controller('project')
 @UseGuards(JwtAuthGuard, TenantGuard)
 export class ProjectController {
-  constructor(private readonly prismaService: PrismaService, private readonly projectRolesService: ProjectRolesService) {}
+  constructor(private readonly prismaService: PrismaService, private readonly projectRolesService: ProjectRolesService, private readonly projectService: ProjectService) {}
 
   @Get()
   get(@CurrentTenant() projectId: number, @User() user: UserDB) {
@@ -35,49 +37,30 @@ export class ProjectController {
     })
   }
 
-  @Get('panel')
-  async getPanel(@CurrentTenant() projectId: number, @User() user: UserDB) {
-    const panelChildren = await this.prismaService.$queryRaw`
-      WITH RECURSIVE permission_tree AS (
-        SELECT 
-          id,
-          name,
-          code,
-          description,
-          "parentId"
-        FROM public."Permission"
-        WHERE code = 'PANEL'
+  @Get('role/permissions')
+  @ApiHeader({
+    name: 'x-tenant-id',
+    description: 'Required tenant identifier',
+    required: true,
+    schema: { type: 'string', example: '123' },
+  })
+  async permissions(@CurrentTenant() projectId: number, @User() user: UserDB) {
+    const userToProject = await this.prismaService.userToProject.findFirst({
+      where: {
+        projectId,
+        AND: {
+          userId: user.id,
+        }
+      },
+      select: {
+        id: true,
+        roleId: true
+      }
+    })
 
-        UNION ALL
+    const permissions = await this.projectService.getPermissions(userToProject.roleId)
 
-        SELECT 
-          p.id,
-          p.name,
-          p.code,
-          p.description,
-          p."parentId"
-        FROM public."Permission" p
-        INNER JOIN permission_tree pt ON p."parentId" = pt.id
-      )
-      SELECT 
-        id,
-        name,
-        code,
-        description,
-        "parentId"
-      FROM permission_tree
-      ORDER BY id;
-    `.then(rows => rows as Array<{
-      id: number;
-      name: string;
-      code: string;
-      description: string | null;
-      parentId: number | null;
-    }>);
-
-    console.log(panelChildren)
-
-    return panelChildren
+    return {result: await this.projectService.buildPermissionTree(permissions)}
   }
 
   @Post('role')
