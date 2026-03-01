@@ -24,9 +24,9 @@ export class ProjectRolesService {
       const permissions = await mng.permission.findMany({})
       
       const rolePermissions = permissions.map((per) => ({
-        userPermissionId: per.id,
-        userRoleId: role.id,
-        granted: false
+        permissionId: per.id,
+        roleId: role.id,
+        granted: false,
       }) as RolePermission)
 
       await mng.rolePermission.createMany({
