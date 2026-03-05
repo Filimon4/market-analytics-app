@@ -1,11 +1,12 @@
 model UserToProject {
-  id        BigInt  @id @default(autoincrement())
-  roleId    Int
-  projectId BigInt
-  userId    BigInt
-  blocked   Boolean
+  id          BigInt  @id @default(autoincrement())
+  roleId      Int
+  projectId   BigInt
+  userId      BigInt
+  blocked     Boolean
+  createdAt   DateTime @default(now())
 
-  user       User       @relation(fields: [userId], references: [id])
-  userRole   Role   @relation(fields: [roleId], references: [id])
-  project    Project    @relation(fields: [projectId], references: [id])
+  user        User       @relation(fields: [userId], references: [id])
+  userRole    Role   @relation(fields: [roleId], references: [id])
+  project     Project    @relation(fields: [projectId], references: [id])
 }

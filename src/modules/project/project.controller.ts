@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UseGuards } from "@nestjs/common";
+import { BadGatewayException, BadRequestException, Body, Controller, Get, Post, UseGuards } from "@nestjs/common";
 import { User } from "src/common/decorators/user.decorator";
 import { PrismaService } from "src/common/db/prisma.service";
 import { Prisma, User as UserDB } from "@prisma/client";
@@ -17,24 +17,49 @@ export class ProjectController {
   constructor(private readonly prismaService: PrismaService, private readonly projectRolesService: ProjectRolesService, private readonly projectService: ProjectService) {}
 
   @Get()
-  get(@CurrentTenant() projectId: number, @User() user: UserDB) {
-    return this.prismaService.project.findMany({
+  async get(@CurrentTenant() projectId: number, @User() user: UserDB) {
+    const project = await this.prismaService.project.findFirst({
       where: {
         id: projectId,
         userToProject: {
-          every: {
-            user: {
-              id: user.id
-            }
+          some: {
+            userId: user.id
           }
         }
       },
-      select: {
-        name: true,
-        description: true,
-        id: true
-      },
+      include: {
+        userToProject: {
+          where: {
+            userId: user.id
+          },
+          select: {
+            id: true,
+            userId: true,
+            blocked: true,
+            roleId: true,
+            createdAt: true
+          }
+        }
+      }
     })
+
+    if (project.userToProject.length > 1) {
+      throw new BadRequestException('User cannot has more then one connection to a project')
+    }
+
+    const userToProject = project.userToProject[0]
+
+    return {
+      result: {
+        ...project,
+        id: project.id.toString(),
+        userToProject: {
+          ...userToProject,
+          id: userToProject.id.toString(),
+          userId: userToProject.userId.toString(),
+        }
+      }
+    }
   }
 
   @Get('role/permissions')
