@@ -1,15 +1,15 @@
-import { BadGatewayException, BadRequestException, Body, Controller, Get, Post, UseGuards } from "@nestjs/common";
+import { BadRequestException, Body, Controller, Get, Post, Query, UseGuards } from "@nestjs/common";
 import { User } from "src/common/decorators/user.decorator";
 import { PrismaService } from "src/common/db/prisma.service";
-import { Prisma, User as UserDB } from "@prisma/client";
+import { User as UserDB } from "@prisma/client";
 import { TenantGuard } from "src/shared/tenant/guards/tenant.guard";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { CurrentTenant } from "src/shared/tenant/decorators/current-tenant.decorator";
 import { CreateRoleDto } from "./dto/createRole.dto";
 import { ProjectRolesService } from "./project-roles.service";
 import { ProjectAccessGuard } from "./guards/project-access.guard";
-import { ApiHeader } from "@nestjs/swagger";
 import { ProjectService } from "./project.service";
+import { GetPanelDto } from "./dto/getPanel.dto";
 
 @Controller('project')
 @UseGuards(JwtAuthGuard, TenantGuard)
@@ -62,30 +62,58 @@ export class ProjectController {
     }
   }
 
-  @Get('role/permissions')
-  @ApiHeader({
-    name: 'x-tenant-id',
-    description: 'Required tenant identifier',
-    required: true,
-    schema: { type: 'string', example: '123' },
-  })
-  async permissions(@CurrentTenant() projectId: number, @User() user: UserDB) {
-    const userToProject = await this.prismaService.userToProject.findFirst({
+  @Get('panel')
+  async getPanel(@Query() roleDto: GetPanelDto) {
+    const panel = [
+      {
+        name: "Маркетинг",
+        code: 'PANEL_MARKETING',
+        icon: '/icons/marketing.png',
+        children: [
+          { name: 'Стратегии', code : 'PANEL_MARKETING_STRATEGY', url: 'marketing/strategy'},
+          { name: 'Каналы трафика', code : 'PANEL_MARKETING_CHANNELS', url: 'marketing/channels'},
+          { name: 'Результаты трафика', code : 'PANEL_MARKETING_CHANNELS_PERFORMANCE', url: 'marketing/channels/performance'},
+        ],
+      },
+      {
+        name: 'Проект',
+        code: 'PANEL_PROJECTS',
+        icon: '/icons/project.png',
+        children: [
+          { name: 'Разработчику', code: 'PANEL_PROJECTS_DEVELOPER', url: 'projects/developer'},
+          { name: 'Апи ключи', code: 'PANEL_PROJECTS_API_KEYS', url: 'projects/apikeys'},
+          { name: 'Пользователи', code: 'PANEL_PROJECTS_USERS', url: 'projects/users'},
+          { name: 'Роли', code: 'PANEL_PROJECTS_ROLES', url: 'projects/roles'},
+        ],
+      }
+    ]
+
+    const role = await this.prismaService.rolePermission.findMany({
       where: {
-        projectId,
-        AND: {
-          userId: user.id,
+        userRole: {
+          id: roleDto.roleId
         }
       },
       select: {
-        id: true,
-        roleId: true
+        granted: true,
+        persmission: {
+          select: {
+            code: true,
+          }
+        }
       }
     })
 
-    const permissions = await this.projectService.getPermissions(userToProject.roleId)
-
-    return {result: await this.projectService.buildPermissionTree(permissions)}
+    return {
+      result: panel.filter((elem) => {
+        return role.find((per) => per.persmission.code === elem.code).granted
+      }).map((elem) => {
+        return {
+          ...elem,
+          children: elem.children.filter((perChildren) => role.find((per) => per.persmission.code === perChildren.code ).granted)
+        }
+      })
+    }
   }
 
   @Post('role')
@@ -95,6 +123,42 @@ export class ProjectController {
   }
 
   @Get('role')
+  async getRole(@CurrentTenant() projectId: number, @User() user: UserDB) {
+    const role = await this.prismaService.role.findFirst({
+      where: {
+        project: {
+          id: projectId
+        },
+        userToProject: {
+          some: {
+            userId: user.id,
+            projectId: projectId
+          }
+        }
+      },
+      include: {
+        rolePermission: {
+          select: {
+            granted: true,
+            permissionId: true,
+            persmission: {
+              select: {
+                code: true,
+              }
+            }
+          },
+        }
+      }
+    })
+
+    return { result: {
+        ...role,
+        projectId: role.projectId.toString()
+      }
+    }
+  }
+
+  @Get('roles')
   getAllRoles() {
     return this.prismaService.role.findMany({
       select: {

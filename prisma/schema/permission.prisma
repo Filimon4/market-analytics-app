@@ -1,12 +1,12 @@
 model Permission {
-  id   Int    @id
-  name String @unique
-  code String @unique
+  id                Int    @id
+  name              String @unique
+  code              String @unique
   description       String?
 
   parentId          Int?          
   parent            Permission?   @relation("PermissionHierarchy", fields: [parentId], references: [id], onDelete: SetNull)
   children          Permission[]  @relation("PermissionHierarchy")
 
-  rolePermission RolePermission[]
+  rolePermission    RolePermission[]
 }
