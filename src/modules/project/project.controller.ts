@@ -68,9 +68,9 @@ export class ProjectController {
         code: 'PANEL_MARKETING',
         icon: '/icons/marketing.png',
         children: [
-          { name: 'Стратегии', code : 'PANEL_MARKETING_STRATEGY', url: 'marketing/strategy'},
-          { name: 'Каналы трафика', code : 'PANEL_MARKETING_CHANNELS', url: 'marketing/channels'},
-          { name: 'Результаты трафика', code : 'PANEL_MARKETING_CHANNELS_PERFORMANCE', url: 'marketing/channels/performance'},
+          { name: 'Стратегии', code : 'PANEL_MARKETING_STRATEGY', url: '/marketing/strategy'},
+          { name: 'Каналы трафика', code : 'PANEL_MARKETING_CHANNELS', url: '/marketing/channels'},
+          { name: 'Результаты трафика', code : 'PANEL_MARKETING_CHANNELS_PERFORMANCE', url: '/marketing/channels/performance'},
         ],
       },
       {
@@ -78,10 +78,10 @@ export class ProjectController {
         code: 'PANEL_PROJECTS',
         icon: '/icons/project.png',
         children: [
-          { name: 'Разработчику', code: 'PANEL_PROJECTS_DEVELOPER', url: 'projects/developer'},
-          { name: 'Апи ключи', code: 'PANEL_PROJECTS_API_KEYS', url: 'projects/apikeys'},
-          { name: 'Пользователи', code: 'PANEL_PROJECTS_USERS', url: 'projects/users'},
-          { name: 'Роли', code: 'PANEL_PROJECTS_ROLES', url: 'projects/roles'},
+          { name: 'Разработчику', code: 'PANEL_PROJECTS_DEVELOPER', url: '/projects/developer'},
+          { name: 'Апи ключи', code: 'PANEL_PROJECTS_API_KEYS', url: '/projects/apikeys'},
+          { name: 'Пользователи', code: 'PANEL_PROJECTS_USERS', url: '/projects/users'},
+          { name: 'Роли', code: 'PANEL_PROJECTS_ROLES', url: '/projects/roles'},
         ],
       }
     ]
