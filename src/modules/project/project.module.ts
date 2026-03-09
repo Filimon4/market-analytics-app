@@ -1,11 +1,13 @@
 import { Module } from "@nestjs/common";
-import { ProjectGlobalController } from "./project-global.controller";
+import { ProjectGlobalController } from "./projectGlobal.controller";
 import { ProjectController } from "./project.controller";
-import { ProjectRolesService } from "./project-roles.service";
+import { ProjectRoleService } from "./projectRole.service";
 import { ProjectService } from "./project.service";
+import { ProjectRoleController } from "./projectRole.controller";
+import { ProjectUserController } from "./projectUser.controller";
 
 @Module({
-  providers: [ProjectRolesService, ProjectService],
-  controllers: [ProjectGlobalController, ProjectController]
+  providers: [ProjectRoleService, ProjectService],
+  controllers: [ProjectGlobalController, ProjectController, ProjectRoleController, ProjectUserController]
 })
 export class Project {}

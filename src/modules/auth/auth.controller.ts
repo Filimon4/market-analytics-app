@@ -3,16 +3,14 @@ import { SignUpDto } from "./dto/singup.dto";
 import { AuthService } from "./auth.service";
 import { SignInDto } from "./dto/singin.dto";
 import { LocalAuthGuard } from "./guards/local-auth.guard";
-import { ConfigService } from "@nestjs/config";
 import { Response } from "express";
 import { JwtRefreshAuthGuard } from "./guards/jwt-refresh-auth.guard";
 import { User } from "src/common/decorators/user.decorator";
-import { User as UserDB } from "@prisma/client";
 
 @Controller('auth')
 export class AuthController {
 
-  constructor(private readonly authService: AuthService, private readonly configService: ConfigService) {}
+  constructor(private readonly authService: AuthService) {}
 
   @Post('signup')
   async singup(@Res({passthrough: true}) res: Response, @Body() dto: SignUpDto) {

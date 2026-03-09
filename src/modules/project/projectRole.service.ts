@@ -4,7 +4,7 @@ import { CreateRoleDto } from "./dto/createRole.dto";
 import { RolePermission } from "@prisma/client";
 
 @Injectable()
-export class ProjectRolesService {
+export class ProjectRoleService {
   constructor(private readonly prismaService: PrismaService) {}
 
   createRole(projectId: number, dto: CreateRoleDto) {
@@ -36,9 +36,5 @@ export class ProjectRolesService {
 
       return role
     })
-  }
-
-  getPermissionByCode(roleId: number, code: string) {
-    
   }
 }

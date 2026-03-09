@@ -9,6 +9,7 @@ import { ExceptionsLogger } from './common/middleware/exceptions-logger.middlewa
 import cookieParser from 'cookie-parser';
 import * as fs from 'fs';
 import { join } from 'path';
+import { AuthPublicModule } from './modules/auth/auth.public.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -46,9 +47,9 @@ async function bootstrap() {
     .setTitle('My API')
     .setVersion('1.0')
     .addBearerAuth()
-    .addApiKey({ type: 'apiKey', name: 'x-user-id', in: 'header' }, 'x-user-id')
     .addSecurityRequirements('bearer')
     .build();
+
   await SwaggerModule.loadPluginMetadata(metadata);
   const document = SwaggerModule.createDocument(app, config);
 
@@ -57,6 +58,17 @@ async function bootstrap() {
       persistAuthorization: true,
     },
   });
+
+  const developerConfig = new DocumentBuilder()
+    .setTitle('API')
+    .setDescription('Документация API для разработчиков')
+    .setVersion('1.0')
+    .build();
+
+  const developerDocument = SwaggerModule.createDocument(app, developerConfig, {
+    include: [AuthPublicModule]
+  })
+  SwaggerModule.setup('open-crm-api', app, developerDocument)
 
   const logger = new Logger('Bootstrap');
   const port = configService.get<number>(EnvironmentVariablesType.HTTP_PORT)!;

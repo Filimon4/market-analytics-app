@@ -1,20 +1,18 @@
-import { BadRequestException, Body, Controller, Get, Post, Query, UseGuards } from "@nestjs/common";
+import { BadRequestException, Controller, Get, Query, UseGuards } from "@nestjs/common";
 import { User } from "src/common/decorators/user.decorator";
 import { PrismaService } from "src/common/db/prisma.service";
 import { User as UserDB } from "@prisma/client";
 import { TenantGuard } from "src/shared/tenant/guards/tenant.guard";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { CurrentTenant } from "src/shared/tenant/decorators/current-tenant.decorator";
-import { CreateRoleDto } from "./dto/createRole.dto";
-import { ProjectRolesService } from "./project-roles.service";
-import { ProjectAccessGuard } from "./guards/project-access.guard";
+import { ProjectRoleService } from "./projectRole.service";
 import { ProjectService } from "./project.service";
 import { GetPanelDto } from "./dto/getPanel.dto";
 
 @Controller('project')
 @UseGuards(JwtAuthGuard, TenantGuard)
 export class ProjectController {
-  constructor(private readonly prismaService: PrismaService, private readonly projectRolesService: ProjectRolesService, private readonly projectService: ProjectService) {}
+  constructor(private readonly prismaService: PrismaService, private readonly projectRolesService: ProjectRoleService, private readonly projectService: ProjectService) {}
 
   @Get()
   async get(@CurrentTenant() projectId: number, @User() user: UserDB) {
@@ -114,57 +112,5 @@ export class ProjectController {
         }
       })
     }
-  }
-
-  @Post('role')
-  @UseGuards(ProjectAccessGuard)
-  createRole(@CurrentTenant() projectId: number, @Body() createRoleDto: CreateRoleDto) {
-    return this.projectRolesService.createRole(projectId, createRoleDto)
-  }
-
-  @Get('role')
-  async getRole(@CurrentTenant() projectId: number, @User() user: UserDB) {
-    const role = await this.prismaService.role.findFirst({
-      where: {
-        project: {
-          id: projectId
-        },
-        userToProject: {
-          some: {
-            userId: user.id,
-            projectId: projectId
-          }
-        }
-      },
-      include: {
-        rolePermission: {
-          select: {
-            granted: true,
-            permissionId: true,
-            persmission: {
-              select: {
-                code: true,
-              }
-            }
-          },
-        }
-      }
-    })
-
-    return { result: {
-        ...role,
-        projectId: role.projectId.toString()
-      }
-    }
-  }
-
-  @Get('roles')
-  getAllRoles() {
-    return this.prismaService.role.findMany({
-      select: {
-        code: true,
-        default: true
-      }
-    })
   }
 }

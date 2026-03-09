@@ -1,20 +1,4 @@
-import { Prisma } from "@prisma/client";
-
-export type PermissionsForRole = {
-  id: number;
-  code: string;
-  granted: boolean;
-  level: number;
-  parentId: number;
-}
-
-export type TRoleGetPayload = Prisma.RoleGetPayload<{
-  select: {
-    id: true,
-    default: true,
-    code: true
-  }
-}>
+import { Prisma } from "@prisma/client"
 
 export const UsersToProjectSelect: Prisma.UserToProjectSelect = {
   id: true,
@@ -33,10 +17,24 @@ export const UsersToProjectSelect: Prisma.UserToProjectSelect = {
 }
 
 export type TUsersToProjectGetPayload = Prisma.UserToProjectGetPayload<{
-  select: typeof UsersToProjectSelect
+  select: {
+    id: true,
+    blocked: true,
+    userRole: {
+      select: {
+        id: true,
+      }
+    },
+    user: {
+      select: {
+        name: true,
+        email: true,
+      }
+    }
+  }
 }>
 
-export type TUsersToProjectRequest = Omit<TUsersToProjectGetPayload, 'id'> & {
+export type TUsersToProjectRequest = Omit<TUsersToProjectGetPayload, 'id' | 'userRole' | 'user'> & {
   id: string,
   roleId: number,
   userName: string,
