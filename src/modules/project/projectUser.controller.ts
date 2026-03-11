@@ -1,4 +1,4 @@
-import { Controller, Get, Param, ParseIntPipe, Query, UseGuards } from "@nestjs/common";
+import { Controller, Get, Param, ParseIntPipe, Post, Query, UseGuards } from "@nestjs/common";
 import { PrismaService } from "src/common/db/prisma.service";
 import { TenantGuard } from "src/shared/tenant/guards/tenant.guard";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
@@ -21,7 +21,7 @@ export class ProjectUserController {
    * @param dto GetFilterDto
    * @returns ITableListResponse
    */
-  @Get('table/list')
+  @Post('table/list')
   // guard permission
   async getTableList(@CurrentTenant() projectId: number, @Query() dto: GetUsersToProjectTableListDto): Promise<IApiResultResponse<ITableListResponse<TUsersToProjectResponse>>> {
     const whereUserInput: Prisma.UserToProjectWhereInput = {}
@@ -32,12 +32,8 @@ export class ProjectUserController {
       whereUserInput.blocked = {equals: dto.filter.blocked}
     }
 
-    if (dto.filter?.id) {
-      whereUserInput.id = {equals: BigInt(dto.filter.id)}
-    }
-
-    if (dto.filter?.roleId) {
-      whereUserInput.userRole.id = {equals: dto.filter.roleId}
+    if (dto.filter?.role.id) {
+      whereUserInput.userRole.id = {equals: dto.filter.role.id}
     }
 
     if (dto.filter?.userEmail) {

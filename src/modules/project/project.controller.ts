@@ -5,7 +5,7 @@ import { User as UserDB } from "@prisma/client";
 import { TenantGuard } from "src/shared/tenant/guards/tenant.guard";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { CurrentTenant } from "src/shared/tenant/decorators/current-tenant.decorator";
-import { ProjectRoleService } from "./projectRole.service";
+import { ProjectRoleService } from "./role/projectRole.service";
 import { ProjectService } from "./project.service";
 import { GetPanelDto } from "./dto/getPanel.dto";
 

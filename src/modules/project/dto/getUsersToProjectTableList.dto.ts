@@ -1,13 +1,36 @@
-import { Transform, Type } from "class-transformer";
-import { IsNotEmpty, IsNumber, IsOptional, IsString, Max, Min } from "class-validator";
-import { TUsersToProjectRequest } from "../types/user.interface";
+import { Type } from "class-transformer";
+import { IsNotEmpty, IsNumber, IsOptional, IsString, Max, Min, ValidateNested } from "class-validator";
+
+export class UsersToProjectTableRoleDto {
+  @IsNotEmpty()
+  @Type(() => Number)
+  @IsNumber()
+  id: number
+}
+
+export class UsersToProjectTableListFilterDto {
+  @IsOptional()
+  blocked?
+
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => UsersToProjectTableRoleDto)
+  role?: UsersToProjectTableRoleDto
+  
+  @IsOptional()
+  @IsString()
+  userName?: string
+  
+  @IsOptional()
+  @IsString()
+  userEmail?: string
+}
 
 export class GetUsersToProjectTableListDto {
   @IsOptional()
-  @Transform((param) => {
-    return JSON.parse(param.value)
-  })
-  filter: Partial<TUsersToProjectRequest> = {}
+  @ValidateNested()
+  @Type(() => UsersToProjectTableListFilterDto)
+  filter: UsersToProjectTableListFilterDto = {}
 
   @IsNotEmpty()
   @Type(() => Number)

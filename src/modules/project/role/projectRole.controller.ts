@@ -1,25 +1,24 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Post, Query, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Param, ParseIntPipe, Post, UseGuards } from "@nestjs/common";
 import { User } from "src/common/decorators/user.decorator";
 import { PrismaService } from "src/common/db/prisma.service";
 import { Prisma, User as UserDB } from "@prisma/client";
 import { TenantGuard } from "src/shared/tenant/guards/tenant.guard";
-import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
+import { JwtAuthGuard } from "../../auth/guards/jwt-auth.guard";
 import { CurrentTenant } from "src/shared/tenant/decorators/current-tenant.decorator";
 import { CreateRoleDto } from "./dto/createRole.dto";
 import { ProjectRoleService } from "./projectRole.service";
-import { ProjectAccessGuard } from "./guards/project-access.guard";
-import { ProjectService } from "./project.service";
+import { ProjectAccessGuard } from "../guards/project-access.guard";
 import { GetRolesTableListDto } from "./dto/getRolesTableList.dto";
-import { RolesBlocks, RolesColumns } from "./constants/role.constant";
+import { RolesBlocks, RolesColumns, RolesSelect } from "./constants/role.constant";
 import { ITableListResponse } from "src/common/interfaces/itable.interface";
-import { TRoleGetPayload } from "./types";
 import { IEntity } from "src/common/interfaces/ientity.interface";
 import { IApiResultResponse } from "src/common/interfaces/api.interface";
+import { TRoleGetPayload } from "./types/role.type";
 
 @Controller('project/role')
 @UseGuards(JwtAuthGuard, TenantGuard)
 export class ProjectRoleController {
-  constructor(private readonly prismaService: PrismaService, private readonly projectRolesService: ProjectRoleService, private readonly projectService: ProjectService) {}
+  constructor(private readonly prismaService: PrismaService, private readonly projectRolesService: ProjectRoleService) {}
 
   @Post()
   @UseGuards(ProjectAccessGuard)
@@ -68,9 +67,9 @@ export class ProjectRoleController {
    * @param dto GetFilterDto
    * @returns ITableListResponse
    */
-  @Get('table/list')
+  @Post('table/list')
   // guard permission
-  async getTableList(@CurrentTenant() projectId: number, @Query() dto: GetRolesTableListDto): Promise<IApiResultResponse<ITableListResponse<TRoleGetPayload>>> {
+  async getTableList(@CurrentTenant() projectId: number, @Body() dto: GetRolesTableListDto): Promise<IApiResultResponse<ITableListResponse<TRoleGetPayload>>> {
     const rolesWhereInput: Prisma.RoleWhereInput = {}
 
     rolesWhereInput.projectId = projectId
@@ -79,17 +78,13 @@ export class ProjectRoleController {
       rolesWhereInput.code = { contains: dto.filter.code, mode: 'insensitive' }
     }
 
-    if (dto.filter?.default) {
+    if (dto.filter?.default !== undefined) {
       rolesWhereInput.default = dto.filter.default
     }
-  
+
     const total = await this.prismaService.role.count({ where: rolesWhereInput, orderBy: {id: 'asc'} });
     const rolesData = await this.prismaService.role.findMany({
-      select: {
-        id: true,
-        code: true,
-        default: true,
-      },
+      select: RolesSelect,
       orderBy: {id: 'asc'},
       where: rolesWhereInput,
       take: dto.size,

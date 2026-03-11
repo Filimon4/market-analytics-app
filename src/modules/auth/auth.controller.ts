@@ -16,7 +16,7 @@ export class AuthController {
   async singup(@Res({passthrough: true}) res: Response, @Body() dto: SignUpDto) {
     const tokens = await this.authService.signup(dto.name, dto.email, dto.password)
 
-    res.cookie('refresh_token', tokens.refreshToken, {
+    res.cookie('refreshToken', tokens.refreshToken, {
       httpOnly: true,
       secure: true,
       sameSite: 'lax',
@@ -34,7 +34,7 @@ export class AuthController {
   async signin(@Res({passthrough: true}) res: Response, @Request() req, @Body() dto: SignInDto) {
     const tokens = await this.authService.generateTokens({email: dto.email, id: req?.user?.id })
 
-    res.cookie('refresh_token', tokens.refreshToken, {
+    res.cookie('refreshToken', tokens.refreshToken, {
       httpOnly: true,
       secure: true,
       sameSite: 'lax',
@@ -55,7 +55,7 @@ export class AuthController {
   ) {
     const tokens = await this.authService.generateTokens({email: user.email, id: user.sub })
 
-    res.cookie('refresh_token', tokens.refreshToken, {
+    res.cookie('refreshToken', tokens.refreshToken, {
       httpOnly: true,
       secure: true,
       sameSite: 'lax',
