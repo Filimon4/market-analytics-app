@@ -125,10 +125,10 @@ export class ProjectRoleController {
     return {
       result: {
         blocks: RolesBlocks,
-        // add fields
+        blockDetails: [],
         data: [{
           ...roleData,
-          blockType: "main"
+          blockCode: "main"
         }]
       }
     }

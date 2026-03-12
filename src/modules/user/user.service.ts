@@ -11,10 +11,10 @@ import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly prisma: PrismaService, private readonly configService: ConfigService) {}
+  constructor(private readonly prismaService: PrismaService, private readonly configService: ConfigService) {}
 
   async create(dto: CreateUserDto): Promise<User> {
-    const user = await this.prisma.user.create({
+    const user = await this.prismaService.user.create({
       data: {
         email: dto.email,
         name: dto.name,
@@ -28,13 +28,13 @@ export class UserService {
   }
 
   async findAll() {
-    const list = await this.prisma.user.findMany({});
+    const list = await this.prismaService.user.findMany({});
 
     return list.map((usr) => ({ ...usr, id: usr.id.toString() }));
   }
 
   async findByEmail(email: string): Promise<User> {
-    const user = await this.prisma.user.findUnique({
+    const user = await this.prismaService.user.findUnique({
       where: { email },
     });
 
@@ -44,7 +44,7 @@ export class UserService {
   }
 
   async findById(id: bigint): Promise<User> {
-    const user = await this.prisma.user.findUnique({
+    const user = await this.prismaService.user.findUnique({
       where: { id },
     });
 
@@ -54,10 +54,55 @@ export class UserService {
   }
 
   async update(id: bigint, dto: UpdateUserDto) {
-    return this.prisma.user.update({ where: { id }, data: {} });
+    return this.prismaService.user.update({ where: { id }, data: {} });
   }
 
   async remove(id: bigint) {
-    return this.prisma.user.delete({ where: { id } });
+    return this.prismaService.user.delete({ where: { id } });
+  }
+
+  async getTableUser(projectId: number, user: User) {
+    const userToProjectWhereInput: Prisma.UserToProjectWhereInput = {
+      projectId,
+      user: {
+        id: user.id
+      },
+    }
+
+    const userToProjectData = await this.prismaService.userToProject.findFirst({
+      select: {
+        blocked: true,
+        createdAt: true,
+        userRole: {
+          select: {
+            id: true,
+            code: true,
+          }
+        },
+        user: {
+          select: {
+            name: true,
+            email: true,
+            createdAt: true
+          }
+        },
+        project: {
+          select: {
+            id: true,
+            name: true,
+            description: true,
+          }
+        }
+      },
+      where: userToProjectWhereInput,
+    })
+
+    return {
+      ...userToProjectData,
+      project: {
+        ...userToProjectData.project,
+        id: userToProjectData.project.id.toString()
+      }
+    }
   }
 }

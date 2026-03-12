@@ -15,6 +15,13 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { ConfigService } from '@nestjs/config';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { Request } from 'express';
+import { CurrentTenant } from 'src/shared/tenant/decorators/current-tenant.decorator';
+import { User } from 'src/common/decorators/user.decorator';
+import { User as UserDB } from '@prisma/client';
+import { IEntity } from 'src/common/interfaces/ientity.interface';
+import { IApiResultResponse } from 'src/common/interfaces/api.interface';
+import { UserBlockDetails, UserBlocks } from './constants';
+import { TenantGuard } from 'src/shared/tenant/guards/tenant.guard';
 
 @Controller('user')
 export class UserController {
@@ -65,5 +72,34 @@ export class UserController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.userService.remove(BigInt(id));
+  }
+
+  @Get('table/current')
+  @UseGuards(JwtAuthGuard, TenantGuard)
+  async getTableUser(@CurrentTenant() projectId: number, @User() user: UserDB): Promise<IApiResultResponse<IEntity>> {
+    
+    const data = await this.userService.getTableUser(projectId, user)
+    
+    return {
+      result: {
+        blocks: UserBlocks,
+        blockDetails: UserBlockDetails,
+        data: [
+          {
+            ...data.user,
+            blockCode: 'main'
+          },
+          {
+            name: data.project.name,
+            blcoked: data.blocked,
+            createdAt: data.createdAt,
+            role: {
+              ...data.userRole
+            },
+            blockCode: 'project'
+          }
+        ]
+      }
+    }
   }
 }

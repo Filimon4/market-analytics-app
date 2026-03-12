@@ -80,8 +80,8 @@ export class ProjectUserController {
     return {
       result: {
         blocks: UserToProjectBlocks,
-        // add fields
-        data: [{...{...userToProjectData, id: userToProjectData.id.toString()}, blockType: 'main'}]
+        blockDetails: [],
+        data: [{...{...userToProjectData, id: userToProjectData.id.toString()}, blockCode: 'main'}]
       }
     }
   }

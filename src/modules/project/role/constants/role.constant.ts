@@ -9,7 +9,7 @@ export const RolesColumns: ITableColumn[] = [
 ] as const; 
   
 export const RolesBlocks: IBlock[] = [
-  {type: "main", name: "Роль", columnCapacity: 5}
+  {code: "main", name: "Роль", columnCapacity: 5, maxColumns: 2}
 ]
 
 export const RolesSelect: Prisma.RoleSelect = {
