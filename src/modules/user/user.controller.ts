@@ -91,7 +91,7 @@ export class UserController {
           },
           {
             name: data.project.name,
-            blcoked: data.blocked,
+            blocked: data.blocked,
             createdAt: data.createdAt,
             role: {
               ...data.userRole
