@@ -4,7 +4,7 @@ import { ProjectController } from "./project.controller";
 import { ProjectRoleService } from "./role/projectRole.service";
 import { ProjectService } from "./project.service";
 import { ProjectRoleController } from "./role/projectRole.controller";
-import { ProjectUserController } from "./projectUser.controller";
+import { ProjectUserController } from "./user/projectUser.controller";
 
 @Module({
   providers: [ProjectRoleService, ProjectService],

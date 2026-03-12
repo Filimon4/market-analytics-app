@@ -1,5 +1,5 @@
-import { Type } from "class-transformer";
-import { IsNotEmpty, IsNumber, IsOptional, IsString, Max, Min, ValidateNested } from "class-validator";
+import { Transform, Type } from "class-transformer";
+import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString, Max, Min, ValidateNested } from "class-validator";
 
 export class UsersToProjectTableRoleDto {
   @IsNotEmpty()
@@ -10,38 +10,40 @@ export class UsersToProjectTableRoleDto {
 
 export class UsersToProjectTableListFilterDto {
   @IsOptional()
-  blocked?
+  @Transform(({value}) => value === '1' || value === 'true')
+  @IsBoolean()
+  blocked?: boolean;
 
   @IsOptional()
   @ValidateNested()
   @Type(() => UsersToProjectTableRoleDto)
-  role?: UsersToProjectTableRoleDto
+  role?: UsersToProjectTableRoleDto;
   
   @IsOptional()
   @IsString()
-  userName?: string
+  userName?: string;
   
   @IsOptional()
   @IsString()
-  userEmail?: string
+  userEmail?: string;
 }
 
 export class GetUsersToProjectTableListDto {
   @IsOptional()
   @ValidateNested()
   @Type(() => UsersToProjectTableListFilterDto)
-  filter: UsersToProjectTableListFilterDto = {}
+  filter: UsersToProjectTableListFilterDto = {};
 
   @IsNotEmpty()
   @Type(() => Number)
   @IsNumber()
   @Min(1)
-  page: number = 1
+  page: number = 1;
 
   @IsNotEmpty()
   @Type(() => Number)
   @IsNumber()
   @Min(1)
   @Max(50)
-  size: number = 10
+  size: number = 10;
 }

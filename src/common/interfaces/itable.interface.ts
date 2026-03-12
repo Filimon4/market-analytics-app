@@ -2,7 +2,7 @@
 export interface ITableColumn {
   code: string;
   name: string;
-  type: 'string' | 'number' | 'boolean' | 'date' | 'link' | 'constants' | string;
+  type: 'string' | 'number' | 'boolean' | 'date' | 'select';
   filtrable: boolean;
   linkUrl?: string;
   constantsData?: string[];
