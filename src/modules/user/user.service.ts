@@ -67,36 +67,56 @@ export class UserService {
       userToProject: {}
     }
 
-    userInfo.user = await this.prismaService.user.findUnique({
+    const userData = await this.prismaService.user.findUnique({
       where: {
         id: user.id
+      },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        createdAt: true
       }
     })
 
+    userInfo.user = {
+      ...userData,
+      id: userData.id.toString()
+    }
 
-    userInfo.userToProject = projectId && await this.prismaService.userToProject.findFirst({
-      select: {
-        blocked: true,
-        createdAt: true,
-        userRole: {
-          select: {
-            id: true,
-            code: true,
-            title: true
+    if (projectId) {
+      const userToProjectData = await this.prismaService.userToProject.findFirst({
+        select: {
+          blocked: true,
+          createdAt: true,
+          userRole: {
+            select: {
+              id: true,
+              code: true,
+              title: true
+            }
+          },
+          project: {
+            select: {
+              id: true,
+              name: true,
+              description: true,
+            }
           }
         },
+        where: {
+          projectId
+        },
+      })
+
+      userInfo.userToProject = {
+        ...userToProjectData,
         project: {
-          select: {
-            id: true,
-            name: true,
-            description: true,
-          }
+          ...userToProjectData.project,
+          id: userToProjectData.project.id.toString()
         }
-      },
-      where: {
-        projectId
-      },
-    })
+      }
+    }
 
     return userInfo
   }
