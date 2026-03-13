@@ -21,7 +21,7 @@ import { User as UserDB } from '@prisma/client';
 import { IEntity } from 'src/common/interfaces/ientity.interface';
 import { IApiResultResponse } from 'src/common/interfaces/api.interface';
 import { UserBlockDetails, UserBlocks } from './constants';
-import { TenantGuard } from 'src/shared/tenant/guards/tenant.guard';
+import { TenantGuard, TenantOptional } from 'src/shared/tenant/guards/tenant.guard';
 
 @Controller('user')
 export class UserController {
@@ -75,30 +75,19 @@ export class UserController {
   }
 
   @Get('table/current')
+  @TenantOptional()
   @UseGuards(JwtAuthGuard, TenantGuard)
-  async getTableUser(@CurrentTenant() projectId: number, @User() user: UserDB): Promise<IApiResultResponse<IEntity>> {
+  async getTableUser(@User() user: UserDB, @CurrentTenant({required: false}) projectId?: number): Promise<IApiResultResponse<IEntity>> {
     
-    const data = await this.userService.getTableUser(projectId, user)
+    const data = await this.userService.getTableUser(user, projectId)
     
     return {
       result: {
         blocks: UserBlocks,
         blockDetails: UserBlockDetails,
-        data: [
-          {
-            ...data.user,
-            blockCode: 'main'
-          },
-          {
-            name: data.project.name,
-            blocked: data.blocked,
-            createdAt: data.createdAt,
-            role: {
-              ...data.userRole
-            },
-            blockCode: 'project'
-          }
-        ]
+        data: {
+          ...data,
+        }
       }
     }
   }

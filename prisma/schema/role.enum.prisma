@@ -1,10 +1,11 @@
 model Role {
-  id        Int    @id @default(autoincrement())
-  code      String
-  projectId BigInt
-  default Boolean @default(false)
+  id              Int    @id @default(autoincrement())
+  code            String
+  title           String @default("None")
+  projectId       BigInt
+  default         Boolean @default(false)
 
-  rolePermission RolePermission[]
-  userToProject  UserToProject[]
-  project        Project          @relation(fields: [projectId], references: [id])
+  rolePermission  RolePermission[]
+  userToProject   UserToProject[]
+  project         Project          @relation(fields: [projectId], references: [id])
 }

@@ -9,6 +9,7 @@ export class JwtRefreshStrategy extends PassportStrategy(Strategy, 'jwt-refresh'
   constructor(private readonly configService: ConfigService) {
     super({
       jwtFromRequest: (req: Request) => {
+        console.log(req?.cookies['refreshToken'])
         return req?.cookies['refreshToken'] || null;
       },
       ignoreExpiration: false,
@@ -17,6 +18,7 @@ export class JwtRefreshStrategy extends PassportStrategy(Strategy, 'jwt-refresh'
   }
 
   async validate(payload: any) {
+    console.log(`validate: ${JSON.stringify(payload)}`)
     return payload;
   }
 }

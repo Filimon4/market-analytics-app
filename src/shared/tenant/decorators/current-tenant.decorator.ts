@@ -1,11 +1,15 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import { Request } from 'express';
 
+interface CurrentTenantOptions {
+  required?: boolean;
+}
+
 export const CurrentTenant = createParamDecorator(
-  (data: unknown, ctx: ExecutionContext): number => {
+  (data: CurrentTenantOptions = {required: true}, ctx: ExecutionContext): number => {
     const request = ctx.switchToHttp().getRequest<Request & {tenantId: number}>()
 
-    if (!request.tenantId) {
+    if (data.required && !request.tenantId) {
       throw new Error('No tenant ID in current context');
     }
 

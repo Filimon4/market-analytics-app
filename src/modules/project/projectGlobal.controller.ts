@@ -92,9 +92,9 @@ export class ProjectGlobalController {
       })
 
       const defaultRoles = [
-        {code: "owner"},
-        {code: "analytic"},
-        {code: "marketing"},
+        {code: "owner", title: "Ген. дир."},
+        {code: "analytic", title: "Аналитик"},
+        {code: "marketing", title: "Маркетолог"},
       ]
 
       const defaultPermissions = {
@@ -118,7 +118,8 @@ export class ProjectGlobalController {
         data: defaultRoles.map((rol) => ({
           code: rol.code,
           projectId: project.id,
-          default: true
+          default: true,
+          title: rol.title
         }) as Prisma.RoleCreateManyInput),
         skipDuplicates: true,
         select: {

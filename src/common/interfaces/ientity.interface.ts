@@ -24,5 +24,5 @@ export interface IBlockDetail extends IBlockIndentifier {
 export interface IEntity {
   blocks: IBlock[]
   blockDetails: IBlockDetail[] 
-  data: (Record<string, any> & IBlockIndentifier)[]
+  data: Record<string, any>
 }

@@ -3,7 +3,7 @@ import { IBlock, IBlockDetail } from "src/common/interfaces/ientity.interface";
 
 export const UserBlocks: IBlock[] = [
   {name: "Пользователь", code: 'main', columnCapacity: 5, maxColumns: 2},
-  {name: "Проект", code: 'project', columnCapacity: 5, maxColumns: 2},
+  {name: "Проект", code: 'project', columnCapacity: 5, maxColumns: 1},
 ]
 
 export const UserBlockDetails: IBlockDetail[] = [
@@ -11,21 +11,21 @@ export const UserBlockDetails: IBlockDetail[] = [
     fields: [
       {
         title: "Имя",
-        path: 'name',
+        path: 'user.name',
         editable: true,
         type: 'string',
         editPath: 'name'
       },
       {
         title: "Почта",
-        path: 'email',
+        path: 'user.email',
         editable: true,
         type: 'string',
         editPath: 'email'
       },
       {
         title: "Дата регистрации",
-        path: 'createdAt',
+        path: 'user.createdAt',
         editable: false,
         type: 'datetime',
       },
@@ -36,13 +36,13 @@ export const UserBlockDetails: IBlockDetail[] = [
     fields: [
       {
         title: "Текущий проект",
-        path: 'name',
+        path: 'project.name',
         editable: false,
         type: 'string',
       },
       {
         title: "Роль в проекте",
-        path: 'role.name',
+        path: 'userRole.title',
         editable: false,
         type: 'string',
       },
@@ -53,11 +53,11 @@ export const UserBlockDetails: IBlockDetail[] = [
         type: 'datetime',
       },
       {
-        title: "Статус",
+        title: "Заблокирован",
         path: 'blocked',
         editable: false,
-        type: 'string',
-      },
+        type: 'boolean',
+      }
     ],
     blockCode: 'project'
   },

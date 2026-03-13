@@ -61,15 +61,20 @@ export class UserService {
     return this.prismaService.user.delete({ where: { id } });
   }
 
-  async getTableUser(projectId: number, user: User) {
-    const userToProjectWhereInput: Prisma.UserToProjectWhereInput = {
-      projectId,
-      user: {
-        id: user.id
-      },
+  async getTableUser(user: User, projectId?: number) {
+    const userInfo = {
+      user: {},
+      userToProject: {}
     }
 
-    const userToProjectData = await this.prismaService.userToProject.findFirst({
+    userInfo.user = await this.prismaService.user.findUnique({
+      where: {
+        id: user.id
+      }
+    })
+
+
+    userInfo.userToProject = projectId && await this.prismaService.userToProject.findFirst({
       select: {
         blocked: true,
         createdAt: true,
@@ -77,13 +82,7 @@ export class UserService {
           select: {
             id: true,
             code: true,
-          }
-        },
-        user: {
-          select: {
-            name: true,
-            email: true,
-            createdAt: true
+            title: true
           }
         },
         project: {
@@ -94,15 +93,11 @@ export class UserService {
           }
         }
       },
-      where: userToProjectWhereInput,
+      where: {
+        projectId
+      },
     })
 
-    return {
-      ...userToProjectData,
-      project: {
-        ...userToProjectData.project,
-        id: userToProjectData.project.id.toString()
-      }
-    }
+    return userInfo
   }
 }
