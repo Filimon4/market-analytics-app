@@ -7,7 +7,16 @@ export class RolesTableFilterDto {
   code?: string
 
   @IsOptional()
-  @Transform(({value}) => value === '1' || value === 'true')
+  @IsString()
+  title?: string
+
+  @IsOptional()
+  @Transform(({value}) => {
+    if (!value) return undefined
+    if (value === '1' || value === 'true') return true
+
+    return false
+  })
   @IsBoolean()
   default?: boolean
 }

@@ -9,11 +9,12 @@ import { CreateRoleDto } from "./dto/createRole.dto";
 import { ProjectRoleService } from "./projectRole.service";
 import { ProjectAccessGuard } from "../guards/project-access.guard";
 import { GetRolesTableListDto } from "./dto/getRolesTableList.dto";
-import { RolesBlocks, RolesColumns, RolesSelect } from "./constants/role.constant";
+import { RolesBlockDetails, RolesBlocks, RolesColumns, RolesSelect } from "./constants/role.constant";
 import { ITableListResponse } from "src/common/interfaces/itable.interface";
 import { IEntity } from "src/common/interfaces/ientity.interface";
 import { IApiResultResponse } from "src/common/interfaces/api.interface";
 import { TRoleGetPayload } from "./types/role.type";
+import { TreeBuilder } from "src/common/utils/treeBuilder";
 
 @Controller('project/role')
 @UseGuards(JwtAuthGuard, TenantGuard)
@@ -82,6 +83,10 @@ export class ProjectRoleController {
       rolesWhereInput.default = dto.filter.default
     }
 
+    if (dto.filter?.title) {
+      rolesWhereInput.title = { contains: dto.filter.title, mode: 'insensitive' }
+    }
+
     const total = await this.prismaService.role.count({ where: rolesWhereInput, orderBy: {id: 'asc'} });
     const rolesData = await this.prismaService.role.findMany({
       select: RolesSelect,
@@ -117,19 +122,41 @@ export class ProjectRoleController {
       where: rolesWhereInput,
       select: {
         id: true,
+        title: true,
         code: true,
         default: true,
+        rolePermission: {
+          select: {
+            id: true,
+            persmission: {
+              select: {
+                id: true,
+                code: true,
+                parentId: true,
+                description: true,
+                name: true,
+              }
+            },
+            granted: true
+          }
+        }
       },
     })
 
+    const permissionTree = TreeBuilder.buildPermissionTree(roleData.rolePermission)
+
+    // TODO: Отправить данные на фронт, постоить дерево и принимать изминений из дерева
     return {
       result: {
         blocks: RolesBlocks,
-        blockDetails: [],
-        data: [{
-          ...roleData,
-          blockCode: "main"
-        }]
+        blockDetails: RolesBlockDetails,
+        data: {
+          id: roleData.id,
+          title: roleData.title,
+          code: roleData.code,
+          default: roleData.default,
+          permissionTree
+        }
       }
     }
   }

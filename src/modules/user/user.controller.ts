@@ -3,15 +3,12 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
-  Delete,
   UseGuards,
   Req,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { ConfigService } from '@nestjs/config';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { Request } from 'express';
@@ -37,11 +34,6 @@ export class UserController {
     };
   }
 
-  @Get()
-  findAll() {
-    return this.userService.findAll();
-  }
-
   @Get('/current')
   @UseGuards(JwtAuthGuard)
   async getCurrent(@Req() req: Request) {
@@ -64,17 +56,7 @@ export class UserController {
     }
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() dto: UpdateUserDto) {
-    return this.userService.update(BigInt(id), dto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(BigInt(id));
-  }
-
-  @Get('table/current')
+  @Post('table/current')
   @TenantOptional()
   @UseGuards(JwtAuthGuard, TenantGuard)
   async getTableUser(@User() user: UserDB, @CurrentTenant({required: false}) projectId?: number): Promise<IApiResultResponse<IEntity>> {

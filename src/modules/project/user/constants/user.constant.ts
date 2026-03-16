@@ -27,5 +27,5 @@ export const UserToProjectColumns: ITableColumn[] = [
 ]
 
 export const UserToProjectBlocks: IBlock[] = [
-  {code: "main", name: "Пользователь", columnCapacity: 5, maxColumns: 2}
+  {code: "main", name: "Пользователь", columnCapacity: 5, maxColumns: 2, blockType: 'table'}
 ]

@@ -1,9 +1,8 @@
-import { Prisma } from "@prisma/client";
 import { IBlock, IBlockDetail } from "src/common/interfaces/ientity.interface";
 
 export const UserBlocks: IBlock[] = [
-  {name: "Пользователь", code: 'main', columnCapacity: 5, maxColumns: 2},
-  {name: "Проект", code: 'project', columnCapacity: 5, maxColumns: 1},
+  {name: "Пользователь", code: 'main', columnCapacity: 5, maxColumns: 2, blockType: 'table'},
+  {name: "Проект", code: 'project', columnCapacity: 5, maxColumns: 1, blockType: 'table'},
 ]
 
 export const UserBlockDetails: IBlockDetail[] = [
@@ -36,25 +35,25 @@ export const UserBlockDetails: IBlockDetail[] = [
     fields: [
       {
         title: "Текущий проект",
-        path: 'project.name',
+        path: 'userToProject.project.name',
         editable: false,
         type: 'string',
       },
       {
         title: "Роль в проекте",
-        path: 'userRole.title',
+        path: 'userToProject.userRole.title',
         editable: false,
         type: 'string',
       },
       {
         title: "Дата входа",
-        path: 'createdAt',
+        path: 'userToProject.createdAt',
         editable: false,
         type: 'datetime',
       },
       {
         title: "Заблокирован",
-        path: 'blocked',
+        path: 'userToProject.blocked',
         editable: false,
         type: 'boolean',
       }

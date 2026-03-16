@@ -6,7 +6,8 @@ export interface IBlock {
   code: string,
   name: string,
   columnCapacity: number,
-  maxColumns: number
+  maxColumns: number,
+  blockType: "table" | "tree"
 }
 
 export interface IField {
@@ -21,8 +22,12 @@ export interface IBlockDetail extends IBlockIndentifier {
   fields: IField[]
 }
 
+export interface IBlockTreeDetail extends IBlockIndentifier {
+  treePath: string
+}
+
 export interface IEntity {
   blocks: IBlock[]
-  blockDetails: IBlockDetail[] 
+  blockDetails: (IBlockDetail | IBlockTreeDetail)[]
   data: Record<string, any>
 }
