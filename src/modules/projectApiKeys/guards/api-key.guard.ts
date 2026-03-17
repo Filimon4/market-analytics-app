@@ -5,11 +5,11 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { ApiKeyService } from 'src/modules/apiKeys/apiKeys.service.js';
+import { ProjectApiKeyService } from 'src/modules/projectApiKeys/projectApiKeys.service.js';
 
 @Injectable()
 export class ApiKeyGuard implements CanActivate {
-  constructor(private readonly apiKeyService: ApiKeyService) {}
+  constructor(private readonly apiKeyService: ProjectApiKeyService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const req = context.switchToHttp().getRequest<Request>();

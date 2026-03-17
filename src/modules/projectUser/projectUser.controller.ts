@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, ParseIntPipe, Post, Query, UseGuards } from "@nestjs/common";
 import { PrismaService } from "src/common/db/prisma.service";
 import { TenantGuard } from "src/shared/tenant/guards/tenant.guard";
-import { JwtAuthGuard } from "../../auth/guards/jwt-auth.guard";
+import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { CurrentTenant } from "src/shared/tenant/decorators/current-tenant.decorator";
 import { ITableListResponse } from "src/common/interfaces/itable.interface";
 import { IEntity } from "src/common/interfaces/ientity.interface";
@@ -9,7 +9,7 @@ import { IApiResultResponse } from "src/common/interfaces/api.interface";
 import { Prisma } from "@prisma/client";
 import { GetUsersToProjectTableListDto } from "./dto/getUsersToProjectTableList.dto";
 import { TUsersToProjectResponse } from "./types/user.interface";
-import { UsersToProjectSelect, UserToProjectBlocks, UserToProjectColumns } from "./constants/user.constant";
+import { UsersToProjectSelect, UserToProjectBlockDetails, UserToProjectBlocks, UserToProjectColumns } from "./constants/user.constant";
 
 @Controller('project/user')
 @UseGuards(JwtAuthGuard, TenantGuard)
@@ -68,9 +68,12 @@ export class ProjectUserController {
    * Ручки для интерфейса. Возвращает данные для таблицы
    * @returns IEntity
    */
-  @Get('table/:userId')
-  async getTable(@CurrentTenant() projectId: number, @Param('userId', ParseIntPipe) userId: number): Promise<IApiResultResponse<IEntity>> {
-    const userToProjectWhereInput: Prisma.UserToProjectWhereInput = {}
+  @Get('table/:id')
+  async getTable(@CurrentTenant() projectId: number, @Param('id', ParseIntPipe) userId: number): Promise<IApiResultResponse<IEntity>> {
+    const userToProjectWhereInput: Prisma.UserToProjectWhereInput = {
+      projectId,
+      id: userId
+    }
 
     const userToProjectData = await this.prismaService.userToProject.findFirst({
       where: userToProjectWhereInput,
@@ -80,8 +83,8 @@ export class ProjectUserController {
     return {
       result: {
         blocks: UserToProjectBlocks,
-        blockDetails: [],
-        data: [{...{...userToProjectData, id: userToProjectData.id.toString()}, blockCode: 'main'}]
+        blockDetails: UserToProjectBlockDetails,
+        data: {...userToProjectData, id: userToProjectData.id.toString()}
       }
     }
   }

@@ -1,10 +1,10 @@
-import { Injectable, NotFoundException, UseGuards } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../common/db/prisma.service.js';
 import { UpdateApiKeyDto } from './dto/updateApiKey.dto.js';
 import { GetApiKeyDto } from './dto/getApiKey.dto.js';
 
 @Injectable()
-export class ApiKeyService {
+export class ProjectApiKeyService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async getById(id: bigint) {

@@ -1,11 +1,13 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { DbModule } from 'src/common/db/db.module';
-import { ApiKeyModule } from 'src/modules/apiKeys/apiKeys.module';
+import { ProjectApiKeyModule } from 'src/modules/projectApiKeys/projectApiKeys.module';
 import { AuthModule } from 'src/modules/auth/auth.module';
 import { ChannelModule } from 'src/modules/channel/channel.module';
 import { ChannelPerformanceModule } from 'src/modules/channelPerformance/channelPerformance.module';
-import { Project } from 'src/modules/project/project.module';
+import { ProjectModule } from 'src/modules/project/project.module';
+import { ProjectRoleModule } from 'src/modules/projectRole/projectRole.module';
+import { ProjectUserModule } from 'src/modules/projectUser/projectUser.module';
 import { StrategyModule } from 'src/modules/strategy/strategy.module';
 import { UserModule } from 'src/modules/user/user.module';
 import { TenantModule } from 'src/shared/tenant/tenant.module';
@@ -18,12 +20,16 @@ import { TenantModule } from 'src/shared/tenant/tenant.module';
     DbModule,
     TenantModule,
     AuthModule,
+    
     UserModule,
-    ApiKeyModule,
     StrategyModule,
     ChannelModule,
     ChannelPerformanceModule,
-    Project
+
+    ProjectModule,
+    ProjectApiKeyModule,
+    ProjectUserModule,
+    ProjectRoleModule
   ],
 })
 export class AppModule {}

@@ -3,7 +3,7 @@ model ApiKey {
   projectId BigInt
   name      String
   key       String
-  scope     String
+  scope     String // TODO: move to different table. | stirng permissionName | boolean read | boolean write. One to many
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt()
   expiresAt DateTime

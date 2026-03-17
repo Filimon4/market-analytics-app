@@ -2,11 +2,11 @@
 export interface ITableColumn {
   code: string;
   name: string;
-  type: 'string' | 'number' | 'boolean' | 'date' | 'select';
+  type: 'string' | 'number' | 'boolean' | 'date' | 'select' | 'constants';
   filtrable: boolean;
-  linkUrl?: string;
-  constantsData?: string[];
-  path?: string;
+  selectUrl?: string; // for select
+  constantList?: string[]; // for constant
+  path?: string; 
 }
 
 export interface ITableListResponse<T> {

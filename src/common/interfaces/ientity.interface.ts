@@ -15,7 +15,8 @@ export interface IField {
   editable: boolean,
   type: 'string' | 'number' | 'boolean' | 'date' | 'datetime' | 'select',
   path: string,
-  editPath?: string
+  editPath?: string,
+  selectUrl?: string
 }
 
 export interface IBlockDetail extends IBlockIndentifier {
