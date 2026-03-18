@@ -1,12 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { ChannelPerformanceService } from './channelPerformance.service';
 import { CreateChannelPerformanceDto } from './dto/createChannelPerformance.dto';
 import { UpdateChannelPerformanceDto } from './dto/updateChannelPerformance.dto';

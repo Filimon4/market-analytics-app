@@ -1,4 +1,3 @@
-
 export interface ITableColumn {
   code: string;
   name: string;
@@ -6,13 +5,13 @@ export interface ITableColumn {
   filtrable: boolean;
   selectUrl?: string; // for select
   constantList?: string[]; // for constant
-  path?: string; 
+  path?: string;
 }
 
 export interface ITableListResponse<T> {
-  columns: ITableColumn[],
-  data: T[],
-  page: number,
-  total: number,
-  maxPage: number
+  columns: ITableColumn[];
+  data: T[];
+  page: number;
+  total: number;
+  maxPage: number;
 }

@@ -1,8 +1,223 @@
 /* eslint-disable */
 export default async () => {
-    const t = {
-        ["./modules/projectRole/dto/getRolesTableList.dto"]: await import("./modules/projectRole/dto/getRolesTableList.dto"),
-        ["./modules/projectUser/dto/getUsersToProjectTableList.dto"]: await import("./modules/projectUser/dto/getUsersToProjectTableList.dto")
-    };
-    return { "@nestjs/swagger": { "models": [[import("./modules/projectApiKeys/dto/getApiKey.dto"), { "GetApiKeyDto": { search: { required: false, type: () => String }, statusId: { required: false, type: () => Number } } }], [import("./modules/projectApiKeys/dto/updateApiKey.dto"), { "UpdateApiKeyDto": { name: { required: false, type: () => String }, permissions: { required: false, type: () => String }, expiresAt: { required: false, type: () => String }, statusId: { required: false, type: () => Number } } }], [import("./modules/user/dto/create-user.dto"), { "CreateUserDto": { name: { required: true, type: () => String, minLength: 4 }, email: { required: true, type: () => String, format: "email" }, password: { required: true, type: () => String } } }], [import("./modules/user/dto/update-user.dto"), { "UpdateUserDto": {} }], [import("./modules/auth/dto/generateTokens.dto"), { "GenerateTokensDto": { email: { required: true, type: () => String, format: "email" }, id: { required: true, type: () => String } } }], [import("./modules/auth/dto/singup.dto"), { "SignUpDto": { email: { required: true, type: () => String, format: "email" }, name: { required: true, type: () => String, minLength: 5 }, password: { required: true, type: () => String } } }], [import("./modules/auth/dto/singin.dto"), { "SignInDto": { email: { required: true, type: () => String, format: "email" }, password: { required: true, type: () => String } } }], [import("./modules/channel/dto/createChannel.dto"), { "CreateChannelDto": { strategyId: { required: true, type: () => Number }, trafficSource: { required: true, type: () => String }, name: { required: true, type: () => String } } }], [import("./modules/channel/dto/updateChannel.dto"), { "UpdateChannelDto": {} }], [import("./modules/channelPerformance/dto/createChannelPerformance.dto"), { "CreateChannelPerformanceDto": { channelId: { required: true, type: () => BigInt, minimum: 1 }, name: { required: true, type: () => String }, startDate: { required: true, type: () => Date }, endDate: { required: true, type: () => Date }, impressions: { required: false, type: () => Number, default: 0 }, clicks: { required: false, type: () => Number, default: 0 }, spend: { required: false, type: () => Number, default: 0 }, conversions: { required: false, type: () => Number, default: 0 }, revenue: { required: false, type: () => Number, default: 0 } } }], [import("./modules/channelPerformance/dto/updateChannelPerformance.dto"), { "UpdateChannelPerformanceDto": {} }], [import("./modules/project/dto/createProject.dto"), { "CreateProjectDto": { name: { required: true, type: () => String }, description: { required: true, type: () => String } } }], [import("./modules/project/dto/getProject.dto"), { "GetProjectDto": { userToProjectId: { required: false, type: () => BigInt } } }], [import("./modules/projectRole/dto/createRole.dto"), { "CreateRoleDto": { code: { required: true, type: () => String } } }], [import("./modules/project/dto/getPanel.dto"), { "GetPanelDto": { roleId: { required: true, type: () => Number } } }], [import("./modules/projectRole/dto/getRolesTableList.dto"), { "RolesTableFilterDto": { code: { required: false, type: () => String }, title: { required: false, type: () => String }, default: { required: false, type: () => Boolean } }, "GetRolesTableListDto": { filter: { required: true, type: () => t["./modules/projectRole/dto/getRolesTableList.dto"].RolesTableFilterDto }, page: { required: true, type: () => Number, default: 1, minimum: 1 }, size: { required: true, type: () => Number, default: 10, minimum: 1, maximum: 50 } } }], [import("./modules/projectUser/dto/getUsersToProjectTableList.dto"), { "UsersToProjectTableRoleDto": { id: { required: true, type: () => Number } }, "UsersToProjectTableListFilterDto": { blocked: { required: false, type: () => Boolean }, role: { required: false, type: () => t["./modules/projectUser/dto/getUsersToProjectTableList.dto"].UsersToProjectTableRoleDto }, userName: { required: false, type: () => String }, userEmail: { required: false, type: () => String } }, "GetUsersToProjectTableListDto": { filter: { required: true, type: () => t["./modules/projectUser/dto/getUsersToProjectTableList.dto"].UsersToProjectTableListFilterDto }, page: { required: true, type: () => Number, default: 1, minimum: 1 }, size: { required: true, type: () => Number, default: 10, minimum: 1, maximum: 50 } } }], [import("./modules/strategy/dto/createStrategy.dto"), { "CreateStrategyDto": { name: { required: true, type: () => String }, description: { required: true, type: () => String }, projectId: { required: true, type: () => Number } } }], [import("./modules/strategy/dto/updateStrategy.dto"), { "UpdateStrategyDto": {} }], [import("./modules/projectApiKeys/dto/createApiKey.dto"), { "CreateApiKeyDto": { name: { required: true, type: () => String }, permissions: { required: true, type: () => String }, expiresAt: { required: true, type: () => String }, statusId: { required: true, type: () => Number } } }]], "controllers": [[import("./modules/projectApiKeys/projectApiKeys.controller"), { "ProjectApiKeyController": { "getById": {}, "getList": {}, "update": {}, "getTableList": {}, "getTableEntity": {} } }], [import("./modules/user/user.controller"), { "UserController": { "create": {}, "getCurrent": {}, "findOne": {}, "getTableUser": {} } }], [import("./modules/auth/auth.controller"), { "AuthController": { "singup": {}, "signin": {}, "refresh": {} } }], [import("./modules/channel/channel.controller"), { "ChannelController": { "create": {}, "findAll": {}, "findOne": {}, "update": {}, "remove": {} } }], [import("./modules/channelPerformance/channelPerformance.controller"), { "ChannelPerformanceController": { "create": {}, "findAll": {}, "findOne": {}, "update": {}, "remove": {} } }], [import("./modules/project/projectGlobal.controller"), { "ProjectGlobalController": { "all": {}, "get": {}, "create": {} } }], [import("./modules/project/project.controller"), { "ProjectController": { "get": {}, "getPanel": {} } }], [import("./modules/projectRole/projectRole.controller"), { "ProjectRoleController": { "createRole": {}, "getRole": {}, "getTableList": {}, "getTable": {} } }], [import("./modules/projectUser/projectUser.controller"), { "ProjectUserController": { "getTableList": {}, "getTable": {} } }], [import("./modules/strategy/strategy.controller"), { "StrategyController": { "create": {}, "findAll": {}, "findOne": {}, "update": {}, "remove": {} } }]] } };
+  const t = {
+    ['./modules/projectRole/dto/getRolesTableList.dto']:
+      await import('./modules/projectRole/dto/getRolesTableList.dto'),
+    ['./modules/projectUser/dto/getUsersToProjectTableList.dto']:
+      await import('./modules/projectUser/dto/getUsersToProjectTableList.dto'),
+  };
+  return {
+    '@nestjs/swagger': {
+      models: [
+        [
+          import('./modules/projectApiKeys/dto/getApiKey.dto'),
+          {
+            GetApiKeyDto: {
+              search: { required: false, type: () => String },
+              statusId: { required: false, type: () => Number },
+            },
+          },
+        ],
+        [
+          import('./modules/projectApiKeys/dto/updateApiKey.dto'),
+          {
+            UpdateApiKeyDto: {
+              name: { required: false, type: () => String },
+              permissions: { required: false, type: () => String },
+              expiresAt: { required: false, type: () => String },
+              statusId: { required: false, type: () => Number },
+            },
+          },
+        ],
+        [
+          import('./modules/user/dto/create-user.dto'),
+          {
+            CreateUserDto: {
+              name: { required: true, type: () => String, minLength: 4 },
+              email: { required: true, type: () => String, format: 'email' },
+              password: { required: true, type: () => String },
+            },
+          },
+        ],
+        [import('./modules/user/dto/update-user.dto'), { UpdateUserDto: {} }],
+        [
+          import('./modules/auth/dto/generateTokens.dto'),
+          {
+            GenerateTokensDto: {
+              email: { required: true, type: () => String, format: 'email' },
+              id: { required: true, type: () => String },
+            },
+          },
+        ],
+        [
+          import('./modules/auth/dto/singup.dto'),
+          {
+            SignUpDto: {
+              email: { required: true, type: () => String, format: 'email' },
+              name: { required: true, type: () => String, minLength: 5 },
+              password: { required: true, type: () => String },
+            },
+          },
+        ],
+        [
+          import('./modules/auth/dto/singin.dto'),
+          {
+            SignInDto: {
+              email: { required: true, type: () => String, format: 'email' },
+              password: { required: true, type: () => String },
+            },
+          },
+        ],
+        [
+          import('./modules/channel/dto/createChannel.dto'),
+          {
+            CreateChannelDto: {
+              strategyId: { required: true, type: () => Number },
+              trafficSource: { required: true, type: () => String },
+              name: { required: true, type: () => String },
+            },
+          },
+        ],
+        [import('./modules/channel/dto/updateChannel.dto'), { UpdateChannelDto: {} }],
+        [
+          import('./modules/channelPerformance/dto/createChannelPerformance.dto'),
+          {
+            CreateChannelPerformanceDto: {
+              channelId: { required: true, type: () => BigInt, minimum: 1 },
+              name: { required: true, type: () => String },
+              startDate: { required: true, type: () => Date },
+              endDate: { required: true, type: () => Date },
+              impressions: { required: false, type: () => Number, default: 0 },
+              clicks: { required: false, type: () => Number, default: 0 },
+              spend: { required: false, type: () => Number, default: 0 },
+              conversions: { required: false, type: () => Number, default: 0 },
+              revenue: { required: false, type: () => Number, default: 0 },
+            },
+          },
+        ],
+        [import('./modules/channelPerformance/dto/updateChannelPerformance.dto'), { UpdateChannelPerformanceDto: {} }],
+        [
+          import('./modules/project/dto/createProject.dto'),
+          {
+            CreateProjectDto: {
+              name: { required: true, type: () => String },
+              description: { required: true, type: () => String },
+            },
+          },
+        ],
+        [
+          import('./modules/project/dto/getProject.dto'),
+          { GetProjectDto: { userToProjectId: { required: false, type: () => BigInt } } },
+        ],
+        [
+          import('./modules/projectRole/dto/createRole.dto'),
+          { CreateRoleDto: { code: { required: true, type: () => String } } },
+        ],
+        [
+          import('./modules/project/dto/getPanel.dto'),
+          { GetPanelDto: { roleId: { required: true, type: () => Number } } },
+        ],
+        [
+          import('./modules/projectRole/dto/getRolesTableList.dto'),
+          {
+            RolesTableFilterDto: {
+              code: { required: false, type: () => String },
+              title: { required: false, type: () => String },
+              default: { required: false, type: () => Boolean },
+            },
+            GetRolesTableListDto: {
+              filter: {
+                required: true,
+                type: () => t['./modules/projectRole/dto/getRolesTableList.dto'].RolesTableFilterDto,
+              },
+              page: { required: true, type: () => Number, default: 1, minimum: 1 },
+              size: { required: true, type: () => Number, default: 10, minimum: 1, maximum: 50 },
+            },
+          },
+        ],
+        [
+          import('./modules/projectUser/dto/getUsersToProjectTableList.dto'),
+          {
+            UsersToProjectTableRoleDto: { id: { required: true, type: () => Number } },
+            UsersToProjectTableListFilterDto: {
+              blocked: { required: false, type: () => Boolean },
+              role: {
+                required: false,
+                type: () => t['./modules/projectUser/dto/getUsersToProjectTableList.dto'].UsersToProjectTableRoleDto,
+              },
+              userName: { required: false, type: () => String },
+              userEmail: { required: false, type: () => String },
+            },
+            GetUsersToProjectTableListDto: {
+              filter: {
+                required: true,
+                type: () =>
+                  t['./modules/projectUser/dto/getUsersToProjectTableList.dto'].UsersToProjectTableListFilterDto,
+              },
+              page: { required: true, type: () => Number, default: 1, minimum: 1 },
+              size: { required: true, type: () => Number, default: 10, minimum: 1, maximum: 50 },
+            },
+          },
+        ],
+        [
+          import('./modules/strategy/dto/createStrategy.dto'),
+          {
+            CreateStrategyDto: {
+              name: { required: true, type: () => String },
+              description: { required: true, type: () => String },
+              projectId: { required: true, type: () => Number },
+            },
+          },
+        ],
+        [import('./modules/strategy/dto/updateStrategy.dto'), { UpdateStrategyDto: {} }],
+        [
+          import('./modules/projectApiKeys/dto/createApiKey.dto'),
+          {
+            CreateApiKeyDto: {
+              name: { required: true, type: () => String },
+              permissions: { required: true, type: () => String },
+              expiresAt: { required: true, type: () => String },
+              statusId: { required: true, type: () => Number },
+            },
+          },
+        ],
+      ],
+      controllers: [
+        [
+          import('./modules/projectApiKeys/projectApiKeys.controller'),
+          { ProjectApiKeyController: { getById: {}, getList: {}, update: {}, getTableList: {}, getTableEntity: {} } },
+        ],
+        [
+          import('./modules/user/user.controller'),
+          { UserController: { create: {}, getCurrent: {}, findOne: {}, getTableUser: {} } },
+        ],
+        [import('./modules/auth/auth.controller'), { AuthController: { singup: {}, signin: {}, refresh: {} } }],
+        [
+          import('./modules/channel/channel.controller'),
+          { ChannelController: { create: {}, findAll: {}, findOne: {}, update: {}, remove: {} } },
+        ],
+        [
+          import('./modules/channelPerformance/channelPerformance.controller'),
+          { ChannelPerformanceController: { create: {}, findAll: {}, findOne: {}, update: {}, remove: {} } },
+        ],
+        [
+          import('./modules/project/projectGlobal.controller'),
+          { ProjectGlobalController: { all: {}, get: {}, create: {} } },
+        ],
+        [import('./modules/project/project.controller'), { ProjectController: { get: {}, getPanel: {} } }],
+        [
+          import('./modules/projectRole/projectRole.controller'),
+          { ProjectRoleController: { createRole: {}, getRole: {}, getTableList: {}, getTable: {} } },
+        ],
+        [
+          import('./modules/projectUser/projectUser.controller'),
+          { ProjectUserController: { getTableList: {}, getTable: {} } },
+        ],
+        [
+          import('./modules/strategy/strategy.controller'),
+          { StrategyController: { create: {}, findAll: {}, findOne: {}, update: {}, remove: {} } },
+        ],
+      ],
+    },
+  };
 };

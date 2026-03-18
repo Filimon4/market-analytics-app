@@ -13,7 +13,6 @@ export class MinFilledPropertiesConstraint implements ValidatorConstraintInterfa
     const object = args.object as Record<string, any>;
 
     const filledCount = Object.entries(object).filter(([key, val]) => {
-
       return val !== undefined && val !== null;
     }).length;
 
@@ -26,10 +25,7 @@ export class MinFilledPropertiesConstraint implements ValidatorConstraintInterfa
   }
 }
 
-export function MinFilledProperties(
-  minCount: number,
-  validationOptions?: ValidationOptions,
-) {
+export function MinFilledProperties(minCount: number, validationOptions?: ValidationOptions) {
   return function (object: object, propertyName: string) {
     registerDecorator({
       target: object.constructor,

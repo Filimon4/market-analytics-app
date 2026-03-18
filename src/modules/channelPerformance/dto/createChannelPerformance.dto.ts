@@ -1,12 +1,5 @@
 import { Type } from 'class-transformer';
-import {
-  IsString,
-  IsNotEmpty,
-  IsNumber,
-  IsDate,
-  IsOptional,
-  IsPositive,
-} from 'class-validator';
+import { IsString, IsNotEmpty, IsNumber, IsDate, IsOptional, IsPositive } from 'class-validator';
 
 export class CreateChannelPerformanceDto {
   @IsNotEmpty()

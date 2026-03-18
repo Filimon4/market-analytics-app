@@ -60,8 +60,8 @@ export class ChannelPerformanceService {
       data: {
         channel: {
           connect: {
-            id: dto.channelId
-          }
+            id: dto.channelId,
+          },
         },
         clicks: dto.clicks,
         conversions: dto.conversions,
@@ -70,15 +70,15 @@ export class ChannelPerformanceService {
         revenue: dto.revenue,
         spend: dto.spend,
         startDate: dto.startDate,
-        endDate: dto.endDate
+        endDate: dto.endDate,
       },
     });
 
     return {
       ...performance,
       id: performance.id.toString(),
-      channelId: performance.channelId.toString()
-    }
+      channelId: performance.channelId.toString(),
+    };
   }
 
   async remove(id: string) {

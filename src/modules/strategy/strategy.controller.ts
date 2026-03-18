@@ -1,12 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { StrategyService } from './strategy.service';
 import { CreateStrategyDto } from './dto/createStrategy.dto.js';
 import { UpdateStrategyDto } from './dto/updateStrategy.dto.js';

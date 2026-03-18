@@ -16,7 +16,7 @@ export class ChannelService {
             id: dto.strategyId,
           },
         },
-        name: dto.name
+        name: dto.name,
       },
     });
 
@@ -39,7 +39,7 @@ export class ChannelService {
       strategy: {
         ...channel.strategy,
         id: channel.strategy.id.toString(),
-        projectId: channel.strategy.projectId.toString()
+        projectId: channel.strategy.projectId.toString(),
       },
     }));
   }
@@ -59,27 +59,30 @@ export class ChannelService {
       strategy: {
         ...channel.strategy,
         id: channel.strategy.id.toString(),
-        projectId: channel.strategy.projectId.toString()
+        projectId: channel.strategy.projectId.toString(),
       },
     };
   }
 
   async update(id: bigint, dto: UpdateChannelDto) {
-    const strategy = await this.prisma.channel.update({ where: { id }, data: {
-      strategy: {
-        connect: {
-          id: dto.strategyId
-        }
+    const strategy = await this.prisma.channel.update({
+      where: { id },
+      data: {
+        strategy: {
+          connect: {
+            id: dto.strategyId,
+          },
+        },
+        trafficSource: dto.trafficSource,
+        name: dto.name,
       },
-      trafficSource: dto.trafficSource,
-      name: dto.name
-    } });
+    });
 
     return {
       ...strategy,
       id: strategy.id.toString(),
-      strategyId: strategy.strategyId.toString()
-    }
+      strategyId: strategy.strategyId.toString(),
+    };
   }
 
   async remove(id: bigint) {

@@ -30,7 +30,7 @@ async function bootstrap() {
       transformOptions: { exposeDefaultValues: true },
     }),
   );
-  app.setGlobalPrefix('api')
+  app.setGlobalPrefix('api');
   app.enableVersioning({
     defaultVersion: '1',
     type: VersioningType.URI,
@@ -39,9 +39,7 @@ async function bootstrap() {
   app.useGlobalFilters(new ExceptionsLogger());
 
   const configService = app.get(ConfigService);
-  const swaggerPrefixURL = configService.get<string>(
-    EnvironmentVariablesType.HTTP_OPEN_API_PREFIX,
-  )!;
+  const swaggerPrefixURL = configService.get<string>(EnvironmentVariablesType.HTTP_OPEN_API_PREFIX)!;
 
   const config = new DocumentBuilder()
     .setTitle('My API')
@@ -66,18 +64,16 @@ async function bootstrap() {
     .build();
 
   const developerDocument = SwaggerModule.createDocument(app, developerConfig, {
-    include: [AuthPublicModule]
-  })
-  SwaggerModule.setup('open-crm-api', app, developerDocument)
+    include: [AuthPublicModule],
+  });
+  SwaggerModule.setup('open-crm-api', app, developerDocument);
 
   const logger = new Logger('Bootstrap');
   const port = configService.get<number>(EnvironmentVariablesType.HTTP_PORT)!;
   const host = configService.get<string>(EnvironmentVariablesType.HTTP_HOST)!;
 
   await app.listen(port, host).then(() => {
-    (logger.log(
-      `📚 Swagger доступен по адресу https://127.0.0.1:${port}${swaggerPrefixURL}`,
-    ),
+    (logger.log(`📚 Swagger доступен по адресу https://127.0.0.1:${port}${swaggerPrefixURL}`),
       logger.log(`🚀 Приложение запущено по адресу https://127.0.0.1:${port}`));
   });
 }

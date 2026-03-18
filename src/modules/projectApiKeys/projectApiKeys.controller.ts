@@ -1,14 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  Patch,
-  Query,
-  ParseIntPipe,
-  Post,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Query, ParseIntPipe, Post, UseGuards } from '@nestjs/common';
 
 import { GetApiKeyDto } from './dto/getApiKey.dto';
 import { UpdateApiKeyDto } from './dto/updateApiKey.dto';
@@ -28,7 +18,10 @@ import { IEntity } from 'src/common/interfaces/ientity.interface';
 @Controller('project/api-keys')
 @UseGuards(JwtAuthGuard, TenantGuard)
 export class ProjectApiKeyController {
-  constructor(private readonly apiKeyService: ProjectApiKeyService, private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly apiKeyService: ProjectApiKeyService,
+    private readonly prismaService: PrismaService,
+  ) {}
 
   @Get(':id')
   getById(@Param('id', ParseIntPipe) id: number) {
@@ -45,63 +38,69 @@ export class ProjectApiKeyController {
     return this.apiKeyService.update(BigInt(id), dto);
   }
 
-  @Post("/table/list")
-  async getTableList(@CurrentTenant() projectId: number, @Body() dto: GetApiKeysTableListDto): Promise<IApiResultResponse<ITableListResponse<TProjectApiKeysResponse>>> {
+  @Post('/table/list')
+  async getTableList(
+    @CurrentTenant() projectId: number,
+    @Body() dto: GetApiKeysTableListDto,
+  ): Promise<IApiResultResponse<ITableListResponse<TProjectApiKeysResponse>>> {
     const whereApiKeyInput: Prisma.ApiKeyWhereInput = {
-      projectId: projectId
-    }
+      projectId: projectId,
+    };
 
     if (dto.filter.key) {
-      whereApiKeyInput.key = {contains: dto.filter.key}
+      whereApiKeyInput.key = { contains: dto.filter.key };
     }
 
     if (dto.filter.name) {
-      whereApiKeyInput.name = {contains: dto.filter.name}
+      whereApiKeyInput.name = { contains: dto.filter.name };
     }
 
     if (dto.filter.scope) {
-      whereApiKeyInput.scope = {contains: dto.filter.scope}
+      whereApiKeyInput.scope = { contains: dto.filter.scope };
     }
 
     if (dto.filter.status) {
       whereApiKeyInput.status = {
         code: {
-          contains: dto.filter.status
-        }
-      }
+          contains: dto.filter.status,
+        },
+      };
     }
 
-    const total = await this.prismaService.apiKey.count({ where: whereApiKeyInput, orderBy: {id: 'asc'} });
+    const total = await this.prismaService.apiKey.count({ where: whereApiKeyInput, orderBy: { id: 'asc' } });
     const dataApiKeys = await this.prismaService.apiKey.findMany({
       where: whereApiKeyInput,
       select: ApiKeysSelect,
-      orderBy: {id: 'asc'},
+      orderBy: { id: 'asc' },
       take: dto.size,
-      skip: (dto.page - 1) * dto.size
-    })
+      skip: (dto.page - 1) * dto.size,
+    });
 
     return {
       result: {
         columns: ApiKeysColumns,
-        data: dataApiKeys.map((key) => ({...key, id: key.id.toString()})),
+        data: dataApiKeys.map((key) => ({ ...key, id: key.id.toString() })),
         page: 0,
         total,
         maxPage: Math.max(Math.ceil(total / dto.size), 1),
-      }
-    }
+      },
+    };
   }
 
   @Get('/table/:id')
-  async getTableEntity(@CurrentTenant() projectId: number, @Param('id', ParseIntPipe) apiKeyId: number): Promise<IApiResultResponse<IEntity>> {
+  async getTableEntity(
+    @CurrentTenant() projectId: number,
+    @Param('id', ParseIntPipe) apiKeyId: number,
+  ): Promise<IApiResultResponse<IEntity>> {
     const rolesWhereInput: Prisma.ApiKeyWhereUniqueInput = {
       projectId,
       id: apiKeyId,
-    }
+    };
 
     const apiKeyData = await this.prismaService.apiKey.findUnique({
       where: rolesWhereInput,
       select: ApiKeysSelect,
-    })
+    });
 
     return {
       result: {
@@ -109,9 +108,9 @@ export class ProjectApiKeyController {
         blockDetails: ApiKeysBlockDetails,
         data: {
           ...apiKeyData,
-          id: apiKeyData.id.toString()
-        }
-      }
-    }
+          id: apiKeyData.id.toString(),
+        },
+      },
+    };
   }
 }

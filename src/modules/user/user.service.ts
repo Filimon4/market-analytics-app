@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/common/db/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -11,20 +7,25 @@ import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly prismaService: PrismaService, private readonly configService: ConfigService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly configService: ConfigService,
+  ) {}
 
   async create(dto: CreateUserDto): Promise<User> {
-    const user = await this.prismaService.user.create({
-      data: {
-        email: dto.email,
-        name: dto.name,
-        password: dto.password,
-      },
-    }).catch(() => {
-      throw new BadRequestException('Failed to create user');
-    })
+    const user = await this.prismaService.user
+      .create({
+        data: {
+          email: dto.email,
+          name: dto.name,
+          password: dto.password,
+        },
+      })
+      .catch(() => {
+        throw new BadRequestException('Failed to create user');
+      });
 
-    return user
+    return user;
   }
 
   async findAll() {
@@ -40,7 +41,7 @@ export class UserService {
 
     if (!user) throw new NotFoundException('User not found');
 
-    return user
+    return user;
   }
 
   async findById(id: bigint): Promise<User> {
@@ -50,7 +51,7 @@ export class UserService {
 
     if (!user) throw new NotFoundException('User not found');
 
-    return user
+    return user;
   }
 
   async update(id: bigint, dto: UpdateUserDto) {
@@ -64,25 +65,25 @@ export class UserService {
   async getTableUser(user: User, projectId?: number) {
     const userInfo = {
       user: {},
-      userToProject: {}
-    }
+      userToProject: {},
+    };
 
     const userData = await this.prismaService.user.findUnique({
       where: {
-        id: user.id
+        id: user.id,
       },
       select: {
         id: true,
         email: true,
         name: true,
-        createdAt: true
-      }
-    })
+        createdAt: true,
+      },
+    });
 
     userInfo.user = {
       ...userData,
-      id: userData.id.toString()
-    }
+      id: userData.id.toString(),
+    };
 
     if (projectId) {
       const userToProjectData = await this.prismaService.userToProject.findFirst({
@@ -93,31 +94,31 @@ export class UserService {
             select: {
               id: true,
               code: true,
-              title: true
-            }
+              title: true,
+            },
           },
           project: {
             select: {
               id: true,
               name: true,
               description: true,
-            }
-          }
+            },
+          },
         },
         where: {
-          projectId
+          projectId,
         },
-      })
+      });
 
       userInfo.userToProject = {
         ...userToProjectData,
         project: {
           ...userToProjectData.project,
-          id: userToProjectData.project.id.toString()
-        }
-      }
+          id: userToProjectData.project.id.toString(),
+        },
+      };
     }
 
-    return userInfo
+    return userInfo;
   }
 }

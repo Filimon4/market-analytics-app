@@ -1,39 +1,39 @@
-import { Type } from "class-transformer"
-import { IsNotEmpty, IsNumber, IsOptional, IsString, Max, Min, ValidateNested } from "class-validator"
+import { Type } from 'class-transformer';
+import { IsNotEmpty, IsNumber, IsOptional, IsString, Max, Min, ValidateNested } from 'class-validator';
 
 export class ApiKeysTableFilterDto {
   @IsOptional()
   @IsString()
-  name?: string
-  
+  name?: string;
+
   @IsOptional()
   @IsString()
-  key?: string
-  
+  key?: string;
+
   @IsOptional()
   @IsString()
-  scope?: string
-  
+  scope?: string;
+
   @IsOptional()
-  status?: string
+  status?: string;
 }
 
 export class GetApiKeysTableListDto {
   @IsOptional()
   @ValidateNested()
   @Type(() => ApiKeysTableFilterDto)
-  filter: ApiKeysTableFilterDto = {}
+  filter: ApiKeysTableFilterDto = {};
 
   @IsNotEmpty()
   @Type(() => Number)
   @IsNumber()
   @Min(1)
-  page: number = 1
+  page: number = 1;
 
   @IsNotEmpty()
   @Type(() => Number)
   @IsNumber()
   @Min(1)
   @Max(50)
-  size: number = 10
+  size: number = 10;
 }

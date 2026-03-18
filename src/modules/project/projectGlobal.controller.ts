@@ -1,11 +1,11 @@
-import { Body, Controller, Get, NotFoundException, Post, Query, UseGuards } from "@nestjs/common";
-import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
-import { PrismaService } from "src/common/db/prisma.service";
-import { User } from "src/common/decorators/user.decorator";
-import { CreateProjectDto } from "./dto/createProject.dto";
-import { Prisma, User as UserDB } from "@prisma/client";
-import { EPermissionCode } from "./constants";
-import { GetProjectDto } from "./dto/getProject.dto";
+import { Body, Controller, Get, NotFoundException, Post, Query, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { PrismaService } from 'src/common/db/prisma.service';
+import { User } from 'src/common/decorators/user.decorator';
+import { CreateProjectDto } from './dto/createProject.dto';
+import { Prisma, User as UserDB } from '@prisma/client';
+import { EPermissionCode } from './constants';
+import { GetProjectDto } from './dto/getProject.dto';
 
 @Controller('global/project')
 @UseGuards(JwtAuthGuard)
@@ -27,13 +27,21 @@ export class ProjectGlobalController {
           select: {
             id: true,
             name: true,
-            description: true
-          }
-        }
-      }
-    })
+            description: true,
+          },
+        },
+      },
+    });
 
-    return {result: projects.map((proj) => ({...proj, id: proj.id.toString(), projectId: proj.projectId.toString(), roleId: proj.roleId.toString(), project: {...proj.project, id: proj.project.id.toString()}}))}
+    return {
+      result: projects.map((proj) => ({
+        ...proj,
+        id: proj.id.toString(),
+        projectId: proj.projectId.toString(),
+        roleId: proj.roleId.toString(),
+        project: { ...proj.project, id: proj.project.id.toString() },
+      })),
+    };
   }
 
   @Get()
@@ -41,39 +49,39 @@ export class ProjectGlobalController {
     const whereProject: Prisma.ProjectWhereInput = {
       userToProject: {
         every: {
-          userId: user.id
-        }
+          userId: user.id,
+        },
       },
-    }
+    };
 
-    const andWhereProject: Prisma.ProjectWhereInput['AND'] = []
+    const andWhereProject: Prisma.ProjectWhereInput['AND'] = [];
 
     if (dto.userToProjectId) {
       andWhereProject.push({
         userToProject: {
           every: {
-            id: dto.userToProjectId
-          }
-        }
-      })
+            id: dto.userToProjectId,
+          },
+        },
+      });
     }
 
-    whereProject.AND = andWhereProject
+    whereProject.AND = andWhereProject;
 
     const project = await this.prismaService.project.findFirst({
       where: whereProject,
       select: {
         id: true,
         name: true,
-        description: true
-      }
-    })
+        description: true,
+      },
+    });
 
     if (!project) {
-      throw new NotFoundException('There is not project')
+      throw new NotFoundException('There is not project');
     }
 
-    return {result: {...project, id: project.id.toString()}}
+    return { result: { ...project, id: project.id.toString() } };
   }
 
   @Post()
@@ -88,14 +96,14 @@ export class ProjectGlobalController {
           id: true,
           name: true,
           description: true,
-        }
-      })
+        },
+      });
 
       const defaultRoles = [
-        {code: "owner", title: "Ген. дир."},
-        {code: "analytic", title: "Аналитик"},
-        {code: "marketing", title: "Маркетолог"},
-      ]
+        { code: 'owner', title: 'Ген. дир.' },
+        { code: 'analytic', title: 'Аналитик' },
+        { code: 'marketing', title: 'Маркетолог' },
+      ];
 
       const defaultPermissions = {
         ['analytic']: {
@@ -111,65 +119,72 @@ export class ProjectGlobalController {
           [EPermissionCode.PANEL_MARKETING_CHANNELS]: true,
           [EPermissionCode.PANEL_MARKETING_CHANNELS_PERFORMANCE]: true,
           [EPermissionCode.PANEL_MARKETING_STRATEGY]: true,
-        }
-      }
+        },
+      };
 
       const roles = await mng.role.createManyAndReturn({
-        data: defaultRoles.map((rol) => ({
-          code: rol.code,
-          projectId: project.id,
-          default: true,
-          title: rol.title
-        }) as Prisma.RoleCreateManyInput),
+        data: defaultRoles.map(
+          (rol) =>
+            ({
+              code: rol.code,
+              projectId: project.id,
+              default: true,
+              title: rol.title,
+            }) as Prisma.RoleCreateManyInput,
+        ),
         skipDuplicates: true,
         select: {
           id: true,
-          code: true
-        }
-      })
+          code: true,
+        },
+      });
 
-      const ownerRole = roles.find((r) => r.code === 'owner')
+      const ownerRole = roles.find((r) => r.code === 'owner');
 
       const userPersmissions = await mng.permission.findMany({
         select: {
           id: true,
           code: true,
-          parentId: true
-        }
-      })
+          parentId: true,
+        },
+      });
 
       await mng.rolePermission.createMany({
-        data: roles.flatMap((role) => userPersmissions.map(per => ({
-          userRoleId: role.id,
-          userPermissionId: per.id,
-          granted: role.code === 'owner' ? true : defaultPermissions[role.code][per.code] || false
-        }) as unknown as Prisma.RolePermissionCreateManyInput))
-      })
-      
+        data: roles.flatMap((role) =>
+          userPersmissions.map(
+            (per) =>
+              ({
+                userRoleId: role.id,
+                userPermissionId: per.id,
+                granted: role.code === 'owner' ? true : defaultPermissions[role.code][per.code] || false,
+              }) as unknown as Prisma.RolePermissionCreateManyInput,
+          ),
+        ),
+      });
+
       await mng.userToProject.create({
         data: {
           blocked: false,
           project: {
             connect: {
-              id: project.id
-            }
+              id: project.id,
+            },
           },
           user: {
             connect: {
               id: user.id,
-              email: user.email
-            }
+              email: user.email,
+            },
           },
           userRole: {
             connect: {
-              id: ownerRole.id
-            }
-          }
-        }
-      })
+              id: ownerRole.id,
+            },
+          },
+        },
+      });
 
-      return {...project, id: String(project.id)}
-    })
+      return { ...project, id: String(project.id) };
+    });
   }
-
 }

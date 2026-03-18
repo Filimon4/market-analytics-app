@@ -24,9 +24,7 @@ export class ProjectApiKeyService {
   async getList(dto: GetApiKeyDto) {
     const list = await this.prismaService.apiKey.findMany({
       where: {
-        name: dto.search
-          ? { contains: dto.search, mode: 'insensitive' }
-          : undefined,
+        name: dto.search ? { contains: dto.search, mode: 'insensitive' } : undefined,
         statusId: dto.statusId ?? undefined,
       },
       orderBy: { createdAt: 'desc' },
@@ -39,7 +37,7 @@ export class ProjectApiKeyService {
     }));
   }
 
-  // TODO: After tenant id 
+  // TODO: After tenant id
   // @UseGuards(RoleGuard('2'))
   // async create(user: User, dto: CreateApiKeyDto) {
   //   const key = `api_${Date.now()}_${randomUUID()}`;
@@ -52,7 +50,7 @@ export class ProjectApiKeyService {
   //       expiresAt: dto.expiresAt,
   //       project: {
   //         connect: {
-  //           id: 
+  //           id:
   //         }
   //       },
   //       status: {
@@ -83,8 +81,7 @@ export class ProjectApiKeyService {
 
     if (dto.name !== undefined) updateData.name = dto.name;
     if (dto.permissions !== undefined) updateData.permissions = dto.permissions;
-    if (dto.expiresAt !== undefined)
-      updateData.expiresAt = new Date(dto.expiresAt);
+    if (dto.expiresAt !== undefined) updateData.expiresAt = new Date(dto.expiresAt);
     if (dto.statusId !== undefined) updateData.statusId = dto.statusId;
 
     return this.prismaService.apiKey.update({

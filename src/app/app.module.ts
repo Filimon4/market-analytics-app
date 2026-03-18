@@ -20,7 +20,7 @@ import { TenantModule } from 'src/shared/tenant/tenant.module';
     DbModule,
     TenantModule,
     AuthModule,
-    
+
     UserModule,
     StrategyModule,
     ChannelModule,
@@ -29,7 +29,7 @@ import { TenantModule } from 'src/shared/tenant/tenant.module';
     ProjectModule,
     ProjectApiKeyModule,
     ProjectUserModule,
-    ProjectRoleModule
+    ProjectRoleModule,
   ],
 })
 export class AppModule {}

@@ -1,6 +1,6 @@
-import { Prisma } from "@prisma/client"
-import { IBlock, IBlockDetail } from "src/common/interfaces/ientity.interface"
-import { ITableColumn } from "src/common/interfaces/itable.interface"
+import { Prisma } from '@prisma/client';
+import { IBlock, IBlockDetail } from 'src/common/interfaces/ientity.interface';
+import { ITableColumn } from 'src/common/interfaces/itable.interface';
 
 export const UsersToProjectSelect: Prisma.UserToProjectSelect = {
   id: true,
@@ -9,28 +9,28 @@ export const UsersToProjectSelect: Prisma.UserToProjectSelect = {
     select: {
       id: true,
       title: true,
-      code: true
-    }
+      code: true,
+    },
   },
   user: {
     select: {
       name: true,
       email: true,
-    }
-  }
-}
+    },
+  },
+};
 
 export const UserToProjectColumns: ITableColumn[] = [
-  {code: 'id', name: 'Инд.', type: 'number', filtrable: false},
-  {code: 'role', name: 'Роль', type: 'select', selectUrl: '', path: 'userRole.title', filtrable: true},
-  {code: 'userName', name: 'Имя пользователя', type: 'string', path: 'user.name', filtrable: true},
-  {code: 'userEmail', name: 'Почта пользователя', type: 'string', path: 'user.email', filtrable: true},
-  {code: 'blocked', name: "Заблокирован", type: "boolean", filtrable: true},
-]
+  { code: 'id', name: 'Инд.', type: 'number', filtrable: false },
+  { code: 'role', name: 'Роль', type: 'select', selectUrl: '', path: 'userRole.title', filtrable: true },
+  { code: 'userName', name: 'Имя пользователя', type: 'string', path: 'user.name', filtrable: true },
+  { code: 'userEmail', name: 'Почта пользователя', type: 'string', path: 'user.email', filtrable: true },
+  { code: 'blocked', name: 'Заблокирован', type: 'boolean', filtrable: true },
+];
 
 export const UserToProjectBlocks: IBlock[] = [
-  {code: "main", name: "Пользователь", columnCapacity: 5, maxColumns: 2, blockType: 'table'}
-]
+  { code: 'main', name: 'Пользователь', columnCapacity: 5, maxColumns: 2, blockType: 'table' },
+];
 
 export const UserToProjectBlockDetails: IBlockDetail[] = [
   {
@@ -38,7 +38,7 @@ export const UserToProjectBlockDetails: IBlockDetail[] = [
     fields: [
       {
         path: 'id',
-        title: "Инд.",
+        title: 'Инд.',
         editable: false,
         type: 'number',
       },
@@ -47,7 +47,7 @@ export const UserToProjectBlockDetails: IBlockDetail[] = [
         editable: true,
         title: 'Заблокирован',
         type: 'boolean',
-        editPath: 'blocked'
+        editPath: 'blocked',
       },
       {
         path: 'userRole.id',
@@ -55,7 +55,7 @@ export const UserToProjectBlockDetails: IBlockDetail[] = [
         type: 'select',
         selectUrl: '',
         title: 'Роль',
-        editPath: 'userRoleId'
+        editPath: 'userRoleId',
       },
       {
         path: 'user.name',
@@ -71,6 +71,6 @@ export const UserToProjectBlockDetails: IBlockDetail[] = [
         type: 'string',
         editPath: 'userEmail',
       },
-    ]
-  }
-]
+    ],
+  },
+];

@@ -1,11 +1,9 @@
-import { Global, Module } from "@nestjs/common";
-import { JwtModule } from "src/common/utils/jwt/jwt.module";
+import { Global, Module } from '@nestjs/common';
+import { JwtModule } from 'src/common/utils/jwt/jwt.module';
 
 @Global()
 @Module({
-  imports: [
-    JwtModule,
-  ],
+  imports: [JwtModule],
   controllers: [],
   providers: [],
   exports: [],

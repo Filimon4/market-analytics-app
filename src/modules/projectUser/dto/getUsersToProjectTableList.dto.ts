@@ -1,16 +1,16 @@
-import { Transform, Type } from "class-transformer";
-import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString, Max, Min, ValidateNested } from "class-validator";
+import { Transform, Type } from 'class-transformer';
+import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString, Max, Min, ValidateNested } from 'class-validator';
 
 export class UsersToProjectTableRoleDto {
   @IsNotEmpty()
   @Type(() => Number)
   @IsNumber()
-  id: number
+  id: number;
 }
 
 export class UsersToProjectTableListFilterDto {
   @IsOptional()
-  @Transform(({value}) => value === '1' || value === 'true')
+  @Transform(({ value }) => value === '1' || value === 'true')
   @IsBoolean()
   blocked?: boolean;
 
@@ -18,11 +18,11 @@ export class UsersToProjectTableListFilterDto {
   @ValidateNested()
   @Type(() => UsersToProjectTableRoleDto)
   role?: UsersToProjectTableRoleDto;
-  
+
   @IsOptional()
   @IsString()
   userName?: string;
-  
+
   @IsOptional()
   @IsString()
   userEmail?: string;

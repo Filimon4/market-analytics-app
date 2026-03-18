@@ -1,12 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Param,
-  UseGuards,
-  Req,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UseGuards, Req } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { ConfigService } from '@nestjs/config';
@@ -22,7 +14,10 @@ import { TenantGuard, TenantOptional } from 'src/shared/tenant/guards/tenant.gua
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService, private readonly configService: ConfigService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly configService: ConfigService,
+  ) {}
 
   @Post()
   async create(@Body() dto: CreateUserDto) {
@@ -30,20 +25,20 @@ export class UserController {
 
     return {
       ...createdUser,
-      id: createdUser.id.toString()
+      id: createdUser.id.toString(),
     };
   }
 
   @Get('/current')
   @UseGuards(JwtAuthGuard)
   async getCurrent(@Req() req: Request) {
-    const user = await this.userService.findByEmail(req.user.email)
+    const user = await this.userService.findByEmail(req.user.email);
 
     return {
       email: user.email,
       name: user.name,
       createdAt: user.createdAt,
-    }
+    };
   }
 
   @Get(':id')
@@ -52,25 +47,27 @@ export class UserController {
 
     return {
       ...user,
-      id: user.id.toString()
-    }
+      id: user.id.toString(),
+    };
   }
 
   @Post('table/current')
   @TenantOptional()
   @UseGuards(JwtAuthGuard, TenantGuard)
-  async getTableUser(@User() user: UserDB, @CurrentTenant({required: false}) projectId?: number): Promise<IApiResultResponse<IEntity>> {
-    
-    const data = await this.userService.getTableUser(user, projectId)
-    
+  async getTableUser(
+    @User() user: UserDB,
+    @CurrentTenant({ required: false }) projectId?: number,
+  ): Promise<IApiResultResponse<IEntity>> {
+    const data = await this.userService.getTableUser(user, projectId);
+
     return {
       result: {
         blocks: UserBlocks,
         blockDetails: UserBlockDetails,
         data: {
           ...data,
-        }
-      }
-    }
+        },
+      },
+    };
   }
 }

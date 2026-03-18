@@ -1,10 +1,4 @@
-import {
-  Injectable,
-  CanActivate,
-  ExecutionContext,
-  UnauthorizedException,
-  SetMetadata,
-} from '@nestjs/common';
+import { Injectable, CanActivate, ExecutionContext, UnauthorizedException, SetMetadata } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 
 export const IS_TENANT_OPTIONAL_KEY = 'isTenantOptional';
@@ -17,17 +11,16 @@ export class TenantGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest();
 
-    const isTenantOptional = this.reflector.getAllAndOverride<boolean>(
-      IS_TENANT_OPTIONAL_KEY,
-      [context.getHandler(), context.getClass()],
-    );
+    const isTenantOptional = this.reflector.getAllAndOverride<boolean>(IS_TENANT_OPTIONAL_KEY, [
+      context.getHandler(),
+      context.getClass(),
+    ]);
 
     let tenantId: string | undefined;
 
     if (request.user && request.user.tenantId) {
       tenantId = request.user.tenantId;
-    }
-    else if (request.headers['x-tenant-id'] || request.headers['x-project-id']) {
+    } else if (request.headers['x-tenant-id'] || request.headers['x-project-id']) {
       tenantId = (request.headers['x-tenant-id'] || request.headers['x-project-id']) as string;
     }
 
@@ -35,7 +28,7 @@ export class TenantGuard implements CanActivate {
       throw new UnauthorizedException('Tenant ID is required');
     }
 
-    request.tenantId = tenantId
+    request.tenantId = tenantId;
 
     return true;
   }

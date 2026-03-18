@@ -1,7 +1,6 @@
-
 export interface Tree {
-  nodes: TreeNode[]
-  defaultCheckedKeys?: string[]
+  nodes: TreeNode[];
+  defaultCheckedKeys?: string[];
   checkable?: boolean;
   draggable?: boolean;
 }

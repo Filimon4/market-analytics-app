@@ -13,5 +13,5 @@ export class CreateStrategyDto {
   @IsNotEmpty()
   @Type(() => Number)
   @IsNumber()
-  projectId: number
+  projectId: number;
 }

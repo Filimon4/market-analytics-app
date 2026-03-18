@@ -7,9 +7,10 @@ export class TreeBuilder {
    * @returns готовый массив
    */
   static buildPermissionTree(data: any[]): Tree {
-    if (!data || data.length === 0) return {
-      nodes: []
-    };
+    if (!data || data.length === 0)
+      return {
+        nodes: [],
+      };
 
     const nodeMap = new Map<number, TreeNode>();
     const roots: TreeNode[] = [];
@@ -27,7 +28,7 @@ export class TreeBuilder {
       };
 
       if (item.granted) {
-        defaultCheckedKeys.push(p.code)
+        defaultCheckedKeys.push(p.code);
       }
 
       nodeMap.set(p.id, node);
@@ -60,7 +61,7 @@ export class TreeBuilder {
       nodes: roots,
       checkable: true,
       draggable: false,
-      defaultCheckedKeys
+      defaultCheckedKeys,
     };
   }
 }

@@ -24,7 +24,7 @@ export class StrategyService {
     return {
       ...strategy,
       id: strategy.id.toString(),
-      projectId: strategy.projectId.toString()
+      projectId: strategy.projectId.toString(),
     };
   }
 
