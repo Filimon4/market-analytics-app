@@ -9,7 +9,7 @@ export const ApiKeysColumns: ITableColumn[] = [
   { code: 'scope', name: 'Доступ ключа', type: 'string', filtrable: true },
   { code: 'status', name: 'Статус ключа', type: 'select', selectUrl: '', filtrable: true, path: 'status.code' },
   { code: 'expiresAt', name: 'Срок дейтсвия', type: 'string', filtrable: false }, // TODO: Добавить datetime фильтр
-  { code: 'createdAt', name: 'Дата создания', type: 'string', filtrable: false },
+  { code: 'createdAt', name: 'Дата создания', type: 'string', filtrable: false }, // TODO: Добавить datetime фильтр
 ] as const;
 
 export const ApiKeysBlocks: IBlock[] = [
