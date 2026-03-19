@@ -10,6 +10,7 @@ import * as fs from 'fs';
 import { join } from 'path';
 import { AuthPublicModule } from './modules/auth/auth.public.module';
 
+// TODO: Добавть проверку доступности роли для действий. То добавить проверку на возможность совершать дейтвие по ручке
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     httpsOptions: {

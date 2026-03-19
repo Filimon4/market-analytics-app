@@ -4,9 +4,9 @@ import { TenantGuard } from 'src/shared/tenant/guards/tenant.guard';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CurrentTenant } from 'src/shared/tenant/decorators/current-tenant.decorator';
 import { ITableListResponse } from 'src/common/interfaces/itable.interface';
-import { IEntity } from 'src/common/interfaces/ientity.interface';
+import { IEntityResponse } from 'src/common/interfaces/ientity.interface';
 import { IApiResultResponse } from 'src/common/interfaces/api.interface';
-import { Prisma } from '@prisma/client';
+import { Prisma, User as UserDB } from '@prisma/client';
 import { GetUsersToProjectTableListDto } from './dto/getUsersToProjectTableList.dto';
 import { TUsersToProjectResponse } from './types/user.interface';
 import {
@@ -15,11 +15,20 @@ import {
   UserToProjectBlocks,
   UserToProjectColumns,
 } from './constants/user.constant';
+import { User } from 'src/common/decorators/user.decorator';
 
 @Controller('project/user')
 @UseGuards(JwtAuthGuard, TenantGuard)
 export class ProjectUserController {
   constructor(private readonly prismaService: PrismaService) {}
+
+  // TODO: Приглашение пользователя
+  @Post('/invite')
+  async createInvite(@CurrentTenant() projectId: number, @Body() dto) {}
+
+  // TODO: Принять приглашение
+  @Get('/invite/:hash')
+  async appeptInvite(@Param('hash') hash: string, @User() user: UserDB) {}
 
   /**
    * Ручки для интерфейса. Возвращает данные для таблицы
@@ -77,7 +86,7 @@ export class ProjectUserController {
    * @returns IEntity
    */
   @Get('table/create')
-  async getTableCreate(): Promise<IApiResultResponse<Pick<IEntity, 'blocks' | 'blockDetails'>>> {
+  async getTableCreate(): Promise<IApiResultResponse<Pick<IEntityResponse, 'blocks' | 'blockDetails'>>> {
     return {
       result: {
         blocks: UserToProjectBlocks,
@@ -94,7 +103,7 @@ export class ProjectUserController {
   async getTable(
     @CurrentTenant() projectId: number,
     @Param('id', ParseIntPipe) userId: number,
-  ): Promise<IApiResultResponse<IEntity>> {
+  ): Promise<IApiResultResponse<IEntityResponse>> {
     const userToProjectWhereInput: Prisma.UserToProjectWhereInput = {
       projectId,
       id: userId,

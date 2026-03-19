@@ -1,5 +1,5 @@
 import { Prisma } from '@prisma/client';
-import { IBlock, IEntity } from 'src/common/interfaces/ientity.interface';
+import { IBlock, IEntityResponse } from 'src/common/interfaces/ientity.interface';
 import { ITableColumn } from 'src/common/interfaces/itable.interface';
 
 export const ApiKeysColumns: ITableColumn[] = [
@@ -16,7 +16,7 @@ export const ApiKeysBlocks: IBlock[] = [
   { code: 'main', name: 'Апи ключ', columnCapacity: 5, maxColumns: 2, blockType: 'table' },
 ];
 
-export const ApiKeysBlockDetails: IEntity['blockDetails'] = [
+export const ApiKeysBlockDetails: IEntityResponse['blockDetails'] = [
   {
     blockCode: 'main',
     fields: [
@@ -37,12 +37,10 @@ export const ApiKeysBlockDetails: IEntity['blockDetails'] = [
       },
       {
         title: 'Код апи ключа',
-        editable: true,
+        editable: false,
         path: 'key',
         type: 'string',
         editPath: 'key',
-
-        required: true,
       },
       {
         title: 'Доступ апи ключа',

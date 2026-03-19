@@ -7,7 +7,7 @@ import { Request } from 'express';
 import { CurrentTenant } from 'src/shared/tenant/decorators/current-tenant.decorator';
 import { User } from 'src/common/decorators/user.decorator';
 import { User as UserDB } from '@prisma/client';
-import { IEntity } from 'src/common/interfaces/ientity.interface';
+import { IEntityResponse } from 'src/common/interfaces/ientity.interface';
 import { IApiResultResponse } from 'src/common/interfaces/api.interface';
 import { UserBlockDetails, UserBlocks } from './constants';
 import { TenantGuard, TenantOptional } from 'src/shared/tenant/guards/tenant.guard';
@@ -57,7 +57,7 @@ export class UserController {
   async getTableUser(
     @User() user: UserDB,
     @CurrentTenant({ required: false }) projectId?: number,
-  ): Promise<IApiResultResponse<IEntity>> {
+  ): Promise<IApiResultResponse<IEntityResponse>> {
     const data = await this.userService.getTableUser(user, projectId);
 
     return {

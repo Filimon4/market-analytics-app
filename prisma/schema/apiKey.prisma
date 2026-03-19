@@ -2,13 +2,12 @@ model ApiKey {
   id        BigInt   @id @default(autoincrement())
   projectId BigInt
   name      String
-  key       String
+  key       String   @unique @default(ulid())
   scope     String // TODO: move to different table. | stirng permissionName | boolean read | boolean write. One to many
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt()
   expiresAt DateTime
   statusId  Int
-  createdBy BigInt
 
   status  ApiKeyStatus @relation(fields: [statusId], references: [id])
   project Project      @relation(fields: [projectId], references: [id])

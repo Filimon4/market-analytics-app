@@ -17,7 +17,6 @@ export class ProjectApiKeyService {
     return {
       ...record,
       id: record.id.toString(),
-      createdBy: record.createdBy.toString(),
     };
   }
 
@@ -33,7 +32,6 @@ export class ProjectApiKeyService {
     return list.map((key) => ({
       ...key,
       id: key.id.toString(),
-      createdBy: key.createdBy.toString(),
     }));
   }
 

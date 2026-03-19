@@ -11,7 +11,7 @@ import { ProjectAccessGuard } from '../project/guards/project-access.guard';
 import { GetRolesTableListDto } from './dto/getRolesTableList.dto';
 import { RolesBlockDetails, RolesBlocks, RolesColumns, RolesSelect } from './constants/role.constant';
 import { ITableListResponse } from 'src/common/interfaces/itable.interface';
-import { IEntity } from 'src/common/interfaces/ientity.interface';
+import { ICreateEntityResponse, IEntityResponse } from 'src/common/interfaces/ientity.interface';
 import { IApiResultResponse } from 'src/common/interfaces/api.interface';
 import { TRoleGetPayload } from './types/role.type';
 import { TreeBuilder } from 'src/common/utils/treeBuilder';
@@ -25,14 +25,15 @@ export class ProjectRoleController {
   ) {}
 
   @Post()
-  @UseGuards(ProjectAccessGuard)
-  async createRole(@CurrentTenant() projectId: number, @Body() createRoleDto: CreateRoleDto) {
+  async createRole(
+    @CurrentTenant() projectId: number,
+    @Body() createRoleDto: CreateRoleDto,
+  ): Promise<IApiResultResponse<ICreateEntityResponse>> {
     const role = await this.projectRolesService.createRole(projectId, createRoleDto);
 
     return {
       result: {
-        ...role,
-        entityUrl: `roles/${role.id}`,
+        id: role.id.toString(),
       },
     };
   }
@@ -122,7 +123,7 @@ export class ProjectRoleController {
   }
 
   @Get('table/create')
-  async getTableCreate(): Promise<IApiResultResponse<Pick<IEntity, 'blocks' | 'blockDetails'>>> {
+  async getTableCreate(): Promise<IApiResultResponse<Pick<IEntityResponse, 'blocks' | 'blockDetails'>>> {
     return {
       result: {
         blocks: RolesBlocks,
@@ -139,7 +140,7 @@ export class ProjectRoleController {
   async getTable(
     @CurrentTenant() projectId: number,
     @Param('roleId', ParseIntPipe) roleId: number,
-  ): Promise<IApiResultResponse<IEntity>> {
+  ): Promise<IApiResultResponse<IEntityResponse>> {
     const rolesWhereInput: Prisma.RoleWhereUniqueInput = {
       projectId,
       id: roleId,

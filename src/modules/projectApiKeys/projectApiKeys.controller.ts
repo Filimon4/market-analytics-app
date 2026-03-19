@@ -13,7 +13,8 @@ import { ApiKeysBlockDetails, ApiKeysBlocks, ApiKeysColumns, ApiKeysSelect } fro
 import { GetApiKeysTableListDto } from './dto/getApiKeysTableList';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { TenantGuard } from 'src/shared/tenant/guards/tenant.guard';
-import { IEntity } from 'src/common/interfaces/ientity.interface';
+import { ICreateEntityResponse, IEntityResponse } from 'src/common/interfaces/ientity.interface';
+import { CreateApiKeyDto } from './dto/createApiKey.dto';
 
 @Controller('project/api-keys')
 @UseGuards(JwtAuthGuard, TenantGuard)
@@ -33,9 +34,39 @@ export class ProjectApiKeyController {
     return this.apiKeyService.getList(dto);
   }
 
-  @Patch(':id')
-  update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateApiKeyDto) {
-    return this.apiKeyService.update(BigInt(id), dto);
+  @Post()
+  async createApiKey(
+    @CurrentTenant() projectId: number,
+    @Body() dto: CreateApiKeyDto,
+  ): Promise<IApiResultResponse<ICreateEntityResponse>> {
+    const createApiKeyInput: Prisma.ApiKeyCreateInput = {
+      project: {
+        connect: {
+          id: projectId,
+        },
+      },
+      status: {
+        connect: {
+          id: dto.statusId,
+        },
+      },
+      name: dto.name,
+      scope: dto.scope,
+      expiresAt: dto.expiresAt,
+    };
+
+    const apiKey = await this.prismaService.apiKey.create({
+      data: createApiKeyInput,
+      select: {
+        id: true,
+      },
+    });
+
+    return {
+      result: {
+        id: apiKey.id.toString(),
+      },
+    };
   }
 
   @Post('/table/list')
@@ -88,7 +119,7 @@ export class ProjectApiKeyController {
   }
 
   @Get('table/create')
-  async getTableCreate(): Promise<IApiResultResponse<Pick<IEntity, 'blocks' | 'blockDetails'>>> {
+  async getTableCreate(): Promise<IApiResultResponse<Pick<IEntityResponse, 'blocks' | 'blockDetails'>>> {
     return {
       result: {
         blocks: ApiKeysBlocks,
@@ -101,7 +132,7 @@ export class ProjectApiKeyController {
   async getTableEntity(
     @CurrentTenant() projectId: number,
     @Param('id', ParseIntPipe) apiKeyId: number,
-  ): Promise<IApiResultResponse<IEntity>> {
+  ): Promise<IApiResultResponse<IEntityResponse>> {
     const rolesWhereInput: Prisma.ApiKeyWhereUniqueInput = {
       projectId,
       id: apiKeyId,
