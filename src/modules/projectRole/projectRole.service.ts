@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/common/db/prisma.service';
 import { CreateRoleDto } from './dto/createRole.dto';
 import { RolePermission } from '@prisma/client';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/client';
 
 @Injectable()
 export class ProjectRoleService {
@@ -13,7 +14,8 @@ export class ProjectRoleService {
         data: {
           projectId,
           code: dto.code,
-          default: false,
+          default: dto.default,
+          title: dto.title,
         },
         select: {
           id: true,

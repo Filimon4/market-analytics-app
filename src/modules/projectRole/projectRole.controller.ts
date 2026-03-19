@@ -26,8 +26,15 @@ export class ProjectRoleController {
 
   @Post()
   @UseGuards(ProjectAccessGuard)
-  createRole(@CurrentTenant() projectId: number, @Body() createRoleDto: CreateRoleDto) {
-    return this.projectRolesService.createRole(projectId, createRoleDto);
+  async createRole(@CurrentTenant() projectId: number, @Body() createRoleDto: CreateRoleDto) {
+    const role = await this.projectRolesService.createRole(projectId, createRoleDto);
+
+    return {
+      result: {
+        ...role,
+        entityUrl: `roles/${role.id}`,
+      },
+    };
   }
 
   @Get()
