@@ -23,7 +23,7 @@ export interface IField {
 
   // Поля для добаления
   required?: true; // Обязательно заполнение при добавлении
-  createEditable?: true; // При добавлении можно ли менять. Перекрывает editable
+  createEditable?: boolean; // При добавлении можно ли менять. Перекрывает editable
   createDefault?: boolean | string | number; // При добавлении дефолтное значение. Если поле только для отображение (editable: false) то можно добавить дефолтное значение
 }
 
