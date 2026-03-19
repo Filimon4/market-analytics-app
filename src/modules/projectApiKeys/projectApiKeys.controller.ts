@@ -87,6 +87,16 @@ export class ProjectApiKeyController {
     };
   }
 
+  @Get('table/create')
+  async getTableCreate(): Promise<IApiResultResponse<Pick<IEntity, 'blocks' | 'blockDetails'>>> {
+    return {
+      result: {
+        blocks: ApiKeysBlocks,
+        blockDetails: ApiKeysBlockDetails,
+      },
+    };
+  }
+
   @Get('/table/:id')
   async getTableEntity(
     @CurrentTenant() projectId: number,

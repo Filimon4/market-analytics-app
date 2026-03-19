@@ -114,6 +114,16 @@ export class ProjectRoleController {
     };
   }
 
+  @Get('table/create')
+  async getTableCreate(): Promise<IApiResultResponse<Pick<IEntity, 'blocks' | 'blockDetails'>>> {
+    return {
+      result: {
+        blocks: RolesBlocks,
+        blockDetails: RolesBlockDetails,
+      },
+    };
+  }
+
   /**
    * Ручки для интерфейса. Возвращает данные для таблицы
    * @returns IEntity

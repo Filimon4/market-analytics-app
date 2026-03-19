@@ -32,6 +32,8 @@ export const ApiKeysBlockDetails: IEntity['blockDetails'] = [
         path: 'name',
         type: 'string',
         editPath: 'name',
+
+        required: true,
       },
       {
         title: 'Код апи ключа',
@@ -39,6 +41,8 @@ export const ApiKeysBlockDetails: IEntity['blockDetails'] = [
         path: 'key',
         type: 'string',
         editPath: 'key',
+
+        required: true,
       },
       {
         title: 'Доступ апи ключа',
@@ -46,20 +50,27 @@ export const ApiKeysBlockDetails: IEntity['blockDetails'] = [
         path: 'scope',
         type: 'string',
         editPath: 'scope',
+
+        required: true,
       },
       {
         title: 'Статус апи ключа',
-        editable: false,
+        editable: true,
         path: 'status',
         type: 'select',
         selectUrl: '',
         editPath: 'status',
+
+        required: true,
       },
       {
         title: 'Срок действия',
         editable: false,
         path: 'expiresAt',
         type: 'datetime',
+
+        createEditable: true,
+        required: true,
       },
       {
         title: 'Дата создания',

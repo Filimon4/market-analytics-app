@@ -76,6 +76,20 @@ export class ProjectUserController {
    * Ручки для интерфейса. Возвращает данные для таблицы
    * @returns IEntity
    */
+  @Get('table/create')
+  async getTableCreate(): Promise<IApiResultResponse<Pick<IEntity, 'blocks' | 'blockDetails'>>> {
+    return {
+      result: {
+        blocks: UserToProjectBlocks,
+        blockDetails: UserToProjectBlockDetails,
+      },
+    };
+  }
+
+  /**
+   * Ручки для интерфейса. Возвращает данные для таблицы
+   * @returns IEntity
+   */
   @Get('table/:id')
   async getTable(
     @CurrentTenant() projectId: number,

@@ -43,11 +43,22 @@ export const UserToProjectBlockDetails: IBlockDetail[] = [
         type: 'number',
       },
       {
-        path: 'blocked',
+        path: 'user.name',
         editable: true,
-        title: 'Заблокирован',
-        type: 'boolean',
-        editPath: 'blocked',
+        title: 'Имя пользователя',
+        type: 'string',
+        editPath: 'userName',
+
+        required: true,
+      },
+      {
+        path: 'user.email',
+        editable: true,
+        title: 'Почта пользователя',
+        type: 'string',
+        editPath: 'userEmail',
+
+        required: true,
       },
       {
         path: 'userRole.id',
@@ -56,20 +67,18 @@ export const UserToProjectBlockDetails: IBlockDetail[] = [
         selectUrl: '',
         title: 'Роль',
         editPath: 'userRoleId',
+
+        required: true,
       },
       {
-        path: 'user.name',
+        path: 'blocked',
         editable: true,
-        title: 'Имя пользователя',
-        type: 'string',
-        editPath: 'userName',
-      },
-      {
-        path: 'user.email',
-        editable: true,
-        title: 'Почта пользователя',
-        type: 'string',
-        editPath: 'userEmail',
+        title: 'Заблокирован',
+        type: 'boolean',
+        editPath: 'blocked',
+
+        createDefault: false,
+        createEditable: false,
       },
     ],
   },

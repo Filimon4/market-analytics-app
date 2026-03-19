@@ -11,7 +11,7 @@ export const RolesColumns: ITableColumn[] = [
 
 export const RolesBlocks: IBlock[] = [
   { code: 'main', name: 'Роль', columnCapacity: 5, maxColumns: 2, blockType: 'table' },
-  { code: 'permissions', name: 'Доступы', columnCapacity: 5, maxColumns: 2, blockType: 'tree' },
+  { code: 'permissions', name: 'Доступы', columnCapacity: 5, maxColumns: 2, blockType: 'tree', createHide: true },
 ];
 
 export const RolesBlockDetails: IEntity['blockDetails'] = [
@@ -30,6 +30,8 @@ export const RolesBlockDetails: IEntity['blockDetails'] = [
         title: 'Название',
         type: 'string',
         editPath: 'title',
+
+        required: true,
       },
       {
         editable: true,
@@ -37,12 +39,16 @@ export const RolesBlockDetails: IEntity['blockDetails'] = [
         title: 'Код роли',
         type: 'string',
         editPath: 'code',
+
+        required: true,
       },
       {
         editable: false,
         path: 'default',
         title: 'Системаня роль',
         type: 'boolean',
+
+        createDefault: false,
       },
     ],
   },
