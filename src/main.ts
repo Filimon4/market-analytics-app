@@ -5,7 +5,6 @@ import { AppModule } from './app/app.module';
 import { ConfigService } from '@nestjs/config';
 import { EnvironmentVariablesType } from './common/constants/environment-variables.type';
 import metadata from './metadata';
-import { ExceptionsLogger } from './common/middleware/exceptions-logger.middleware';
 import cookieParser from 'cookie-parser';
 import * as fs from 'fs';
 import { join } from 'path';
@@ -35,8 +34,6 @@ async function bootstrap() {
     defaultVersion: '1',
     type: VersioningType.URI,
   });
-
-  app.useGlobalFilters(new ExceptionsLogger());
 
   const configService = app.get(ConfigService);
   const swaggerPrefixURL = configService.get<string>(EnvironmentVariablesType.HTTP_OPEN_API_PREFIX)!;
