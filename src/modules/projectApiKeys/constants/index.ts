@@ -8,8 +8,8 @@ export const ApiKeysColumns: ITableColumn[] = [
   { code: 'key', name: 'Код ключа', type: 'string', filtrable: true },
   { code: 'scope', name: 'Доступ ключа', type: 'string', filtrable: true },
   { code: 'status', name: 'Статус ключа', type: 'select', selectUrl: '', filtrable: true, path: 'status.code' },
-  { code: 'expiresAt', name: 'Срок дейтсвия', type: 'string', filtrable: false }, // TODO: Добавить datetime фильтр
-  { code: 'createdAt', name: 'Дата создания', type: 'string', filtrable: false }, // TODO: Добавить datetime фильтр
+  { code: 'expiresAt', name: 'Срок дейтсвия', type: 'datetime', filtrable: false }, // TODO: Добавить datetime фильтр
+  { code: 'createdAt', name: 'Дата создания', type: 'datetime', filtrable: false }, // TODO: Добавить datetime фильтр
 ] as const;
 
 export const ApiKeysBlocks: IBlock[] = [
@@ -24,7 +24,7 @@ export const ApiKeysBlockDetails: IEntityResponse['blockDetails'] = [
         title: 'Инд.',
         editable: false,
         path: 'id',
-        type: 'number',
+        type: 'string',
       },
       {
         title: 'Название',

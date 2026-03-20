@@ -22,7 +22,7 @@ export const RolesBlockDetails: IEntityResponse['blockDetails'] = [
         title: 'Инд.',
         editable: false,
         path: 'id',
-        type: 'number',
+        type: 'string',
       },
       {
         editable: true,
