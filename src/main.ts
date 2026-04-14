@@ -43,7 +43,17 @@ async function bootstrap() {
     .setTitle('My API')
     .setVersion('1.0')
     .addBearerAuth()
+    .addApiKey(
+      {
+        type: 'apiKey',
+        in: 'header',
+        name: 'x-tenant-id',
+        description: 'Tenant identifier',
+      },
+      'x-tenant-id',
+    )
     .addSecurityRequirements('bearer')
+    .addSecurityRequirements('x-tenant-id')
     .build();
 
   await SwaggerModule.loadPluginMetadata(metadata);

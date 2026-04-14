@@ -7,7 +7,6 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CurrentTenant } from 'src/shared/tenant/decorators/current-tenant.decorator';
 import { CreateRoleDto } from './dto/createRole.dto';
 import { ProjectRoleService } from './projectRole.service';
-import { ProjectAccessGuard } from '../project/guards/project-access.guard';
 import { GetRolesTableListDto } from './dto/getRolesTableList.dto';
 import { RolesBlockDetails, RolesBlocks, RolesColumns, RolesSelect } from './constants/role.constant';
 import { ITableListResponse } from 'src/common/interfaces/itable.interface';

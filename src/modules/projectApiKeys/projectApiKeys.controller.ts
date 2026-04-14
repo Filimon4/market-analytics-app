@@ -24,6 +24,18 @@ export class ProjectApiKeyController {
     private readonly prismaService: PrismaService,
   ) {}
 
+  @Get('/statuses')
+  async getApiKeyStatuses() {
+    const apiKeyStatus = await this.prismaService.apiKeyStatus.findMany({
+      select: {
+        id: true,
+        code: true,
+      },
+    });
+
+    return { result: apiKeyStatus };
+  }
+
   @Get(':id')
   getById(@Param('id', ParseIntPipe) id: number) {
     return this.apiKeyService.getById(BigInt(id));
@@ -118,7 +130,7 @@ export class ProjectApiKeyController {
     };
   }
 
-  @Get('table/create')
+  @Get('/table/create')
   async getTableCreate(): Promise<IApiResultResponse<Pick<IEntityResponse, 'blocks' | 'blockDetails'>>> {
     return {
       result: {

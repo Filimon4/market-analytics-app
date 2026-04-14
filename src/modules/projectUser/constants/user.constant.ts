@@ -22,7 +22,7 @@ export const UsersToProjectSelect: Prisma.UserToProjectSelect = {
 
 export const UserToProjectColumns: ITableColumn[] = [
   { code: 'id', name: 'Инд.', type: 'number', filtrable: false },
-  { code: 'role', name: 'Роль', type: 'select', selectUrl: '', path: 'userRole.title', filtrable: true },
+  { code: 'role', name: 'Роль', type: 'select', selectUrl: 'title', path: 'userRole.title', filtrable: true },
   { code: 'userName', name: 'Имя пользователя', type: 'string', path: 'user.name', filtrable: true },
   { code: 'userEmail', name: 'Почта пользователя', type: 'string', path: 'user.email', filtrable: true },
   { code: 'blocked', name: 'Заблокирован', type: 'boolean', filtrable: true },
@@ -61,7 +61,7 @@ export const UserToProjectBlockDetails: IBlockDetail[] = [
         required: true,
       },
       {
-        path: 'userRole.id',
+        path: 'userRole.code',
         editable: true,
         type: 'select',
         selectUrl: '',

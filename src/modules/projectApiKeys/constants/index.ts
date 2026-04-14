@@ -7,7 +7,14 @@ export const ApiKeysColumns: ITableColumn[] = [
   { code: 'name', name: 'Название ключа', type: 'string', filtrable: true },
   { code: 'key', name: 'Код ключа', type: 'string', filtrable: true },
   { code: 'scope', name: 'Доступ ключа', type: 'string', filtrable: true },
-  { code: 'status', name: 'Статус ключа', type: 'select', selectUrl: '', filtrable: true, path: 'status.code' },
+  {
+    code: 'status',
+    name: 'Статус ключа',
+    type: 'select',
+    selectUrl: '/v1/project/api-keys/statuses',
+    filtrable: true,
+    path: 'status.code',
+  },
   { code: 'expiresAt', name: 'Срок дейтсвия', type: 'datetime', filtrable: false }, // TODO: Добавить datetime фильтр
   { code: 'createdAt', name: 'Дата создания', type: 'datetime', filtrable: false }, // TODO: Добавить datetime фильтр
 ] as const;
@@ -54,9 +61,9 @@ export const ApiKeysBlockDetails: IEntityResponse['blockDetails'] = [
       {
         title: 'Статус апи ключа',
         editable: true,
-        path: 'status',
+        path: 'status.code',
         type: 'select',
-        selectUrl: '',
+        selectUrl: '/v1/project/api-keys/statuses',
         editPath: 'status',
 
         required: true,

@@ -51,8 +51,6 @@ export class ProjectAccessGuard implements CanActivate {
       },
     });
 
-    console.log(`userRole: ${JSON.stringify(userRole)}`);
-
     const permissions = await this.prismaService.rolePermission.findMany({});
 
     if (!requiredAccess.includes(userRole.code)) {

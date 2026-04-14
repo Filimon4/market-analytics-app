@@ -19,7 +19,9 @@ export interface IField {
   type: 'string' | 'number' | 'boolean' | 'date' | 'datetime' | 'select';
   path: string;
   editPath?: string;
-  selectUrl?: string;
+
+  // Поля для select
+  selectUrl?: string; // Получение данных для выбора
 
   // Поля для добаления
   required?: true; // Обязательно заполнение при добавлении
