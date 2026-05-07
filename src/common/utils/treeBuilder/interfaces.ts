@@ -1,8 +1,7 @@
 export interface Tree {
   nodes: TreeNode[];
-  defaultCheckedKeys?: string[];
   checkable?: boolean;
-  draggable?: boolean;
+  cascade?: boolean;
 }
 
 export interface TreeNode {
@@ -11,5 +10,5 @@ export interface TreeNode {
   children?: TreeNode[] | undefined;
   disabled?: boolean;
   isLeaf?: boolean;
-  checkboxDisabled?: boolean;
+  checked?: boolean;
 }

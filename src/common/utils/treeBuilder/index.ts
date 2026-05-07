@@ -14,7 +14,6 @@ export class TreeBuilder {
 
     const nodeMap = new Map<number, TreeNode>();
     const roots: TreeNode[] = [];
-    const defaultCheckedKeys = [];
 
     // 1. Создаём все узлы
     for (const item of data) {
@@ -25,11 +24,8 @@ export class TreeBuilder {
         label: p.name,
         children: [],
         isLeaf: false,
+        checked: item.granted,
       };
-
-      if (item.granted) {
-        defaultCheckedKeys.push(p.code);
-      }
 
       nodeMap.set(p.id, node);
     }
@@ -60,8 +56,7 @@ export class TreeBuilder {
     return {
       nodes: roots,
       checkable: true,
-      draggable: false,
-      defaultCheckedKeys,
+      cascade: true,
     };
   }
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post, UseGuards } from '@nestjs/common';
 import { User } from 'src/common/decorators/user.decorator';
 import { PrismaService } from 'src/common/db/prisma.service';
 import { Prisma, User as UserDB } from '@prisma/client';
@@ -187,4 +187,7 @@ export class ProjectRoleController {
       },
     };
   }
+
+  @Patch()
+  updateRole() {}
 }
