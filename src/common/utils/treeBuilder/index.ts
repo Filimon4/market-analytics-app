@@ -59,4 +59,23 @@ export class TreeBuilder {
       cascade: true,
     };
   }
+
+  static pipePermissionTreeToArray(tree: TreeNode[]): Omit<TreeNode, 'children'>[] {
+    const nodes: Omit<TreeNode, 'children'>[] = [];
+
+    const walk = (items: TreeNode[]) => {
+      for (const item of items) {
+        const { children, ...node } = item;
+        nodes.push(node);
+
+        if (children && children.length > 0) {
+          walk(children);
+        }
+      }
+    };
+
+    walk(tree);
+
+    return nodes;
+  }
 }

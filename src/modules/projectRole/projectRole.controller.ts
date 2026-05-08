@@ -1,4 +1,15 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { User } from 'src/common/decorators/user.decorator';
 import { PrismaService } from 'src/common/db/prisma.service';
 import { Prisma, User as UserDB } from '@prisma/client';
@@ -14,6 +25,7 @@ import { ICreateEntityResponse, IEntityResponse } from 'src/common/interfaces/ie
 import { IApiResultResponse } from 'src/common/interfaces/api.interface';
 import { TRoleGetPayload } from './types/role.type';
 import { TreeBuilder } from 'src/common/utils/treeBuilder';
+import { UpdateRoleDto } from './dto/updateRole.dto';
 
 @Controller('project/role')
 @UseGuards(JwtAuthGuard, TenantGuard)
@@ -182,12 +194,17 @@ export class ProjectRoleController {
           title: roleData.title,
           code: roleData.code,
           default: roleData.default,
-          permissionTree,
+          tree: permissionTree,
         },
       },
     };
   }
 
   @Patch()
-  updateRole() {}
+  @HttpCode(HttpStatus.OK)
+  async updateRole(@CurrentTenant() projectId: number, @Body() updateRoleDto: UpdateRoleDto) {
+    await this.projectRolesService.updateRole(projectId, updateRoleDto);
+
+    return { result: true };
+  }
 }

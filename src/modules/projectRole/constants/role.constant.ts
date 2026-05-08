@@ -54,7 +54,7 @@ export const RolesBlockDetails: IEntityResponse['blockDetails'] = [
   },
   {
     blockCode: 'permissions',
-    treePath: 'permissionTree',
+    treePath: 'tree',
   },
 ];
 
