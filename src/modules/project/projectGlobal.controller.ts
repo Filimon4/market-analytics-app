@@ -4,7 +4,7 @@ import { PrismaService } from 'src/common/db/prisma.service';
 import { User } from 'src/common/decorators/user.decorator';
 import { CreateProjectDto } from './dto/createProject.dto';
 import { Prisma, User as UserDB } from '@prisma/client';
-import { EPermissionCode } from './constants';
+import { DefaultPermissions, DefaultRoles, EPermissionCode } from './constants';
 import { GetProjectDto } from './dto/getProject.dto';
 
 @Controller('global/project')
@@ -86,8 +86,8 @@ export class ProjectGlobalController {
 
   @Post()
   create(@User() user: UserDB, @Body() createProjectDto: CreateProjectDto) {
-    return this.prismaService.$transaction(async (mng) => {
-      const project = await mng.project.create({
+    return this.prismaService.$transaction(async (trx) => {
+      const project = await trx.project.create({
         data: {
           name: createProjectDto.name,
           description: createProjectDto.description,
@@ -99,31 +99,8 @@ export class ProjectGlobalController {
         },
       });
 
-      const defaultRoles = [
-        { code: 'owner', title: 'Ген. дир.' },
-        { code: 'analytic', title: 'Аналитик' },
-        { code: 'marketing', title: 'Маркетолог' },
-      ];
-
-      const defaultPermissions = {
-        ['analytic']: {
-          [EPermissionCode.PANEL]: true,
-          [EPermissionCode.PANEL_MARKETING]: true,
-          [EPermissionCode.PANEL_MARKETING_CHANNELS]: true,
-          [EPermissionCode.PANEL_MARKETING_CHANNELS_PERFORMANCE]: true,
-          [EPermissionCode.PANEL_MARKETING_STRATEGY]: true,
-        },
-        ['marketing']: {
-          [EPermissionCode.PANEL]: true,
-          [EPermissionCode.PANEL_MARKETING]: true,
-          [EPermissionCode.PANEL_MARKETING_CHANNELS]: true,
-          [EPermissionCode.PANEL_MARKETING_CHANNELS_PERFORMANCE]: true,
-          [EPermissionCode.PANEL_MARKETING_STRATEGY]: true,
-        },
-      };
-
-      const roles = await mng.role.createManyAndReturn({
-        data: defaultRoles.map(
+      const roles = await trx.role.createManyAndReturn({
+        data: DefaultRoles.map(
           (rol) =>
             ({
               code: rol.code,
@@ -141,7 +118,7 @@ export class ProjectGlobalController {
 
       const ownerRole = roles.find((r) => r.code === 'owner');
 
-      const userPersmissions = await mng.permission.findMany({
+      const userPersmissions = await trx.permission.findMany({
         select: {
           id: true,
           code: true,
@@ -149,20 +126,20 @@ export class ProjectGlobalController {
         },
       });
 
-      await mng.rolePermission.createMany({
+      await trx.rolePermission.createMany({
         data: roles.flatMap((role) =>
           userPersmissions.map(
             (per) =>
               ({
                 userRoleId: role.id,
                 userPermissionId: per.id,
-                granted: role.code === 'owner' ? true : defaultPermissions[role.code][per.code] || false,
+                granted: role.code === 'owner' ? true : DefaultPermissions[role.code][per.code] || false,
               }) as unknown as Prisma.RolePermissionCreateManyInput,
           ),
         ),
       });
 
-      await mng.userToProject.create({
+      await trx.userToProject.create({
         data: {
           blocked: false,
           project: {

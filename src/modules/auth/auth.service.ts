@@ -38,6 +38,12 @@ export class AuthService {
   }
 
   async signup(name: string, email: string, password: string) {
+    const potentialUser = await this.userService.findByEmail(email).catch(() => null);
+
+    if (potentialUser) {
+      throw new BadRequestException('Already there is not user with this email');
+    }
+
     const encryptedPassword = this.encryptionService.encrypt(password);
 
     const user = await this.userService

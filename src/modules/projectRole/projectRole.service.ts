@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/common/db/prisma.service';
 import { CreateRoleDto } from './dto/createRole.dto';
 import { Prisma, RolePermission } from '@prisma/client';
@@ -47,8 +47,8 @@ export class ProjectRoleService {
 
   updateRole(projectId: number, dto: UpdateRoleDto) {
     return this.prismaService.$transaction(async (trx) => {
-      const roleRaw = await trx.$queryRaw<{ id: number }[]>`
-        select r.id from public."Role" r
+      const roleRaw = await trx.$queryRaw<{ id: number; deleted: boolean }[]>`
+        select r.id, r.deleted from public."Role" r
         where r."projectId" = ${projectId} and r.id = ${dto.id}
         limit 1
         for update
@@ -56,10 +56,14 @@ export class ProjectRoleService {
 
       const role = roleRaw[0];
 
+      if (role.deleted) {
+        throw new BadRequestException('Cannot udpate deleted role');
+      }
+
       const updateRoleData: Prisma.RoleUpdateInput = {};
 
-      if (dto.name) {
-        updateRoleData.title = dto.name;
+      if (dto.title) {
+        updateRoleData.title = dto.title;
       }
 
       if (dto.code) {

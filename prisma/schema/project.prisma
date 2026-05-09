@@ -8,4 +8,6 @@ model Project {
   apiKey        ApiKey[]
   strategy      Strategy[]
   userToProject UserToProject[]
+
+  invitations Invitation[]
 }

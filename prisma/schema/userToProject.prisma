@@ -9,4 +9,6 @@ model UserToProject {
   user        User       @relation(fields: [userId], references: [id])
   userRole    Role   @relation(fields: [roleId], references: [id])
   project     Project    @relation(fields: [projectId], references: [id])
+
+  invitations Invitation[]
 }

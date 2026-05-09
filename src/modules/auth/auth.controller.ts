@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Request, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post, Request, Res, UseGuards } from '@nestjs/common';
 import { SignUpDto } from './dto/singup.dto';
 import { AuthService } from './auth.service';
 import { SignInDto } from './dto/singin.dto';
@@ -61,6 +61,17 @@ export class AuthController {
 
     return {
       token: tokens.accessToken,
+    };
+  }
+
+  @Post('logout')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtRefreshAuthGuard)
+  async logout(@Res({ passthrough: true }) res: Response) {
+    res.clearCookie('refreshToken');
+
+    return {
+      result: true,
     };
   }
 }

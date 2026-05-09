@@ -24,7 +24,7 @@ export class UpdateRoleDto {
 
   @IsOptional()
   @IsString()
-  name?: string;
+  title?: string;
 
   @IsOptional()
   @IsString()

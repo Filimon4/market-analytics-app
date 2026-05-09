@@ -13,6 +13,7 @@ import { UserModule } from 'src/modules/user/user.module';
 import { TenantModule } from 'src/shared/tenant/tenant.module';
 import { APP_FILTER, HttpAdapterHost } from '@nestjs/core';
 import { PrismaClientExceptionFilter } from 'nestjs-prisma';
+import { ProjectInvitationModule } from 'src/modules/projectInvitation/projectInvitation.module';
 
 @Module({
   imports: [
@@ -32,6 +33,8 @@ import { PrismaClientExceptionFilter } from 'nestjs-prisma';
     ProjectApiKeyModule,
     ProjectUserModule,
     ProjectRoleModule,
+
+    ProjectInvitationModule,
   ],
   providers: [
     {

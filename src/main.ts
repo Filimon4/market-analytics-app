@@ -4,6 +4,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app/app.module';
 import { ConfigService } from '@nestjs/config';
 import { EnvironmentVariablesType } from './common/constants/environment-variables.type';
+import './common/utils/bigint.serializer';
 import metadata from './metadata';
 import cookieParser from 'cookie-parser';
 import * as fs from 'fs';

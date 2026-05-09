@@ -1,7 +1,6 @@
-import { Controller, Get, Post, Body, Param, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UseGuards, Req, ParseIntPipe } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { ConfigService } from '@nestjs/config';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { Request } from 'express';
 import { CurrentTenant } from 'src/shared/tenant/decorators/current-tenant.decorator';
@@ -14,10 +13,7 @@ import { TenantGuard, TenantOptional } from 'src/shared/tenant/guards/tenant.gua
 
 @Controller('user')
 export class UserController {
-  constructor(
-    private readonly userService: UserService,
-    private readonly configService: ConfigService,
-  ) {}
+  constructor(private readonly userService: UserService) {}
 
   @Post()
   async create(@Body() dto: CreateUserDto) {

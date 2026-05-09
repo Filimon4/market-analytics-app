@@ -7,6 +7,7 @@ export const RolesColumns: ITableColumn[] = [
   { code: 'title', name: 'Название роли', type: 'string', filtrable: true },
   { code: 'code', name: 'Код роли', type: 'string', filtrable: true },
   { code: 'default', name: 'Системный', type: 'boolean', filtrable: true },
+  { code: 'deleted', name: 'Удалена', type: 'boolean', filtrable: true },
 ] as const;
 
 export const RolesBlocks: IBlock[] = [
@@ -50,6 +51,14 @@ export const RolesBlockDetails: IEntityResponse['blockDetails'] = [
 
         createDefault: false,
       },
+      {
+        editable: false,
+        path: 'deleted',
+        title: 'Удалена',
+        type: 'boolean',
+
+        createDefault: false,
+      },
     ],
   },
   {
@@ -63,4 +72,5 @@ export const RolesSelect: Prisma.RoleSelect = {
   code: true,
   default: true,
   title: true,
+  deleted: true,
 };

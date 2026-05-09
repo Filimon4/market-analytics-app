@@ -1,7 +1,7 @@
 model Permission {
-  id                Int    @id
-  name              String @unique
-  code              String @unique
+  id                Int @id @default(autoincrement())
+  name              String  @unique
+  code              String  @unique
   description       String?
 
   parentId          Int?          

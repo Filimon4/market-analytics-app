@@ -4,6 +4,7 @@ model Role {
   title           String @default("None")
   projectId       BigInt
   default         Boolean @default(false)
+  deleted         Boolean @default(false)
 
   rolePermission  RolePermission[]
   userToProject   UserToProject[]

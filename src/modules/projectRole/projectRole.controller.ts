@@ -1,6 +1,8 @@
 import {
+  BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
@@ -12,19 +14,14 @@ import {
 } from '@nestjs/common';
 import { User } from 'src/common/decorators/user.decorator';
 import { PrismaService } from 'src/common/db/prisma.service';
-import { Prisma, User as UserDB } from '@prisma/client';
+import { User as UserDB } from '@prisma/client';
 import { TenantGuard } from 'src/shared/tenant/guards/tenant.guard';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CurrentTenant } from 'src/shared/tenant/decorators/current-tenant.decorator';
 import { CreateRoleDto } from './dto/createRole.dto';
 import { ProjectRoleService } from './projectRole.service';
-import { GetRolesTableListDto } from './dto/getRolesTableList.dto';
-import { RolesBlockDetails, RolesBlocks, RolesColumns, RolesSelect } from './constants/role.constant';
-import { ITableListResponse } from 'src/common/interfaces/itable.interface';
-import { ICreateEntityResponse, IEntityResponse } from 'src/common/interfaces/ientity.interface';
+import { ICreateEntityResponse } from 'src/common/interfaces/ientity.interface';
 import { IApiResultResponse } from 'src/common/interfaces/api.interface';
-import { TRoleGetPayload } from './types/role.type';
-import { TreeBuilder } from 'src/common/utils/treeBuilder';
 import { UpdateRoleDto } from './dto/updateRole.dto';
 
 @Controller('project/role')
@@ -36,7 +33,7 @@ export class ProjectRoleController {
   ) {}
 
   @Post()
-  async createRole(
+  async create(
     @CurrentTenant() projectId: number,
     @Body() createRoleDto: CreateRoleDto,
   ): Promise<IApiResultResponse<ICreateEntityResponse>> {
@@ -50,7 +47,7 @@ export class ProjectRoleController {
   }
 
   @Get()
-  async getRole(@CurrentTenant() projectId: number, @User() user: UserDB) {
+  async get(@CurrentTenant() projectId: number, @User() user: UserDB) {
     const role = await this.prismaService.role.findFirst({
       where: {
         project: {
@@ -86,124 +83,86 @@ export class ProjectRoleController {
     };
   }
 
-  /**
-   * Ручки для интерфейса. Возвращает данные для таблицы
-   * @param dto GetFilterDto
-   * @returns ITableListResponse
-   */
-  @Post('table/list')
-  // guard permission
-  async getTableList(
-    @CurrentTenant() projectId: number,
-    @Body() dto: GetRolesTableListDto,
-  ): Promise<IApiResultResponse<ITableListResponse<TRoleGetPayload>>> {
-    const rolesWhereInput: Prisma.RoleWhereInput = {};
-
-    rolesWhereInput.projectId = projectId;
-
-    if (dto.filter?.code) {
-      rolesWhereInput.code = { contains: dto.filter.code, mode: 'insensitive' };
-    }
-
-    if (dto.filter?.default !== undefined) {
-      rolesWhereInput.default = dto.filter.default;
-    }
-
-    if (dto.filter?.title) {
-      rolesWhereInput.title = { contains: dto.filter.title, mode: 'insensitive' };
-    }
-
-    const total = await this.prismaService.role.count({ where: rolesWhereInput, orderBy: { id: 'asc' } });
-    const rolesData = await this.prismaService.role.findMany({
-      select: RolesSelect,
-      orderBy: { id: 'asc' },
-      where: rolesWhereInput,
-      take: dto.size,
-      skip: (dto.page - 1) * dto.size,
-    });
-
-    return {
-      result: {
-        columns: RolesColumns,
-        data: rolesData,
-        page: dto.page,
-        total,
-        maxPage: Math.max(Math.ceil(total / dto.size), 1),
-      },
-    };
-  }
-
-  @Get('table/create')
-  async getTableCreate(): Promise<IApiResultResponse<Pick<IEntityResponse, 'blocks' | 'blockDetails'>>> {
-    return {
-      result: {
-        blocks: RolesBlocks,
-        blockDetails: RolesBlockDetails,
-      },
-    };
-  }
-
-  /**
-   * Ручки для интерфейса. Возвращает данные для таблицы
-   * @returns IEntity
-   */
-  @Get('table/:roleId')
-  async getTable(
-    @CurrentTenant() projectId: number,
-    @Param('roleId', ParseIntPipe) roleId: number,
-  ): Promise<IApiResultResponse<IEntityResponse>> {
-    const rolesWhereInput: Prisma.RoleWhereUniqueInput = {
-      projectId,
-      id: roleId,
-    };
-
-    const roleData = await this.prismaService.role.findUnique({
-      where: rolesWhereInput,
-      select: {
-        id: true,
-        title: true,
-        code: true,
-        default: true,
-        rolePermission: {
-          select: {
-            id: true,
-            persmission: {
-              select: {
-                id: true,
-                code: true,
-                parentId: true,
-                description: true,
-                name: true,
-              },
-            },
-            granted: true,
-          },
-        },
-      },
-    });
-
-    const permissionTree = TreeBuilder.buildPermissionTree(roleData.rolePermission);
-
-    // TODO: Принимать изминений из дерева
-    return {
-      result: {
-        blocks: RolesBlocks,
-        blockDetails: RolesBlockDetails,
-        data: {
-          id: roleData.id,
-          title: roleData.title,
-          code: roleData.code,
-          default: roleData.default,
-          tree: permissionTree,
-        },
-      },
-    };
-  }
-
   @Patch()
   @HttpCode(HttpStatus.OK)
-  async updateRole(@CurrentTenant() projectId: number, @Body() updateRoleDto: UpdateRoleDto) {
+  async update(@CurrentTenant() projectId: number, @Body() updateRoleDto: UpdateRoleDto) {
     await this.projectRolesService.updateRole(projectId, updateRoleDto);
+
+    return { result: true };
+  }
+
+  @Delete(':roleId')
+  @HttpCode(HttpStatus.OK)
+  async delete(@CurrentTenant() projectId: number, @Param('roleId', ParseIntPipe) roleId: number) {
+    const role = await this.prismaService.role.findUnique({
+      where: {
+        project: {
+          id: projectId,
+        },
+        id: roleId,
+      },
+      select: {
+        id: true,
+        code: true,
+        default: true,
+        deleted: true,
+      },
+    });
+
+    if (role.default) {
+      throw new BadRequestException('Cannot delete system role');
+    }
+
+    if (role.deleted) {
+      throw new BadRequestException('The role already deleted');
+    }
+
+    await this.prismaService.role.update({
+      where: {
+        id: role.id,
+      },
+      data: {
+        deleted: true,
+      },
+    });
+
+    return { result: true };
+  }
+
+  @Patch('restore/:roleId')
+  @HttpCode(HttpStatus.OK)
+  async restore(@CurrentTenant() projectId: number, @Param('roleId', ParseIntPipe) roleId: number) {
+    const role = await this.prismaService.role.findUnique({
+      where: {
+        project: {
+          id: projectId,
+        },
+        id: roleId,
+      },
+      select: {
+        id: true,
+        code: true,
+        default: true,
+        deleted: true,
+      },
+    });
+
+    if (role.default) {
+      throw new BadRequestException('Cannot restore system role');
+    }
+
+    if (!role.deleted) {
+      throw new BadRequestException('The role is acitve');
+    }
+
+    await this.prismaService.role.update({
+      where: {
+        id: role.id,
+      },
+      data: {
+        deleted: false,
+      },
+    });
 
     return { result: true };
   }

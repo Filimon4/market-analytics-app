@@ -19,6 +19,16 @@ export class RolesTableFilterDto {
   })
   @IsBoolean()
   default?: boolean;
+
+  @IsOptional()
+  @Transform(({ value }) => {
+    if (!value) return undefined;
+    if (value === '1' || value === 'true') return true;
+
+    return false;
+  })
+  @IsBoolean()
+  deleted?: boolean;
 }
 
 export class GetRolesTableListDto {
