@@ -10,6 +10,7 @@ import { ProjectRoleModule } from 'src/modules/projectRole/projectRole.module';
 import { ProjectUserModule } from 'src/modules/projectUser/projectUser.module';
 import { StrategyModule } from 'src/modules/strategy/strategy.module';
 import { UserModule } from 'src/modules/user/user.module';
+import { PermissionModule } from 'src/shared/permissions/permissions.module';
 import { TenantModule } from 'src/shared/tenant/tenant.module';
 import { APP_FILTER, HttpAdapterHost } from '@nestjs/core';
 import { PrismaClientExceptionFilter } from 'nestjs-prisma';
@@ -38,6 +39,7 @@ import { LoggerModule } from 'market-logger/logger';
     LoggerModule.forRoot(),
     DbModule,
     TenantModule,
+    PermissionModule,
     AuthModule,
 
     UserModule,

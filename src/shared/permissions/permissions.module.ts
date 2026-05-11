@@ -1,5 +1,10 @@
 import { Global, Module } from '@nestjs/common';
+import { PermissionsGuard } from './guards/permissions.guard';
+import { PermissionsService } from './permissions.service';
 
 @Global()
-@Module({})
+@Module({
+  providers: [PermissionsService, PermissionsGuard],
+  exports: [PermissionsGuard],
+})
 export class PermissionModule {}
