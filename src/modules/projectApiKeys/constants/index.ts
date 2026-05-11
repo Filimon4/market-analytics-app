@@ -16,7 +16,7 @@ export const ApiKeysColumns: ITableColumn[] = [
     path: 'status.code',
   },
   { code: 'expiresAt', name: 'Срок дейтсвия', type: 'datetime', filtrable: false }, // TODO: Добавить datetime фильтр
-  { code: 'createdAt', name: 'Дата создания', type: 'datetime', filtrable: false }, // TODO: Добавить datetime фильтр
+  { code: 'createdAt', name: 'Дата создания', type: 'datetime', filtrable: false },
 ] as const;
 
 export const ApiKeysBlocks: IBlock[] = [

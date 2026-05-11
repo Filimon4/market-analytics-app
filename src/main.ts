@@ -13,7 +13,6 @@ import { AuthPublicModule } from './modules/auth/auth.public.module';
 import { LoggerService } from 'market-logger/logger';
 import { ClsService } from 'nestjs-cls';
 
-// TODO: Добавть проверку доступности роли для действий. То добавить проверку на возможность совершать дейтвие по ручке
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     httpsOptions: {

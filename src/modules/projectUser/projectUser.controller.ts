@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Post, UseGuards } from '@nestjs/common';
 import { PrismaService } from 'src/common/db/prisma.service';
 import { TenantGuard } from 'src/shared/tenant/guards/tenant.guard';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -15,20 +15,11 @@ import {
   UserToProjectBlocks,
   UserToProjectColumns,
 } from './constants/user.constant';
-import { User } from 'src/common/decorators/user.decorator';
 
 @Controller('project/user')
 @UseGuards(JwtAuthGuard, TenantGuard)
 export class ProjectUserController {
   constructor(private readonly prismaService: PrismaService) {}
-
-  // TODO: Приглашение пользователя
-  @Post('/invite')
-  async createInvite(@CurrentTenant() projectId: number, @Body() dto) {}
-
-  // TODO: Принять приглашение
-  @Get('/invite/:hash')
-  async appeptInvite(@Param('hash') hash: string, @User() user: UserDB) {}
 
   /**
    * Ручки для интерфейса. Возвращает данные для таблицы

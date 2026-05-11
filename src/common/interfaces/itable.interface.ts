@@ -1,7 +1,7 @@
 export interface ITableColumn {
   code: string;
   name: string;
-  type: 'string' | 'number' | 'boolean' | 'select' | 'constants' | 'datetime'; // TODO: Добавить datetime
+  type: 'string' | 'number' | 'boolean' | 'select' | 'constants' | 'datetime';
   filtrable: boolean;
   selectUrl?: string; // for select
   constantList?: string[]; // for constant

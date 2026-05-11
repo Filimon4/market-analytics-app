@@ -24,7 +24,7 @@ import { User as UserDB } from '@prisma/client';
 import { EInvitationAction } from './enum/action.enum';
 import { ApiParam } from '@nestjs/swagger';
 
-// TOOD: Permissions: PROJECT_SEND_INVITE, PROJECT_CANCEL_INVITE
+// TODO: Permissions: PROJECT_SEND_INVITE, PROJECT_CANCEL_INVITE
 @Controller({ path: 'invitations', version: '1' })
 export class ProjectInvitationController {
   private readonly logger = new Logger(ProjectInvitationController.name);
