@@ -7,15 +7,14 @@ import { InvitationListDto } from './dto/infitationLIst.dto';
 import { InvitationService } from './projectInvitation.service';
 import { User } from 'src/common/decorators/user.decorator';
 import { User as UserDB } from '@prisma/client';
-import { InvitationResendDto } from './dto/invitationResend.dto';
 
 @Controller({ path: 'invitations', version: '1' })
-@UseGuards(JwtAuthGuard, TenantGuard)
 export class ProjectInvitationController {
   constructor(private readonly invitationService: InvitationService) {}
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
+  @UseGuards(JwtAuthGuard, TenantGuard)
   async send(@CurrentTenant() projectId: number, @Body() dto: InvitationSendDto, @User() user: UserDB) {
     await this.invitationService.send(projectId, dto, user);
 
@@ -24,16 +23,17 @@ export class ProjectInvitationController {
 
   @Post('/:token/resend')
   @HttpCode(HttpStatus.CREATED)
+  @UseGuards(JwtAuthGuard, TenantGuard)
   async resend(@CurrentTenant() projectId: number, @Param('token') token: string, @User() user: UserDB) {
-    // await this.invitationService.resend(projectId, dto, user);
+    await this.invitationService.resend(projectId, token, user);
 
     return { result: true };
   }
 
   @Patch('/:token/accept')
   @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtAuthGuard, TenantGuard)
   async accept(@Param('token') token: string, @User() user: UserDB) {
-    console.log(token, user);
     await this.invitationService.accept(token, user);
 
     return { result: true };
@@ -41,6 +41,7 @@ export class ProjectInvitationController {
 
   @Patch('/:token/decline')
   @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtAuthGuard, TenantGuard)
   async decline(@Param('token') token: string, @User() user: UserDB) {
     await this.invitationService.decline(token, user);
 
@@ -49,6 +50,7 @@ export class ProjectInvitationController {
 
   @Patch('/:token/cancel')
   @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtAuthGuard, TenantGuard)
   async cancel(@User() user: UserDB, @Param('token') token: string) {
     await this.invitationService.cancel(token, user);
 
@@ -57,9 +59,19 @@ export class ProjectInvitationController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtAuthGuard, TenantGuard)
   async list(@CurrentTenant() projectId: number, @Query() dto: InvitationListDto) {
     const list = await this.invitationService.list(projectId, dto);
 
     return { result: list };
+  }
+
+  @Get('/:token')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtAuthGuard)
+  async getInvitation(@User() user: UserDB, @Param('token') token: string) {
+    const invitation = await this.invitationService.getByToken(token, user);
+
+    return { result: invitation };
   }
 }

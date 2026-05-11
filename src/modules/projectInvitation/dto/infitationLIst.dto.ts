@@ -1,8 +1,8 @@
 import { $Enums } from '@prisma/client';
 import { Type } from 'class-transformer';
-import { IsIn, IsNotEmpty, IsNumber, IsOptional, IsString, Max, Min } from 'class-validator';
+import { IsIn, IsNotEmpty, IsNumber, IsOptional, IsString, Max, Min, ValidateNested } from 'class-validator';
 
-export class InvitationListDto {
+export class InvitationFilterDto {
   @IsOptional()
   @IsIn(Object.values($Enums.InvitationStatus))
   status?: string;
@@ -10,6 +10,13 @@ export class InvitationListDto {
   @IsOptional()
   @IsString()
   email?: string;
+}
+
+export class InvitationListDto {
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => InvitationFilterDto)
+  filter: InvitationFilterDto = {};
 
   @IsNotEmpty()
   @Type(() => Number)

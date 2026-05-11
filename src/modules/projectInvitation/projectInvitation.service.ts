@@ -11,7 +11,6 @@ import { InvitationSendDto } from './dto/invitationSend.dto';
 import { $Enums, Prisma, User as UserDB } from '@prisma/client';
 import { ConfigService } from '@nestjs/config';
 import { InvitationListDto } from './dto/infitationLIst.dto';
-import { InvitationResendDto } from './dto/invitationResend.dto';
 import { randomUUID } from 'crypto';
 
 @Injectable()
@@ -58,7 +57,7 @@ export class InvitationService {
       },
     });
 
-    const inviteLink = `${this.FRONTEND_URL}/invite/${invitation.token}`;
+    const inviteLink = this.getInvitationLink(invitation.token);
 
     this.emailService
       .sendInvitation({
@@ -72,7 +71,7 @@ export class InvitationService {
     return invitation;
   }
 
-  async resend(projectId: number, dto: InvitationResendDto, user: UserDB) {
+  async resend(projectId: number, token: string, user: UserDB) {
     const membership = await this.prismaService.userToProject.findFirst({
       where: { projectId: projectId, userId: user.id },
       include: { userRole: true },
@@ -82,9 +81,13 @@ export class InvitationService {
       throw new BadRequestException('You are not a member of this project');
     }
 
-    const existingInvitation = await this.prismaService.invitation.findUnique({
-      where: { id: dto.id },
+    const existingInvitation = await this.prismaService.invitation.findFirst({
+      where: { token, projectId },
     });
+
+    if (!existingInvitation) {
+      throw new BadRequestException('Failed to find invitation');
+    }
 
     if (existingInvitation && ['ACCEPTED', 'DECLINED'].includes(existingInvitation.status)) {
       throw new ConflictException('The invitation cannot be resend');
@@ -99,13 +102,14 @@ export class InvitationService {
           status: $Enums.InvitationStatus.PENDING,
           token: randomUUID(),
           expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 дней
+          invitedById: user.id,
         },
         include: {
           project: true,
         },
       });
 
-      const inviteLink = `${this.FRONTEND_URL}/invite/${updatedInvitation.token}`;
+      const inviteLink = this.getInvitationLink(updatedInvitation.token);
 
       this.emailService
         .sendInvitation({
@@ -125,7 +129,7 @@ export class InvitationService {
 
   async accept(token: string, user: UserDB) {
     const invitation = await this.prismaService.invitation.findFirst({
-      where: { token },
+      where: { token, email: user.email },
       include: { project: true },
     });
 
@@ -145,21 +149,9 @@ export class InvitationService {
       throw new BadRequestException('The invitation expired');
     }
 
-    const userId = user?.id;
-
-    if (!userId) {
-      throw new BadRequestException('The user must be authorized');
-    }
-
-    console.log(invitation);
-
-    if (user.email.toLowerCase() !== invitation.email.toLowerCase()) {
-      throw new BadRequestException('Email of user is not equal email in invitation!');
-    }
-
     const potentionProjectUser = await this.prismaService.userToProject.findFirst({
       where: {
-        userId,
+        userId: user.id,
         projectId: invitation.projectId,
       },
     });
@@ -185,7 +177,7 @@ export class InvitationService {
 
       await tx.userToProject.create({
         data: {
-          userId,
+          userId: user.id,
           projectId: invitation.projectId,
           roleId: defaultRole.id,
           blocked: false,
@@ -239,8 +231,12 @@ export class InvitationService {
   async list(projectId: number, dto: InvitationListDto) {
     const where: Prisma.InvitationFindManyArgs['where'] = { projectId };
 
-    if (dto.status) {
-      where.status = dto.status as $Enums.InvitationStatus;
+    if (dto.filter?.status) {
+      where.status = dto.filter.status as $Enums.InvitationStatus;
+    }
+
+    if (dto.filter?.email) {
+      where.email = dto.filter.email;
     }
 
     return this.prismaService.invitation.findMany({
@@ -250,5 +246,25 @@ export class InvitationService {
       },
       orderBy: { createdAt: 'desc' },
     });
+  }
+
+  async getByToken(token: string, user: UserDB) {
+    const invitation = await this.prismaService.invitation.findFirst({
+      where: {
+        token,
+        email: user.email,
+      },
+    });
+
+    if (!invitation) {
+      throw new BadRequestException('Failed to finde invitation');
+    }
+
+    return invitation;
+  }
+
+  private getInvitationLink(token: string): string {
+    const params = new URLSearchParams({ token });
+    return `${this.FRONTEND_URL}/invite?${params.toString()}`;
   }
 }
