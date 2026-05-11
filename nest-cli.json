@@ -10,9 +10,23 @@
       {
         "name": "@nestjs/swagger",
         "options": {
-          "dtoFileNameSuffix": [".dto.ts"]
+          "dtoFileNameSuffix": [
+            ".dto.ts"
+          ]
         }
       }
-    ]
+    ],
+    "webpack": true
+  },
+  "projects": {
+    "logger": {
+      "type": "library",
+      "root": "libs/logger",
+      "entryFile": "index",
+      "sourceRoot": "libs/logger/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/logger/tsconfig.lib.json"
+      }
+    }
   }
 }

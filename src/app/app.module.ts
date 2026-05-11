@@ -17,6 +17,7 @@ import { ProjectInvitationModule } from 'src/modules/projectInvitation/projectIn
 import { ClsModule } from 'nestjs-cls';
 import { TRACE_HEADER_NAME } from 'src/common/constants';
 import { randomUUID } from 'crypto';
+import { LoggerModule } from 'market-logger/logger';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { randomUUID } from 'crypto';
         idGenerator: (request: Request) => String(request.headers[TRACE_HEADER_NAME.toLowerCase()] ?? randomUUID()),
       },
     }),
+    LoggerModule.forRoot(),
     DbModule,
     TenantModule,
     AuthModule,
