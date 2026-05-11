@@ -1,15 +1,13 @@
 import { DynamicModule, Module, Provider } from '@nestjs/common';
 import { EmailService } from './email.service';
 import { ResendEmailProvider } from './providers/resend.provider';
+import { TestEmailProvider } from './providers/test.provider';
 import { EMAIL_PROVIDER_TOKEN } from './constants';
-
-export enum EmailProviderType {
-  RESEND = 'RESEND',
-}
+import { EEmailProvider } from './enum/provider.enum';
 
 @Module({})
 export class EmailModule {
-  static forRoot(providerType: EmailProviderType = EmailProviderType.RESEND): DynamicModule {
+  static forRoot(providerType: EEmailProvider = EEmailProvider.RESEND): DynamicModule {
     const provider: Provider = this.getProvider(providerType);
 
     return {
@@ -19,12 +17,17 @@ export class EmailModule {
     };
   }
 
-  private static getProvider(type: EmailProviderType): Provider {
+  private static getProvider(type: EEmailProvider): Provider {
     switch (type) {
-      case EmailProviderType.RESEND:
+      case EEmailProvider.RESEND:
         return {
           provide: EMAIL_PROVIDER_TOKEN,
           useClass: ResendEmailProvider,
+        };
+      case EEmailProvider.TEST:
+        return {
+          provide: EMAIL_PROVIDER_TOKEN,
+          useClass: TestEmailProvider,
         };
       default:
         throw new Error(`Unknown email provider: ${type}`);

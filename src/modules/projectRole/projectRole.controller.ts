@@ -50,13 +50,11 @@ export class ProjectRoleController {
   async get(@CurrentTenant() projectId: number, @User() user: UserDB) {
     const role = await this.prismaService.role.findFirst({
       where: {
-        project: {
-          id: projectId,
-        },
+        projectId,
         userToProject: {
           some: {
             userId: user.id,
-            projectId: projectId,
+            projectId,
           },
         },
       },
@@ -78,7 +76,6 @@ export class ProjectRoleController {
     return {
       result: {
         ...role,
-        projectId: role.projectId.toString(),
       },
     };
   }

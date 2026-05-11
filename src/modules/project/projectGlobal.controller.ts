@@ -46,39 +46,23 @@ export class ProjectGlobalController {
 
   @Get()
   async get(@User() user: UserDB, @Query() dto: GetProjectDto) {
-    const whereProject: Prisma.ProjectWhereInput = {
-      userToProject: {
-        every: {
-          userId: user.id,
-        },
-      },
+    const whereProject: Prisma.UserToProjectWhereInput = {
+      userId: user.id,
     };
 
-    const andWhereProject: Prisma.ProjectWhereInput['AND'] = [];
-
     if (dto.userToProjectId) {
-      andWhereProject.push({
-        userToProject: {
-          every: {
-            id: dto.userToProjectId,
-          },
-        },
-      });
+      whereProject.id = dto.userToProjectId;
     }
 
-    whereProject.AND = andWhereProject;
-
-    const project = await this.prismaService.project.findFirst({
+    const project = await this.prismaService.userToProject.findFirst({
       where: whereProject,
-      select: {
-        id: true,
-        name: true,
-        description: true,
+      include: {
+        project: true,
       },
     });
 
     if (!project) {
-      throw new NotFoundException('There is not project');
+      throw new NotFoundException('There is no project');
     }
 
     return { result: { ...project, id: project.id.toString() } };

@@ -1,4 +1,4 @@
-import { Injectable, CanActivate, ExecutionContext, UnauthorizedException, SetMetadata } from '@nestjs/common';
+import { Injectable, CanActivate, ExecutionContext, SetMetadata, ForbiddenException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 
 export const IS_TENANT_OPTIONAL_KEY = 'isTenantOptional';
@@ -25,7 +25,7 @@ export class TenantGuard implements CanActivate {
     }
 
     if (!tenantId && !isTenantOptional) {
-      throw new UnauthorizedException('Tenant ID is required');
+      throw new ForbiddenException('Tenant ID is required');
     }
 
     request.tenantId = tenantId;
