@@ -23,8 +23,8 @@ import { User } from 'src/common/decorators/user.decorator';
 import { User as UserDB } from '@prisma/client';
 import { EInvitationAction } from './enum/action.enum';
 import { ApiParam } from '@nestjs/swagger';
+import { RequirePermissions } from '@src/shared/permissions/decorators/require-permissions.decorator';
 
-// TODO: Permissions: PROJECT_SEND_INVITE, PROJECT_CANCEL_INVITE
 @Controller({ path: 'invitations', version: '1' })
 export class ProjectInvitationController {
   private readonly logger = new Logger(ProjectInvitationController.name);
@@ -34,6 +34,7 @@ export class ProjectInvitationController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @UseGuards(JwtAuthGuard, TenantGuard)
+  @RequirePermissions('PROJECT_SEND_INVITE')
   async send(@CurrentTenant() projectId: number, @Body() dto: InvitationSendDto, @User() user: UserDB) {
     const token = await this.invitationService.send(projectId, dto, user);
 
@@ -43,6 +44,7 @@ export class ProjectInvitationController {
   @Post('/:token/resend')
   @HttpCode(HttpStatus.CREATED)
   @UseGuards(JwtAuthGuard, TenantGuard)
+  @RequirePermissions('PROJECT_SEND_INVITE')
   async resend(@CurrentTenant() projectId: number, @Param('token') token: string, @User() user: UserDB) {
     await this.invitationService.resend(projectId, token, user);
 
@@ -52,6 +54,7 @@ export class ProjectInvitationController {
   @Patch('/:token/cancel')
   @HttpCode(HttpStatus.OK)
   @UseGuards(JwtAuthGuard, TenantGuard)
+  @RequirePermissions('PROJECT_CANCEL_INVITE')
   async cancel(@CurrentTenant() projectId: number, @User() user: UserDB, @Param('token') token: string) {
     await this.invitationService.cancel(projectId, token, user);
 

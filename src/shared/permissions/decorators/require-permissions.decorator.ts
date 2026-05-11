@@ -1,5 +1,7 @@
-import { SetMetadata } from '@nestjs/common';
+import { applyDecorators, SetMetadata, UseGuards } from '@nestjs/common';
 import { PERMISSIONS_KEY } from '../permissions.constants';
+import { PermissionsGuard } from '../guards/permissions.guard';
 
-export const RequirePermissions = (...codes: string[]): ReturnType<typeof SetMetadata> =>
-  SetMetadata(PERMISSIONS_KEY, codes);
+export const RequirePermissions = (...codes: string[]) => {
+  return applyDecorators(SetMetadata(PERMISSIONS_KEY, codes), UseGuards(PermissionsGuard));
+};
