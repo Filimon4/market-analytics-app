@@ -66,6 +66,7 @@ async function bootstrap() {
     },
   });
 
+  // #region dev
   const developerConfig = new DocumentBuilder()
     .setTitle('API')
     .setDescription('Документация API для разработчиков')
@@ -76,6 +77,7 @@ async function bootstrap() {
     include: [AuthPublicModule],
   });
   SwaggerModule.setup('open-crm-api', app, developerDocument);
+  // #endregion
 
   const logger = new Logger('Bootstrap');
   const port = configService.get<number>(EnvironmentVariablesType.HTTP_PORT)!;

@@ -14,11 +14,22 @@ import { TenantModule } from 'src/shared/tenant/tenant.module';
 import { APP_FILTER, HttpAdapterHost } from '@nestjs/core';
 import { PrismaClientExceptionFilter } from 'nestjs-prisma';
 import { ProjectInvitationModule } from 'src/modules/projectInvitation/projectInvitation.module';
+import { ClsModule } from 'nestjs-cls';
+import { TRACE_HEADER_NAME } from 'src/common/constants';
+import { randomUUID } from 'crypto';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+    }),
+    ClsModule.forRoot({
+      global: true,
+      middleware: {
+        mount: true,
+        generateId: true,
+        idGenerator: (request: Request) => String(request.headers[TRACE_HEADER_NAME.toLowerCase()] ?? randomUUID()),
+      },
     }),
     DbModule,
     TenantModule,
