@@ -1,7 +1,7 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { LoggerService } from './logger.service';
-import { LoggerInterceptor } from './ logger.interceptor';
+import { LoggerInterceptor } from './logger.interceptor';
 
 @Module({
   providers: [LoggerService],

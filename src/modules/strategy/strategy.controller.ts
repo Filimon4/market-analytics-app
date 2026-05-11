@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { StrategyService } from './strategy.service';
-import { CreateStrategyDto } from './dto/createStrategy.dto.js';
-import { UpdateStrategyDto } from './dto/updateStrategy.dto.js';
+import { CreateStrategyDto } from './dto/createStrategy.dto';
+import { UpdateStrategyDto } from './dto/updateStrategy.dto';
 import { User } from 'src/common/decorators/user.decorator';
 import type { User as UserDB } from '@prisma/client';
 

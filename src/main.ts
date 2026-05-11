@@ -6,10 +6,12 @@ import { ConfigService } from '@nestjs/config';
 import { EnvironmentVariablesType } from './common/constants/environment-variables.type';
 import './common/utils/bigint.serializer';
 import metadata from './metadata';
-import cookieParser from 'cookie-parser';
+import * as cookieParser from 'cookie-parser';
 import * as fs from 'fs';
 import { join } from 'path';
 import { AuthPublicModule } from './modules/auth/auth.public.module';
+import { LoggerService } from 'market-logger/logger';
+import { ClsService } from 'nestjs-cls';
 
 // TODO: Добавть проверку доступности роли для действий. То добавить проверку на возможность совершать дейтвие по ручке
 async function bootstrap() {
@@ -19,6 +21,8 @@ async function bootstrap() {
       cert: fs.readFileSync(join(__dirname, '..', 'certs', 'localhost+2.pem')),
     },
   });
+  const logger = new LoggerService(app.get(ClsService));
+
   app.use(cookieParser());
   app.enableCors({
     origin: true,
@@ -36,6 +40,8 @@ async function bootstrap() {
     defaultVersion: '1',
     type: VersioningType.URI,
   });
+
+  app.useLogger(logger);
 
   const configService = app.get(ConfigService);
   const swaggerPrefixURL = configService.get<string>(EnvironmentVariablesType.HTTP_OPEN_API_PREFIX)!;
@@ -79,7 +85,6 @@ async function bootstrap() {
   SwaggerModule.setup('open-crm-api', app, developerDocument);
   // #endregion
 
-  const logger = new Logger('Bootstrap');
   const port = configService.get<number>(EnvironmentVariablesType.HTTP_PORT)!;
   const host = configService.get<string>(EnvironmentVariablesType.HTTP_HOST)!;
 

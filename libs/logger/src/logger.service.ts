@@ -13,23 +13,23 @@ export class LoggerService extends ConsoleLogger {
     return traceId ? `[${traceId}] ${message}` : message;
   }
 
-  log(message: string, context?: string) {
+  log(message: string, context: string = '') {
     super.log(this.format(message), context);
   }
 
-  error(message: string, trace?: string, context?: string) {
+  error(message: string, trace: string = '', context: string = '') {
     super.error(this.format(message), trace, context);
   }
 
-  warn(message: string, context?: string) {
+  warn(message: string, context: string = '') {
     super.warn(this.format(message), context);
   }
 
-  debug(message: string, context?: string) {
+  debug(message: string, context: string = '') {
     super.debug(this.format(message), context);
   }
 
-  verbose(message: string, context?: string) {
+  verbose(message: string, context: string = '') {
     super.verbose(this.format(message), context);
   }
 }

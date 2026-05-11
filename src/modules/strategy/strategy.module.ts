@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { StrategyService } from './strategy.service.js';
-import { StrategyController } from './strategy.controller.js';
+import { StrategyController } from './strategy.controller';
+import { StrategyService } from './strategy.service';
 
 @Module({
   controllers: [StrategyController],

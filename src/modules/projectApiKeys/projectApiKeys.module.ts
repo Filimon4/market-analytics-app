@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { ProjectApiKeyController } from './projectApiKeys.controller.js';
-import { ProjectApiKeyService } from './projectApiKeys.service.js';
+import { ProjectApiKeyController } from './projectApiKeys.controller';
+import { ProjectApiKeyService } from './projectApiKeys.service';
 
 @Module({
   controllers: [ProjectApiKeyController],

@@ -18,12 +18,9 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "market-logger/logger": [
-        "libs/logger/src"
-      ],
-      "market-logger/logger/*": [
-        "libs/logger/src/*"
-      ]
+      "@src/*": ["./src/*"],
+      "market-logger/logger": ["libs/logger/src"],
+      "market-logger/logger/*": ["libs/logger/src/*"]
     }
   }
 }

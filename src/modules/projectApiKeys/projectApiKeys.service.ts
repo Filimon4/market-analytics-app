@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from '../../common/db/prisma.service.js';
-import { UpdateApiKeyDto } from './dto/updateApiKey.dto.js';
-import { GetApiKeyDto } from './dto/getApiKey.dto.js';
+import { PrismaService } from '../../common/db/prisma.service';
+import { UpdateApiKeyDto } from './dto/updateApiKey.dto';
+import { GetApiKeyDto } from './dto/getApiKey.dto';
 
 @Injectable()
 export class ProjectApiKeyService {
