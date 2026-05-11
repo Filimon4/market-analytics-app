@@ -15,7 +15,7 @@ import { APP_FILTER, HttpAdapterHost } from '@nestjs/core';
 import { PrismaClientExceptionFilter } from 'nestjs-prisma';
 import { ProjectInvitationModule } from 'src/modules/projectInvitation/projectInvitation.module';
 import { ClsModule } from 'nestjs-cls';
-import { TRACE_HEADER_NAME } from 'src/common/constants';
+import { TENANT_CLS_NAME, TENANT_HEADER_NAME, TRACE_HEADER_NAME } from 'src/common/constants';
 import { randomUUID } from 'crypto';
 import { LoggerModule } from 'market-logger/logger';
 
@@ -30,6 +30,9 @@ import { LoggerModule } from 'market-logger/logger';
         mount: true,
         generateId: true,
         idGenerator: (request: Request) => String(request.headers[TRACE_HEADER_NAME.toLowerCase()] ?? randomUUID()),
+        setup(cls, req: Request) {
+          cls.set(TENANT_CLS_NAME, req.headers[TENANT_HEADER_NAME]);
+        },
       },
     }),
     LoggerModule.forRoot(),

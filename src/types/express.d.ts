@@ -6,5 +6,6 @@ declare module 'express' {
   export interface Request {
     apiKey?: ApiKey;
     user?: User;
+    tenantId?: string;
   }
 }

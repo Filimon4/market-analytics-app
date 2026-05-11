@@ -45,6 +45,10 @@ export class ProjectController {
       },
     });
 
+    if (!project) {
+      throw new BadRequestException('There is no project');
+    }
+
     if (project.userToProject.length > 1) {
       throw new BadRequestException('User cannot has more then one connection to a project');
     }
