@@ -15,8 +15,9 @@ import {
   UserToProjectBlocks,
   UserToProjectColumns,
 } from './constants/user.constant';
+import { UserEntity } from './types/user.table';
 
-@Controller('project/user')
+@Controller('project/user/table')
 @UseGuards(JwtAuthGuard, TenantGuard)
 export class ProjectUserController {
   constructor(private readonly prismaService: PrismaService) {}
@@ -26,7 +27,7 @@ export class ProjectUserController {
    * @param dto GetFilterDto
    * @returns ITableListResponse
    */
-  @Post('table/list')
+  @Post('list')
   // guard permission
   async getTableList(
     @CurrentTenant() projectId: number,
@@ -76,7 +77,7 @@ export class ProjectUserController {
    * Ручки для интерфейса. Возвращает данные для таблицы
    * @returns IEntity
    */
-  @Get('table/create')
+  @Get('create')
   async getTableCreate(): Promise<IApiResultResponse<Pick<IEntityResponse, 'blocks' | 'blockDetails'>>> {
     return {
       result: {
@@ -90,11 +91,11 @@ export class ProjectUserController {
    * Ручки для интерфейса. Возвращает данные для таблицы
    * @returns IEntity
    */
-  @Get('table/:id')
+  @Get(':id')
   async getTable(
     @CurrentTenant() projectId: number,
     @Param('id', ParseIntPipe) userId: number,
-  ): Promise<IApiResultResponse<IEntityResponse>> {
+  ): Promise<IApiResultResponse<IEntityResponse<UserEntity>>> {
     const userToProjectWhereInput: Prisma.UserToProjectWhereInput = {
       projectId,
       id: userId,
@@ -109,7 +110,17 @@ export class ProjectUserController {
       result: {
         blocks: UserToProjectBlocks,
         blockDetails: UserToProjectBlockDetails,
-        data: { ...userToProjectData, id: userToProjectData.id.toString() },
+        data: {
+          id: String(userToProjectData.id),
+          user: {
+            email: userToProjectData.user.email,
+            name: userToProjectData.user.name,
+          },
+          userRole: {
+            code: userToProjectData.userRole.code,
+          },
+          blocked: Number(userToProjectData.blocked) as 0 | 1,
+        },
       },
     };
   }

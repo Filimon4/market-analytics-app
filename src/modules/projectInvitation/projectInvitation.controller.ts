@@ -33,8 +33,8 @@ export class ProjectInvitationController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  @UseGuards(JwtAuthGuard, TenantGuard)
   @RequirePermissions('PROJECT_SEND_INVITE')
+  @UseGuards(JwtAuthGuard, TenantGuard)
   async send(@CurrentTenant() projectId: number, @Body() dto: InvitationSendDto, @User() user: UserDB) {
     const token = await this.invitationService.send(projectId, dto, user);
 
@@ -43,8 +43,8 @@ export class ProjectInvitationController {
 
   @Post('/:token/resend')
   @HttpCode(HttpStatus.CREATED)
-  @UseGuards(JwtAuthGuard, TenantGuard)
   @RequirePermissions('PROJECT_SEND_INVITE')
+  @UseGuards(JwtAuthGuard, TenantGuard)
   async resend(@CurrentTenant() projectId: number, @Param('token') token: string, @User() user: UserDB) {
     await this.invitationService.resend(projectId, token, user);
 
@@ -53,8 +53,8 @@ export class ProjectInvitationController {
 
   @Patch('/:token/cancel')
   @HttpCode(HttpStatus.OK)
-  @UseGuards(JwtAuthGuard, TenantGuard)
   @RequirePermissions('PROJECT_CANCEL_INVITE')
+  @UseGuards(JwtAuthGuard, TenantGuard)
   async cancel(@CurrentTenant() projectId: number, @User() user: UserDB, @Param('token') token: string) {
     await this.invitationService.cancel(projectId, token, user);
 
@@ -89,16 +89,7 @@ export class ProjectInvitationController {
     return { result: true };
   }
 
-  @Get()
-  @HttpCode(HttpStatus.OK)
-  @UseGuards(JwtAuthGuard, TenantGuard)
-  async list(@CurrentTenant() projectId: number, @Query() dto: InvitationListDto) {
-    const list = await this.invitationService.list(projectId, dto);
-
-    return { result: list };
-  }
-
-  @Get('/:token')
+  @Get('/me/:token')
   @HttpCode(HttpStatus.OK)
   @UseGuards(JwtAuthGuard)
   async getInvitation(@User() user: UserDB, @Param('token') token: string) {

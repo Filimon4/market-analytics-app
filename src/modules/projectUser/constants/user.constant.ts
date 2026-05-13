@@ -64,7 +64,7 @@ export const UserToProjectBlockDetails: IBlockDetail[] = [
         path: 'userRole.code',
         editable: true,
         type: 'select',
-        selectUrl: '',
+        selectUrl: '/v1/project/role/list',
         title: 'Роль',
         editPath: 'userRoleId',
 

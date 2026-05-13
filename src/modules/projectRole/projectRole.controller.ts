@@ -10,11 +10,12 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { User } from 'src/common/decorators/user.decorator';
 import { PrismaService } from 'src/common/db/prisma.service';
-import { User as UserDB } from '@prisma/client';
+import { Prisma, User as UserDB } from '@prisma/client';
 import { TenantGuard } from 'src/shared/tenant/guards/tenant.guard';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CurrentTenant } from 'src/shared/tenant/decorators/current-tenant.decorator';
@@ -23,6 +24,7 @@ import { ProjectRoleService } from './projectRole.service';
 import { ICreateEntityResponse } from 'src/common/interfaces/ientity.interface';
 import { IApiResultResponse } from 'src/common/interfaces/api.interface';
 import { UpdateRoleDto } from './dto/updateRole.dto';
+import { GetRoleList } from './dto/getRoleList.dto';
 
 @Controller('project/role')
 @UseGuards(JwtAuthGuard, TenantGuard)
@@ -77,6 +79,38 @@ export class ProjectRoleController {
       result: {
         ...role,
       },
+    };
+  }
+
+  @Get('list')
+  async list(@CurrentTenant() projectId: number, @User() user: UserDB, @Query() dto: GetRoleList) {
+    const roleWhere: Prisma.RoleWhereInput = {
+      projectId,
+    };
+
+    if (dto?.filter?.likeTitle) {
+      roleWhere.title = {
+        contains: dto.filter.likeTitle,
+      };
+    }
+
+    if (dto?.filter?.deleted) {
+      roleWhere.deleted = dto?.filter?.deleted;
+    }
+
+    const total = await this.prismaService.role.count({ where: roleWhere, orderBy: { id: 'asc' } });
+    const roles = await this.prismaService.role.findMany({
+      where: roleWhere,
+      skip: (dto.page - 1) * dto.size,
+      take: dto.size,
+      omit: {
+        projectId: true,
+      },
+    });
+
+    return {
+      result: roles,
+      maxPage: Math.max(Math.ceil(total / dto.size), 1),
     };
   }
 

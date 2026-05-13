@@ -25,11 +25,7 @@ export class PermissionsGuard implements CanActivate {
     const userId = request.user?.id;
     const tenantId = request.tenantId;
 
-    if (!userId) {
-      throw new UnauthorizedException('Cannot access this resource');
-    }
-
-    if (!tenantId) {
+    if (!userId || !tenantId) {
       throw new ForbiddenException('Cannot access this resource');
     }
 

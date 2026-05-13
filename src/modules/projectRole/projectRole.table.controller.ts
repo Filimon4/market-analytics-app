@@ -11,6 +11,7 @@ import { IEntityResponse } from 'src/common/interfaces/ientity.interface';
 import { IApiResultResponse } from 'src/common/interfaces/api.interface';
 import { TRoleGetPayload } from './types/role.type';
 import { TreeBuilder } from 'src/common/utils/treeBuilder';
+import { RoleEntity } from './types/role.table';
 
 @Controller('project/role/table/')
 @UseGuards(JwtAuthGuard, TenantGuard)
@@ -86,7 +87,7 @@ export class ProjectRoleTableController {
   async getTable(
     @CurrentTenant() projectId: number,
     @Param('roleId', ParseIntPipe) roleId: number,
-  ): Promise<IApiResultResponse<IEntityResponse>> {
+  ): Promise<IApiResultResponse<IEntityResponse<RoleEntity>>> {
     const rolesWhereInput: Prisma.RoleWhereUniqueInput = {
       projectId,
       id: roleId,
@@ -124,9 +125,9 @@ export class ProjectRoleTableController {
           id: roleData.id,
           title: roleData.title,
           code: roleData.code,
-          default: roleData.default,
+          default: Number(roleData.default) as 0 | 1,
           tree: permissionTree,
-          deleted: roleData.deleted,
+          deleted: Number(roleData.deleted) as 0 | 1,
         },
       },
     };

@@ -37,10 +37,10 @@ export interface IBlockTreeDetail extends IBlockIndentifier {
   treePath: string;
 }
 
-export interface IEntityResponse {
+export interface IEntityResponse<B = Record<string, any>> {
   blocks: IBlock[];
   blockDetails: (IBlockDetail | IBlockTreeDetail)[];
-  data: Record<string, any>;
+  data: B;
 }
 
 export interface ICreateEntityResponse {

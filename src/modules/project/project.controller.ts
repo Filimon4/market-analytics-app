@@ -1,22 +1,18 @@
-import { BadRequestException, Controller, Get, Query, UseGuards } from '@nestjs/common';
+import { BadRequestException, Controller, Get, Logger, Query, UseGuards } from '@nestjs/common';
 import { User } from 'src/common/decorators/user.decorator';
 import { PrismaService } from 'src/common/db/prisma.service';
 import { User as UserDB } from '@prisma/client';
 import { TenantGuard } from 'src/shared/tenant/guards/tenant.guard';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CurrentTenant } from 'src/shared/tenant/decorators/current-tenant.decorator';
-import { ProjectRoleService } from '../projectRole/projectRole.service';
-import { ProjectService } from './project.service';
 import { GetPanelDto } from './dto/getPanel.dto';
 
 @Controller('project')
 @UseGuards(JwtAuthGuard, TenantGuard)
 export class ProjectController {
-  constructor(
-    private readonly prismaService: PrismaService,
-    private readonly projectRolesService: ProjectRoleService,
-    private readonly projectService: ProjectService,
-  ) {}
+  private readonly logger = new Logger();
+
+  constructor(private readonly prismaService: PrismaService) {}
 
   @Get()
   async get(@CurrentTenant() projectId: number, @User() user: UserDB) {
@@ -113,6 +109,8 @@ export class ProjectController {
         },
       },
     });
+
+    this.logger.debug(`role: ${JSON.stringify(role)}`);
 
     return {
       result: panel
