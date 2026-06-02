@@ -1,7 +1,10 @@
 import { Module } from '@nestjs/common';
-import { ProjectUserController } from './projectUser.table.controller';
+import { ProjectUserTableController } from './projectUser.table.controller';
+import { ProjectUserService } from './projectUser.service';
+import { ProjectUserController } from './projectUser.controller';
 
 @Module({
-  controllers: [ProjectUserController],
+  controllers: [ProjectUserTableController, ProjectUserController],
+  providers: [ProjectUserService],
 })
 export class ProjectUserModule {}

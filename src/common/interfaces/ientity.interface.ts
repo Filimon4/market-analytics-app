@@ -20,13 +20,31 @@ export interface IField {
   path: string;
   editPath?: string;
 
-  // Поля для select
-  selectUrl?: string; // Получение данных для выбора
+  /**
+   * Поле для select
+   *
+   * Получение данных для выбора
+   */
+  selectUrl?: string;
 
-  // Поля для добаления
-  required?: true; // Обязательно заполнение при добавлении
-  createEditable?: boolean; // При добавлении можно ли менять. Перекрывает editable
-  createDefault?: boolean | string | number; // При добавлении дефолтное значение. Если поле только для отображение (editable: false) то можно добавить дефолтное значение
+  /**
+   * Поле для добаления
+   *
+   * Обязательно заполнение при добавлении
+   */
+  required?: true;
+  /**
+   * Поле для добаления
+   *
+   * При добавлении можно ли менять. Перекрывает editable
+   */
+  createEditable?: boolean;
+  /**
+   * Поле для добаления
+   *
+   * При добавлении дефолтное значение. Если поле только для отображение (editable: false) то можно добавить дефолтное значение
+   * */
+  createDefault?: boolean | string | number;
 }
 
 export interface IBlockDetail extends IBlockIndentifier {

@@ -5,7 +5,7 @@ import { AppModule } from './app/app.module';
 import { ConfigService } from '@nestjs/config';
 import { EnvironmentVariablesType } from './common/constants/environment-variables.type';
 import './common/utils/bigint.serializer';
-import metadata from './metadata';
+// import metadata from './metadata';
 import * as cookieParser from 'cookie-parser';
 import * as fs from 'fs';
 import { join } from 'path';
@@ -62,8 +62,8 @@ async function bootstrap() {
     .addSecurityRequirements('x-tenant-id')
     .build();
 
-  await SwaggerModule.loadPluginMetadata(metadata);
-  const document = SwaggerModule.createDocument(app, config);
+  // await SwaggerModule.loadPluginMetadata(metadata);
+  const document = () => SwaggerModule.createDocument(app, config);
 
   SwaggerModule.setup(swaggerPrefixURL, app, document, {
     swaggerOptions: {

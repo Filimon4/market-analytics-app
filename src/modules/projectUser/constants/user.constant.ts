@@ -21,11 +21,11 @@ export const UsersToProjectSelect: Prisma.UserToProjectSelect = {
 };
 
 export const UserToProjectColumns: ITableColumn[] = [
-  { code: 'id', name: 'Инд.', type: 'number', filtrable: false },
+  { code: 'id', name: 'Инд.', type: 'number', filtrable: false, path: 'id' },
   { code: 'role', name: 'Роль', type: 'select', selectUrl: 'title', path: 'userRole.title', filtrable: true },
   { code: 'userName', name: 'Имя пользователя', type: 'string', path: 'user.name', filtrable: true },
   { code: 'userEmail', name: 'Почта пользователя', type: 'string', path: 'user.email', filtrable: true },
-  { code: 'blocked', name: 'Заблокирован', type: 'boolean', filtrable: true },
+  { code: 'blocked', name: 'Заблокирован', type: 'boolean', filtrable: true, path: 'blocked' },
 ];
 
 export const UserToProjectBlocks: IBlock[] = [
@@ -44,19 +44,17 @@ export const UserToProjectBlockDetails: IBlockDetail[] = [
       },
       {
         path: 'user.name',
-        editable: true,
+        editable: false,
         title: 'Имя пользователя',
         type: 'string',
-        editPath: 'userName',
 
         required: true,
       },
       {
         path: 'user.email',
-        editable: true,
+        editable: false,
         title: 'Почта пользователя',
         type: 'string',
-        editPath: 'userEmail',
 
         required: true,
       },
@@ -66,7 +64,6 @@ export const UserToProjectBlockDetails: IBlockDetail[] = [
         type: 'select',
         selectUrl: '/v1/project/role/list',
         title: 'Роль',
-        editPath: 'userRoleId',
 
         required: true,
       },
@@ -75,7 +72,6 @@ export const UserToProjectBlockDetails: IBlockDetail[] = [
         editable: true,
         title: 'Заблокирован',
         type: 'boolean',
-        editPath: 'blocked',
 
         createDefault: false,
         createEditable: false,

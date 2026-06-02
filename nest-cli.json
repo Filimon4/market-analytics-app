@@ -9,11 +9,7 @@
     "plugins": [
       {
         "name": "@nestjs/swagger",
-        "options": {
-          "dtoFileNameSuffix": [
-            ".dto.ts"
-          ]
-        }
+        "options": {}
       }
     ],
     "webpack": true

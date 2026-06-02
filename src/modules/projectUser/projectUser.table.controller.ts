@@ -17,9 +17,9 @@ import {
 } from './constants/user.constant';
 import { UserEntity } from './types/user.table';
 
-@Controller('project/user/table')
+@Controller({ path: 'project/user/table', version: '1' })
 @UseGuards(JwtAuthGuard, TenantGuard)
-export class ProjectUserController {
+export class ProjectUserTableController {
   constructor(private readonly prismaService: PrismaService) {}
 
   /**

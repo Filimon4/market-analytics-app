@@ -24,8 +24,6 @@ export class TenantGuard implements CanActivate {
 
     const tenantId = this.cls.get<string>(TENANT_CLS_NAME);
 
-    console.log(tenantId);
-
     if (!tenantId && !isTenantOptional) {
       throw new ForbiddenException('Tenant ID is required');
     }
