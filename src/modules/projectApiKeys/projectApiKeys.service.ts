@@ -35,7 +35,7 @@ export class ProjectApiKeyService {
     }));
   }
 
-  // TODO: After tenant id
+  // TODO: After tenant id. Проверить все права и т.п.
   // @UseGuards(RoleGuard('2'))
   // async create(user: User, dto: CreateApiKeyDto) {
   //   const key = `api_${Date.now()}_${randomUUID()}`;
