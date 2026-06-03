@@ -51,6 +51,16 @@ export class ProjectApiKeyController {
     @CurrentTenant() projectId: number,
     @Body() dto: CreateApiKeyDto,
   ): Promise<IApiResultResponse<ICreateEntityResponse>> {
+    const status = await this.prismaService.apiKeyStatus.findFirst({
+      where: {
+        code: dto.status.code,
+      },
+      select: {
+        id: true,
+      },
+      take: 1,
+    });
+
     const createApiKeyInput: Prisma.ApiKeyCreateInput = {
       project: {
         connect: {
@@ -59,7 +69,7 @@ export class ProjectApiKeyController {
       },
       status: {
         connect: {
-          id: dto.statusId,
+          id: status.id,
         },
       },
       name: dto.name,

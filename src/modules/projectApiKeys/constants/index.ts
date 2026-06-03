@@ -38,7 +38,6 @@ export const ApiKeysBlockDetails: IEntityResponse['blockDetails'] = [
         editable: true,
         path: 'name',
         type: 'string',
-        editPath: 'name',
 
         required: true,
       },
@@ -47,14 +46,12 @@ export const ApiKeysBlockDetails: IEntityResponse['blockDetails'] = [
         editable: false,
         path: 'key',
         type: 'string',
-        editPath: 'key',
       },
       {
         title: 'Доступ апи ключа',
         editable: true,
         path: 'scope',
         type: 'string',
-        editPath: 'scope',
 
         required: true,
       },
@@ -64,7 +61,6 @@ export const ApiKeysBlockDetails: IEntityResponse['blockDetails'] = [
         path: 'status.code',
         type: 'select',
         selectUrl: '/v1/project/api-keys/statuses',
-        editPath: 'status',
 
         required: true,
       },
