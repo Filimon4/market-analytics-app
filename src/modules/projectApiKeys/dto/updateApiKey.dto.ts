@@ -1,19 +1,36 @@
-import { IsOptional, IsString, IsNumber, IsDateString } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsOptional, IsString, IsNumber, IsDateString, IsNotEmpty, ValidateNested, IsObject } from 'class-validator';
+
+export class UpdateApiKeyStatusDto {
+  @IsNotEmpty()
+  @IsNumber()
+  id: number;
+
+  @IsNotEmpty()
+  @IsString()
+  code: string;
+}
 
 export class UpdateApiKeyDto {
+  @IsNotEmpty()
+  @IsString()
+  id: string;
+
   @IsOptional()
   @IsString()
   name?: string;
 
   @IsOptional()
   @IsString()
-  permissions?: string;
+  scope?: string;
 
   @IsOptional()
   @IsDateString()
   expiresAt?: string;
 
   @IsOptional()
-  @IsNumber()
-  statusId?: number;
+  @ValidateNested()
+  @Type(() => UpdateApiKeyStatusDto)
+  @IsObject()
+  status?: UpdateApiKeyStatusDto;
 }

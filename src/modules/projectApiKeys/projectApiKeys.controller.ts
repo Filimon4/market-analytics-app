@@ -5,15 +5,11 @@ import { UpdateApiKeyDto } from './dto/updateApiKey.dto';
 import { ProjectApiKeyService } from './projectApiKeys.service';
 import { CurrentTenant } from 'src/shared/tenant/decorators/current-tenant.decorator';
 import { IApiResultResponse } from 'src/common/interfaces/api.interface';
-import { ITableListResponse } from 'src/common/interfaces/itable.interface';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from 'src/common/db/prisma.service';
-import { TProjectApiKeysResponse } from './types';
-import { ApiKeysBlockDetails, ApiKeysBlocks, ApiKeysColumns, ApiKeysSelect } from './constants';
-import { GetApiKeysTableListDto } from './dto/getApiKeysTableList';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { TenantGuard } from 'src/shared/tenant/guards/tenant.guard';
-import { ICreateEntityResponse, IEntityResponse } from 'src/common/interfaces/ientity.interface';
+import { ICreateEntityResponse } from 'src/common/interfaces/ientity.interface';
 import { CreateApiKeyDto } from './dto/createApiKey.dto';
 
 @Controller('project/api-keys')
@@ -91,88 +87,14 @@ export class ProjectApiKeyController {
     };
   }
 
-  @Post('/table/list')
-  async getTableList(
-    @CurrentTenant() projectId: number,
-    @Body() dto: GetApiKeysTableListDto,
-  ): Promise<IApiResultResponse<ITableListResponse<TProjectApiKeysResponse>>> {
-    const whereApiKeyInput: Prisma.ApiKeyWhereInput = {
-      projectId: projectId,
-    };
-
-    if (dto.filter.key) {
-      whereApiKeyInput.key = { contains: dto.filter.key };
-    }
-
-    if (dto.filter.name) {
-      whereApiKeyInput.name = { contains: dto.filter.name };
-    }
-
-    if (dto.filter.scope) {
-      whereApiKeyInput.scope = { contains: dto.filter.scope };
-    }
-
-    if (dto.filter.status) {
-      whereApiKeyInput.status = {
-        code: {
-          contains: dto.filter.status,
-        },
-      };
-    }
-
-    const total = await this.prismaService.apiKey.count({ where: whereApiKeyInput, orderBy: { id: 'asc' } });
-    const dataApiKeys = await this.prismaService.apiKey.findMany({
-      where: whereApiKeyInput,
-      select: ApiKeysSelect,
-      orderBy: { id: 'asc' },
-      take: dto.size,
-      skip: (dto.page - 1) * dto.size,
-    });
+  @Patch()
+  async updateApiKey(@Body() dto: UpdateApiKeyDto) {
+    const updated = await this.apiKeyService.update(dto);
 
     return {
       result: {
-        columns: ApiKeysColumns,
-        data: dataApiKeys.map((key) => ({ ...key, id: key.id.toString() })),
-        page: 0,
-        total,
-        maxPage: Math.max(Math.ceil(total / dto.size), 1),
-      },
-    };
-  }
-
-  @Get('/table/create')
-  async getTableCreate(): Promise<IApiResultResponse<Pick<IEntityResponse, 'blocks' | 'blockDetails'>>> {
-    return {
-      result: {
-        blocks: ApiKeysBlocks,
-        blockDetails: ApiKeysBlockDetails,
-      },
-    };
-  }
-
-  @Get('/table/:id')
-  async getTableEntity(
-    @CurrentTenant() projectId: number,
-    @Param('id', ParseIntPipe) apiKeyId: number,
-  ): Promise<IApiResultResponse<IEntityResponse>> {
-    const rolesWhereInput: Prisma.ApiKeyWhereUniqueInput = {
-      projectId,
-      id: apiKeyId,
-    };
-
-    const apiKeyData = await this.prismaService.apiKey.findUnique({
-      where: rolesWhereInput,
-      select: ApiKeysSelect,
-    });
-
-    return {
-      result: {
-        blocks: ApiKeysBlocks,
-        blockDetails: ApiKeysBlockDetails,
-        data: {
-          ...apiKeyData,
-          id: apiKeyData.id.toString(),
-        },
+        ...updated,
+        id: updated.id.toString(),
       },
     };
   }

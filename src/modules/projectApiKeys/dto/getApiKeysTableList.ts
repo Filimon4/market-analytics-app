@@ -15,7 +15,9 @@ export class ApiKeysTableFilterDto {
   scope?: string;
 
   @IsOptional()
-  status?: string;
+  @Type(() => Number)
+  @IsNumber()
+  status?: number;
 }
 
 export class GetApiKeysTableListDto {

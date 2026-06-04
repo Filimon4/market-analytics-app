@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../common/db/prisma.service';
 import { UpdateApiKeyDto } from './dto/updateApiKey.dto';
 import { GetApiKeyDto } from './dto/getApiKey.dto';
@@ -66,24 +67,18 @@ export class ProjectApiKeyService {
   //   };
   // }
 
-  async update(id: bigint, dto: UpdateApiKeyDto) {
-    const updateData: {
-      name?: string;
-      permissions?: string;
-      expiresAt?: Date;
-      statusId?: number;
-      updatedAt: Date;
-    } = {
-      updatedAt: new Date(),
-    };
+  async update(dto: UpdateApiKeyDto) {
+    const updateData: Prisma.ApiKeyUpdateInput = {};
 
-    if (dto.name !== undefined) updateData.name = dto.name;
-    if (dto.permissions !== undefined) updateData.permissions = dto.permissions;
-    if (dto.expiresAt !== undefined) updateData.expiresAt = new Date(dto.expiresAt);
-    if (dto.statusId !== undefined) updateData.statusId = dto.statusId;
+    if (dto.name) updateData.name = dto.name;
+    if (dto.scope) updateData.scope = dto.scope;
+    if (dto.expiresAt) updateData.expiresAt = new Date(dto.expiresAt);
+    if (dto.status) {
+      updateData.status = { connect: { id: dto.status.id } };
+    }
 
     return this.prismaService.apiKey.update({
-      where: { id },
+      where: { id: BigInt(dto.id) },
       data: updateData,
     });
   }

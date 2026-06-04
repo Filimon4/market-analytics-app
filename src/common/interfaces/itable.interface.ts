@@ -5,6 +5,11 @@ export interface ITableColumn {
   filtrable: boolean;
   selectUrl?: string; // for select
   constantList?: string[]; // for constant
+  /**
+   * Отображение
+   *
+   * Перекрывает code для получения пути значение в обхекте. Используется при вложенных объектах
+   */
   path?: string;
 }
 
