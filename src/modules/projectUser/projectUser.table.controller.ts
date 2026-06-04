@@ -117,6 +117,7 @@ export class ProjectUserTableController {
             name: userToProjectData.user.name,
           },
           userRole: {
+            id: userToProjectData.userRole.id,
             code: userToProjectData.userRole.code,
           },
           blocked: Number(userToProjectData.blocked) as 0 | 1,

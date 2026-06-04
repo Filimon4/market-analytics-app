@@ -58,7 +58,7 @@ export const ApiKeysBlockDetails: IEntityResponse['blockDetails'] = [
       {
         title: 'Статус апи ключа',
         editable: true,
-        path: 'status.code',
+        path: 'status',
         type: 'select',
         selectUrl: '/v1/project/api-keys/statuses',
 

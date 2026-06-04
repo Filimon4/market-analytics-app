@@ -5,6 +5,7 @@ export type UserEntity = {
     email: string;
   };
   userRole: {
+    id: number;
     code: string;
   };
   blocked: 0 | 1;

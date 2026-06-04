@@ -59,7 +59,7 @@ export const UserToProjectBlockDetails: IBlockDetail[] = [
         required: true,
       },
       {
-        path: 'userRole.code',
+        path: 'userRole',
         editable: true,
         type: 'select',
         selectUrl: '/v1/project/roles',
