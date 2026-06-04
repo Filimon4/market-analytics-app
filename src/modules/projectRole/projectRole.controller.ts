@@ -26,7 +26,7 @@ import { IApiResultResponse } from 'src/common/interfaces/api.interface';
 import { UpdateRoleDto } from './dto/updateRole.dto';
 import { GetRoleList } from './dto/getRoleList.dto';
 
-@Controller('project/role')
+@Controller('project/roles')
 @UseGuards(JwtAuthGuard, TenantGuard)
 export class ProjectRoleController {
   constructor(
@@ -48,7 +48,7 @@ export class ProjectRoleController {
     };
   }
 
-  @Get()
+  @Get('current')
   async get(@CurrentTenant() projectId: number, @User() user: UserDB) {
     const role = await this.prismaService.role.findFirst({
       where: {
@@ -82,35 +82,23 @@ export class ProjectRoleController {
     };
   }
 
-  @Get('list')
-  async list(@CurrentTenant() projectId: number, @User() user: UserDB, @Query() dto: GetRoleList) {
+  @Get()
+  async list(@CurrentTenant() projectId: number, @Query() dto: GetRoleList) {
     const roleWhere: Prisma.RoleWhereInput = {
       projectId,
+      deleted: false,
     };
 
-    if (dto?.filter?.likeTitle) {
-      roleWhere.title = {
-        contains: dto.filter.likeTitle,
-      };
-    }
-
-    if (dto?.filter?.deleted) {
-      roleWhere.deleted = dto?.filter?.deleted;
-    }
-
-    const total = await this.prismaService.role.count({ where: roleWhere, orderBy: { id: 'asc' } });
     const roles = await this.prismaService.role.findMany({
       where: roleWhere,
-      skip: (dto.page - 1) * dto.size,
-      take: dto.size,
-      omit: {
-        projectId: true,
+      select: {
+        id: true,
+        code: true,
       },
     });
 
     return {
       result: roles,
-      maxPage: Math.max(Math.ceil(total / dto.size), 1),
     };
   }
 

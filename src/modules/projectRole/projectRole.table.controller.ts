@@ -13,7 +13,7 @@ import { TRoleGetPayload } from './types/role.type';
 import { TreeBuilder } from 'src/common/utils/treeBuilder';
 import { RoleEntity } from './types/role.table';
 
-@Controller('project/role/table/')
+@Controller('project/roles/table/')
 @UseGuards(JwtAuthGuard, TenantGuard)
 export class ProjectRoleTableController {
   constructor(private readonly prismaService: PrismaService) {}
