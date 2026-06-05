@@ -4,7 +4,7 @@ import { PrismaService } from 'src/common/db/prisma.service';
 import { User } from 'src/common/decorators/user.decorator';
 import { CreateProjectDto } from './dto/createProject.dto';
 import { Prisma, User as UserDB } from '@prisma/client';
-import { DefaultPermissions, DefaultRoles } from './constants';
+import { DefaultPermissions, DefaultRoles, EDefaultCodeRole } from './constants';
 import { GetProjectDto } from './dto/getProject.dto';
 
 @Controller('global/project')
@@ -30,8 +30,16 @@ export class ProjectGlobalController {
             description: true,
           },
         },
+        userRole: {
+          select: {
+            id: true,
+            code: true,
+          },
+        },
       },
     });
+
+    console.log(projects);
 
     return {
       result: projects.map((proj) => ({
@@ -40,6 +48,7 @@ export class ProjectGlobalController {
         projectId: proj.projectId.toString(),
         roleId: proj.roleId.toString(),
         project: { ...proj.project, id: proj.project.id.toString() },
+        isOwner: proj.userRole.code === EDefaultCodeRole.owner,
       })),
     };
   }
