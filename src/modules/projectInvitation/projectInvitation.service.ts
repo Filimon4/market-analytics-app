@@ -207,6 +207,7 @@ export class InvitationService {
       const defaultRole = await tx.role.findFirst({
         where: {
           code: 'invited',
+          projectId: invitation.projectId,
         },
       });
 
