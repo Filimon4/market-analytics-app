@@ -4,7 +4,7 @@ import { PrismaService } from 'src/common/db/prisma.service';
 import { User } from 'src/common/decorators/user.decorator';
 import { CreateProjectDto } from './dto/createProject.dto';
 import { Prisma, User as UserDB } from '@prisma/client';
-import { DefaultPermissions, DefaultRoles, EPermissionCode } from './constants';
+import { DefaultPermissions, DefaultRoles } from './constants';
 import { GetProjectDto } from './dto/getProject.dto';
 
 @Controller('global/project')
@@ -112,14 +112,14 @@ export class ProjectGlobalController {
 
       await trx.rolePermission.createMany({
         data: roles.flatMap((role) =>
-          userPersmissions.map(
-            (per) =>
-              ({
-                userRoleId: role.id,
-                userPermissionId: per.id,
-                granted: role.code === 'owner' ? true : DefaultPermissions[role.code][per.code] || false,
-              }) as unknown as Prisma.RolePermissionCreateManyInput,
-          ),
+          userPersmissions.map((per) => {
+            const isGranted = role.code === 'owner' ? true : DefaultPermissions[role.code][per.code] || false;
+            return {
+              roleId: role.id,
+              permissionId: per.id,
+              granted: isGranted,
+            } as Prisma.RolePermissionCreateManyInput;
+          }),
         ),
       });
 
@@ -145,7 +145,7 @@ export class ProjectGlobalController {
         },
       });
 
-      return { ...project, id: String(project.id) };
+      return { result: { ...project, id: String(project.id) } };
     });
   }
 }

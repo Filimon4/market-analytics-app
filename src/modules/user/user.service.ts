@@ -106,7 +106,9 @@ export class UserService {
           },
         },
         where: {
-          projectId,
+          user: {
+            id: userData.id,
+          },
         },
       });
 

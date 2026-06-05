@@ -1,4 +1,17 @@
-import { BadRequestException, Controller, Get, Logger, Query, UseGuards } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Logger,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { User } from 'src/common/decorators/user.decorator';
 import { PrismaService } from 'src/common/db/prisma.service';
 import { User as UserDB } from '@prisma/client';
@@ -6,13 +19,18 @@ import { TenantGuard } from 'src/shared/tenant/guards/tenant.guard';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CurrentTenant } from 'src/shared/tenant/decorators/current-tenant.decorator';
 import { GetPanelDto } from './dto/getPanel.dto';
+import { UpdateProjectDto } from './dto/updateProject.dto';
+import { ProjectService } from './project.service';
 
 @Controller('project')
 @UseGuards(JwtAuthGuard, TenantGuard)
 export class ProjectController {
   private readonly logger = new Logger();
 
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly projectService: ProjectService,
+  ) {}
 
   @Get()
   async get(@CurrentTenant() projectId: number, @User() user: UserDB) {
@@ -113,18 +131,32 @@ export class ProjectController {
     this.logger.debug(`role: ${JSON.stringify(role)}`);
 
     return {
-      result: panel
-        .filter((elem) => {
-          return role.find((per) => per.persmission.code === elem.code).granted;
-        })
-        .map((elem) => {
-          return {
-            ...elem,
-            children: elem.children.filter(
-              (perChildren) => role.find((per) => per.persmission.code === perChildren.code).granted,
-            ),
-          };
-        }),
+      result: role.length
+        ? panel
+            .filter((elem) => {
+              return role.find((per) => per.persmission.code === elem.code).granted;
+            })
+            .map((elem) => {
+              return {
+                ...elem,
+                children: elem.children.filter(
+                  (perChildren) => role.find((per) => per.persmission.code === perChildren.code).granted,
+                ),
+              };
+            })
+        : [],
     };
+  }
+
+  @Patch(':projectId')
+  @HttpCode(HttpStatus.OK)
+  async updateProject(
+    @Param('projectId', ParseIntPipe) projectId: number,
+    @User() user: UserDB,
+    @Body() dto: UpdateProjectDto,
+  ) {
+    const project = await this.projectService.updateProject(user, projectId, dto);
+
+    return { result: project };
   }
 }

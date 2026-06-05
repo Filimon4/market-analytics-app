@@ -5,7 +5,7 @@ import { EmailModule } from 'src/shared/email/email.module';
 import { EEmailProvider } from 'src/shared/email/enum/provider.enum';
 
 @Module({
-  imports: [EmailModule.forRoot(EEmailProvider.TEST)],
+  imports: [EmailModule.forRoot(EEmailProvider.RESEND)],
   controllers: [ProjectInvitationController],
   providers: [InvitationService],
 })

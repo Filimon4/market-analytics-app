@@ -1,5 +1,5 @@
 import { Prisma } from '@prisma/client';
-import { IBlock, IBlockDetail, IBlockTreeDetail, IEntityResponse } from 'src/common/interfaces/ientity.interface';
+import { IBlock, IEntityResponse } from 'src/common/interfaces/ientity.interface';
 import { ITableColumn } from 'src/common/interfaces/itable.interface';
 
 export const RolesColumns: ITableColumn[] = [

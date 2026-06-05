@@ -40,4 +40,5 @@ export const DefaultPermissions = {
     [EPermissionCode.PANEL_MARKETING_CHANNELS_PERFORMANCE]: true,
     [EPermissionCode.PANEL_MARKETING_STRATEGY]: true,
   },
+  [EDefaultCodeRole.invited]: {},
 };
