@@ -1,10 +1,11 @@
 model Strategy {
-  id          BigInt   @id @default(autoincrement())
+  id          BigInt      @id @default(autoincrement())
   projectId   BigInt
   name        String
   description String
-  createdAt   DateTime @default(now())
+  createdAt   DateTime    @default(now())
+  deleted     Boolean     @default(false)
 
-  channels Channel[]
-  project  Project   @relation(fields: [projectId], references: [id])
+  channels    Channel[]
+  project     Project     @relation(fields: [projectId], references: [id])
 }

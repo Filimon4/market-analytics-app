@@ -1,17 +1,17 @@
 model ChannelPerformance {
-  id          BigInt   @id @default(autoincrement())
-  channelId   BigInt
-  name        String
+  id          BigInt    @id @default(autoincrement())
   startDate   DateTime
   endDate     DateTime
-  impressions Int      @default(0)
-  clicks      Int      @default(0)
-  spend       Float    @default(0)
-  conversions Int      @default(0)
-  revenue     Float    @default(0)
+  spend       Float     @default(0)
+  impressions Int       @default(0)
+  clicks      Int       @default(0)
+  conversions Int       @default(0)
+  leads       Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  ufMetrics   Json      @default("{}")
+  deleted     Boolean   @default(false)
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  channel Channel @relation(fields: [channelId], references: [id])
+  channelId   BigInt
+  channel     Channel   @relation(fields: [channelId], references: [id])
 }

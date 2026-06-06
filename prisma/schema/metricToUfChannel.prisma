@@ -1,0 +1,7 @@
+model metricToUfChannel {
+    id          BigInt          @id @default(autoincrement())
+    metricId    BigInt
+    ufChannelId BigInt
+    metric      metricChannel   @relation(fields: [metricId], references: [id])
+    ufChannel   ufChannel       @relation(fields: [ufChannelId], references: [id])
+}

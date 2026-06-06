@@ -20,6 +20,8 @@ import { TENANT_CLS_NAME, TENANT_HEADER_NAME, TRACE_HEADER_NAME } from 'src/comm
 import { randomUUID } from 'crypto';
 import { LoggerModule } from 'market-logger/logger';
 
+// TODO: Добавить панель с приглашениями
+// TODO: Надо ещё добавить списки что бы можно было добавлять занения channel_sources например
 @Module({
   imports: [
     ConfigModule.forRoot({

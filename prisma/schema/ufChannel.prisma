@@ -1,0 +1,13 @@
+model ufChannel {
+  id        BigInt     @id @default(autoincrement())
+  type      String
+  value     Json
+  name      String
+  code      String
+  required  Boolean     @default(false)
+
+  channelId BigInt
+  channel   Channel     @relation(fields: [channelId], references: [id])
+
+  metricToUfChannels metricToUfChannel[]
+}

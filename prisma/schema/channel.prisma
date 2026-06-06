@@ -1,11 +1,14 @@
 model Channel {
-  id            BigInt @id @default(autoincrement())
-  name          String
-  strategyId    BigInt
-  trafficSource String
+  id                    BigInt                @id @default(autoincrement())
+  name                  String
+  strategyId            BigInt
+  trafficSourceId       Int
+  createdAt             DateTime              @default(now())
+  deleted               Boolean               @default(false)
 
-  createdAt DateTime @default(now())
-
-  strategy            Strategy             @relation(fields: [strategyId], references: [id])
-  channelPerformances ChannelPerformance[]
+  strategy              Strategy              @relation(fields: [strategyId], references: [id])
+  channelPerformances   ChannelPerformance[]
+  trafficSource         ChannelSource         @relation(fields: [trafficSourceId], references: [id])
+  ufChannels            ufChannel[]
+  metricChannels        metricChannel[]
 }
