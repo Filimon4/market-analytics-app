@@ -16,6 +16,10 @@ export interface IAnalyticBlock extends IBlock {
   blockType: 'analytics';
 }
 
+export interface IMetricBlock extends IBlock {
+  blockType: 'metrics';
+}
+
 export interface IBlock {
   code: string;
   name: string;
@@ -27,7 +31,7 @@ export interface IBlock {
   createHide?: true;
 }
 
-export type TEntityBlock = ITreeBlock | ITableBlock | IAnalyticBlock;
+export type TEntityBlock = ITreeBlock | ITableBlock | IAnalyticBlock | IMetricBlock;
 
 export interface IField {
   title: string;
