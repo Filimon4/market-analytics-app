@@ -47,6 +47,7 @@ export class UserController {
     };
   }
 
+  // TODO REFACTOR: Вынести отсюда в projectUser
   @Post('table/current')
   @TenantOptional()
   @UseGuards(JwtAuthGuard, TenantGuard)
