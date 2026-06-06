@@ -1,17 +1,13 @@
-import { Type } from 'class-transformer';
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsNotEmpty, IsString, MaxLength } from 'class-validator';
 
 export class CreateStrategyDto {
   @IsNotEmpty()
   @IsString()
+  @MaxLength(255)
   name: string;
 
   @IsNotEmpty()
   @IsString()
+  @MaxLength(2000)
   description: string;
-
-  @IsNotEmpty()
-  @Type(() => Number)
-  @IsNumber()
-  projectId: number;
 }

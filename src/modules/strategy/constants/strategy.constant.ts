@@ -1,19 +1,21 @@
 import { Prisma } from '@prisma/client';
-import { IEntityResponse, TEntityBlock } from 'src/common/interfaces/ientity.interface';
+import { IBlock, IEntityResponse, TEntityBlock } from 'src/common/interfaces/ientity.interface';
 import { ITableColumn } from 'src/common/interfaces/itable.interface';
 
-export const ChannelSourcesColumns: ITableColumn[] = [
+export const StrategiesColumns: ITableColumn[] = [
   { code: 'id', name: 'Инд.', type: 'number', filtrable: false },
   { code: 'name', name: 'Название', type: 'string', filtrable: true },
+  { code: 'description', name: 'Описание', type: 'string', filtrable: true },
   { code: 'createdAt', name: 'Дата создания', type: 'datetime', filtrable: true, dateTimeFilterType: 'period' },
-  { code: 'deleted', name: 'Удален', type: 'boolean', filtrable: true },
+  { code: 'deleted', name: 'Удалена', type: 'boolean', filtrable: true },
 ] as const;
 
-export const ChannelSourcesBlocks: TEntityBlock[] = [
-  { code: 'main', name: 'Источник трафика', columnCapacity: 5, maxColumns: 2, blockType: 'table' },
+export const StrategiesBlocks: TEntityBlock[] = [
+  { code: 'main', name: 'Стратегия', columnCapacity: 5, maxColumns: 2, blockType: 'table' },
+  { code: 'analytics', name: 'Аналитика', blockType: 'analytics', createHide: true },
 ];
 
-export const ChannelSourcesBlockDetails: IEntityResponse['blockDetails'] = [
+export const StrategiesBlockDetails: IEntityResponse['blockDetails'] = [
   {
     blockCode: 'main',
     fields: [
@@ -31,13 +33,19 @@ export const ChannelSourcesBlockDetails: IEntityResponse['blockDetails'] = [
         required: true,
       },
       {
+        title: 'Описание',
+        editable: true,
+        path: 'description',
+        type: 'string',
+      },
+      {
         title: 'Дата создания',
         editable: false,
         path: 'createdAt',
         type: 'datetime',
       },
       {
-        title: 'Удален',
+        title: 'Удалена',
         editable: false,
         path: 'deleted',
         type: 'boolean',
@@ -47,9 +55,10 @@ export const ChannelSourcesBlockDetails: IEntityResponse['blockDetails'] = [
   },
 ];
 
-export const ChannelSourcesSelect: Prisma.ChannelSourceSelect = {
+export const StrategiesSelect: Prisma.StrategySelect = {
   id: true,
   name: true,
+  description: true,
   createdAt: true,
   deleted: true,
 };

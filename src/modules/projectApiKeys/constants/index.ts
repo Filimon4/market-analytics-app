@@ -1,5 +1,5 @@
 import { Prisma } from '@prisma/client';
-import { IBlock, IEntityResponse } from 'src/common/interfaces/ientity.interface';
+import { IEntityResponse, TEntityBlock } from 'src/common/interfaces/ientity.interface';
 import { ITableColumn } from 'src/common/interfaces/itable.interface';
 
 export const ApiKeysColumns: ITableColumn[] = [
@@ -19,7 +19,7 @@ export const ApiKeysColumns: ITableColumn[] = [
   { code: 'createdAt', name: 'Дата создания', type: 'datetime', filtrable: true, dateTimeFilterType: 'period' },
 ] as const;
 
-export const ApiKeysBlocks: IBlock[] = [
+export const ApiKeysBlocks: TEntityBlock[] = [
   { code: 'main', name: 'Апи ключ', columnCapacity: 5, maxColumns: 2, blockType: 'table' },
 ];
 

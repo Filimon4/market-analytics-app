@@ -1,6 +1,6 @@
-import { IBlock, IEntityResponse } from 'src/common/interfaces/ientity.interface';
+import { IBlock, IEntityResponse, TEntityBlock } from 'src/common/interfaces/ientity.interface';
 
-export const ProjectBlocks: IBlock[] = [
+export const ProjectBlocks: TEntityBlock[] = [
   { code: 'main', name: 'Проект', columnCapacity: 5, maxColumns: 2, blockType: 'table' },
 ];
 

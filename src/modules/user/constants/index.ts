@@ -1,6 +1,6 @@
-import { IBlock, IBlockDetail } from 'src/common/interfaces/ientity.interface';
+import { IBlockDetail, TEntityBlock } from 'src/common/interfaces/ientity.interface';
 
-export const UserBlocks: IBlock[] = [
+export const UserBlocks: TEntityBlock[] = [
   { name: 'Пользователь', code: 'main', columnCapacity: 5, maxColumns: 2, blockType: 'table' },
   { name: 'Проект', code: 'project', columnCapacity: 5, maxColumns: 1, blockType: 'table' },
 ];

@@ -14,6 +14,7 @@ import { LoggerService } from 'market-logger/logger';
 import { ClsService } from 'nestjs-cls';
 
 // TODO FEATURE: Перенести все actions/действия на бэк
+// TODO FEATURE: Добавить поля link что бы переходить на полю на другую сущность
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     httpsOptions: {

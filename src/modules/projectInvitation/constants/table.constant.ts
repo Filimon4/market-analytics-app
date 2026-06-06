@@ -1,5 +1,5 @@
 import { Prisma, $Enums } from '@prisma/client';
-import { IBlock, IEntityResponse } from 'src/common/interfaces/ientity.interface';
+import { IEntityResponse, TEntityBlock } from 'src/common/interfaces/ientity.interface';
 import { ITableColumn } from 'src/common/interfaces/itable.interface';
 
 export const InvitationColumns: ITableColumn[] = [
@@ -24,7 +24,7 @@ export const InvitationColumns: ITableColumn[] = [
   { code: 'createdAt', name: 'Дата создания', type: 'datetime', filtrable: false },
 ];
 
-export const InvitationBlocks: IBlock[] = [
+export const InvitationBlocks: TEntityBlock[] = [
   { code: 'main', name: 'Приглашение', columnCapacity: 5, maxColumns: 2, blockType: 'table' },
 ];
 

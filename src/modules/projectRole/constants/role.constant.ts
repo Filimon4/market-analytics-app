@@ -1,5 +1,5 @@
 import { Prisma } from '@prisma/client';
-import { IBlock, IEntityResponse } from 'src/common/interfaces/ientity.interface';
+import { IEntityResponse, TEntityBlock } from 'src/common/interfaces/ientity.interface';
 import { ITableColumn } from 'src/common/interfaces/itable.interface';
 
 export const RolesColumns: ITableColumn[] = [
@@ -10,9 +10,9 @@ export const RolesColumns: ITableColumn[] = [
   { code: 'deleted', name: 'Удалена', type: 'boolean', filtrable: true },
 ] as const;
 
-export const RolesBlocks: IBlock[] = [
+export const RolesBlocks: TEntityBlock[] = [
   { code: 'main', name: 'Роль', columnCapacity: 5, maxColumns: 2, blockType: 'table' },
-  { code: 'permissions', name: 'Доступы', columnCapacity: 5, maxColumns: 2, blockType: 'tree', createHide: true },
+  { code: 'permissions', name: 'Доступы', blockType: 'tree', createHide: true },
 ];
 
 export const RolesBlockDetails: IEntityResponse['blockDetails'] = [

@@ -2,16 +2,32 @@ export interface IBlockIndentifier {
   blockCode: string;
 }
 
+export interface ITreeBlock extends IBlock {
+  blockType: 'tree';
+}
+
+export interface ITableBlock extends IBlock {
+  columnCapacity: number;
+  maxColumns: number;
+  blockType: 'table';
+}
+
+export interface IAnalyticBlock extends IBlock {
+  blockType: 'analytics';
+}
+
 export interface IBlock {
   code: string;
   name: string;
-  columnCapacity: number;
-  maxColumns: number;
-  blockType: 'table' | 'tree';
-
-  // Поля для добавления
-  createHide?: true; // При добавлениии блок будет скрыт
+  /**
+   * Добавление
+   *
+   * При добавлениии блок будет скрыт
+   */
+  createHide?: true;
 }
+
+export type TEntityBlock = ITreeBlock | ITableBlock | IAnalyticBlock;
 
 export interface IField {
   title: string;
@@ -56,7 +72,7 @@ export interface IBlockTreeDetail extends IBlockIndentifier {
 }
 
 export interface IEntityResponse<B = Record<string, any>> {
-  blocks: IBlock[];
+  blocks: TEntityBlock[];
   blockDetails: (IBlockDetail | IBlockTreeDetail)[];
   data: B;
 }

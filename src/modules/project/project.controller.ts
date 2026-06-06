@@ -91,12 +91,12 @@ export class ProjectController {
         code: 'PANEL_MARKETING',
         icon: '/icons/marketing.png',
         children: [
-          { name: 'Стратегии', code: 'PANEL_MARKETING_STRATEGY', url: '/marketing/strategy' },
+          { name: 'Стратегии', code: 'PANEL_MARKETING_STRATEGY', url: '/marketing/strategies' },
           { name: 'Каналы трафика', code: 'PANEL_MARKETING_CHANNELS', url: '/marketing/channels' },
           {
             name: 'Результаты трафика',
             code: 'PANEL_MARKETING_CHANNELS_PERFORMANCE',
-            url: '/marketing/channels/performance',
+            url: '/marketing/channels/performances',
           },
         ],
       },
