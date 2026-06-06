@@ -1,3 +1,4 @@
+// TODO: Добавить сюда системный тип и иконку и поправить составление панели
 model Permission {
   id                Int @id @default(autoincrement())
   name              String  

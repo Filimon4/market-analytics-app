@@ -109,6 +109,9 @@ export class UserService {
           user: {
             id: userData.id,
           },
+          project: {
+            id: projectId,
+          },
         },
       });
 

@@ -25,8 +25,9 @@ import { ICreateEntityResponse } from 'src/common/interfaces/ientity.interface';
 import { IApiResultResponse } from 'src/common/interfaces/api.interface';
 import { UpdateRoleDto } from './dto/updateRole.dto';
 import { GetRoleList } from './dto/getRoleList.dto';
+import { AddPermissionsDto } from './dto/addPermissions.dto';
 
-@Controller('project/roles')
+@Controller('roles')
 @UseGuards(JwtAuthGuard, TenantGuard)
 export class ProjectRoleController {
   constructor(
@@ -102,6 +103,24 @@ export class ProjectRoleController {
     };
   }
 
+  @Get(':roleId/permissions/new')
+  async getNewPermissions(@CurrentTenant() projectId: number, @Param('roleId', ParseIntPipe) roleId: number) {
+    const permissions = await this.projectRolesService.getNewPermissionsForRole(projectId, roleId);
+
+    return { result: permissions };
+  }
+
+  @Post(':roleId/permissions')
+  async addNewPermissions(
+    @CurrentTenant() projectId: number,
+    @Param('roleId', ParseIntPipe) roleId: number,
+    @Body() dto: AddPermissionsDto,
+  ) {
+    await this.projectRolesService.addPermissionsToRole(projectId, roleId, dto.permissionIds);
+
+    return { result: true };
+  }
+
   @Patch()
   @HttpCode(HttpStatus.OK)
   async update(@CurrentTenant() projectId: number, @Body() updateRoleDto: UpdateRoleDto) {
@@ -148,7 +167,7 @@ export class ProjectRoleController {
     return { result: true };
   }
 
-  @Patch('restore/:roleId')
+  @Patch(':roleId/restore')
   @HttpCode(HttpStatus.OK)
   async restore(@CurrentTenant() projectId: number, @Param('roleId', ParseIntPipe) roleId: number) {
     const role = await this.prismaService.role.findUnique({

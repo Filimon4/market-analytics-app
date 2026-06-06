@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/common/db/prisma.service';
 import { CreateRoleDto } from './dto/createRole.dto';
 import { Prisma, RolePermission } from '@prisma/client';
@@ -122,5 +122,48 @@ export class ProjectRoleService {
         }
       }
     });
+  }
+
+  async addPermissionsToRole(projectId: number, roleId: number, permissionIds: number[]) {
+    const role = await this.prismaService.role.findUnique({
+      where: {
+        id: roleId,
+        projectId,
+      },
+    });
+
+    if (!role) throw new NotFoundException('There is no role');
+
+    await this.prismaService.rolePermission.createMany({
+      data: permissionIds.map((permissionId) => ({
+        roleId,
+        permissionId,
+        granted: false,
+      })),
+      skipDuplicates: true,
+    });
+  }
+
+  async getNewPermissionsForRole(projectId: number, roleId: number) {
+    const role = await this.prismaService.role.findUnique({
+      where: {
+        id: roleId,
+        projectId,
+      },
+    });
+
+    if (!role) throw new NotFoundException('There is no role');
+
+    const newPermissions = await this.prismaService.$queryRaw<
+      { id: number; name: string; description: string | null }[]
+    >`
+      SELECT p.id, p.name, p.description
+      FROM public."Permission" p
+      LEFT JOIN public."RolePermission" rp
+        ON rp."permissionId" = p.id AND rp."roleId" = ${roleId}
+      WHERE rp.id IS NULL
+    `;
+
+    return newPermissions;
   }
 }

@@ -84,6 +84,7 @@ export class ProjectController {
 
   @Get('panel')
   async getPanel(@Query() roleDto: GetPanelDto) {
+    // TODO: Переделать это
     const panel = [
       {
         name: 'Маркетинг',
@@ -108,6 +109,8 @@ export class ProjectController {
           { name: 'Апи ключи', code: 'PANEL_PROJECTS_API_KEYS', url: '/projects/apikeys' },
           { name: 'Пользователи', code: 'PANEL_PROJECTS_USERS', url: '/projects/users' },
           { name: 'Роли', code: 'PANEL_PROJECTS_ROLES', url: '/projects/roles' },
+          { name: 'Приглашения', code: 'PANEL_PROJECTS_INVITE', url: '/projects/invitations' }, // TODO: Сделать страницу
+          { name: 'Виды канала трафика', code: 'PANEL_PROJECTS_TYPE_CHANNEL_SOURCE', url: '/projects/channelsources' }, // TODO: Сделать страницу
         ],
       },
     ];
@@ -134,14 +137,17 @@ export class ProjectController {
       result: role.length
         ? panel
             .filter((elem) => {
-              return role.find((per) => per.persmission.code === elem.code).granted;
+              const permission = role.find((per) => per.persmission.code === elem.code);
+              return permission ? permission.granted : false;
             })
             .map((elem) => {
               return {
                 ...elem,
-                children: elem.children.filter(
-                  (perChildren) => role.find((per) => per.persmission.code === perChildren.code).granted,
-                ),
+                children: elem.children.filter((perChildren) => {
+                  const permission = role.find((per) => per.persmission.code === perChildren.code);
+
+                  return permission ? permission.granted : false;
+                }),
               };
             })
         : [],

@@ -39,8 +39,6 @@ export class ProjectGlobalController {
       },
     });
 
-    console.log(projects);
-
     return {
       result: projects.map((proj) => ({
         ...proj,

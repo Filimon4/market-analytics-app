@@ -32,7 +32,7 @@ export class ProjectGlobalTableController {
       id: projectId,
       userToProject: {
         every: {
-          // TODO: Это можно вынести в гурд по роли
+          // TODO: Это можно вынести в гуард по роли
           userRole: {
             code: EDefaultCodeRole.owner,
           },
