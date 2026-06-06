@@ -11,7 +11,7 @@ import { ApiKeysBlockDetails, ApiKeysBlocks, ApiKeysColumns, ApiKeysSelect } fro
 import { GetApiKeysTableListDto } from './dto/getApiKeysTableList';
 import { TProjectApiKeysResponse } from './types';
 
-@Controller('project/api-keys/table/')
+@Controller('api-keys/table/')
 @UseGuards(JwtAuthGuard, TenantGuard)
 export class ProjectApiKeyTableController {
   constructor(private readonly prismaService: PrismaService) {}
@@ -40,6 +40,20 @@ export class ProjectApiKeyTableController {
     if (dto.filter.status) {
       whereApiKeyInput.status = {
         id: dto.filter.status,
+      };
+    }
+
+    if (dto.filter.expiresAt) {
+      whereApiKeyInput.expiresAt = {
+        gte: dto.filter.expiresAt.from,
+        lte: dto.filter.expiresAt.to,
+      };
+    }
+
+    if (dto.filter.createdAt) {
+      whereApiKeyInput.createdAt = {
+        gte: dto.filter.createdAt.from,
+        lte: dto.filter.createdAt.to,
       };
     }
 

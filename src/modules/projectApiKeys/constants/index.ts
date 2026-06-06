@@ -11,12 +11,12 @@ export const ApiKeysColumns: ITableColumn[] = [
     code: 'status',
     name: 'Статус ключа',
     type: 'select',
-    selectUrl: '/v1/project/api-keys/statuses',
+    selectUrl: '/v1/api-keys/statuses',
     filtrable: true,
     path: 'status.code',
   },
-  { code: 'expiresAt', name: 'Срок дейтсвия', type: 'datetime', filtrable: false }, // TODO: Добавить datetime фильтр
-  { code: 'createdAt', name: 'Дата создания', type: 'datetime', filtrable: false },
+  { code: 'expiresAt', name: 'Срок дейтсвия', type: 'datetime', filtrable: true, dateTimeFilterType: 'period' }, // TODO: Добавить datetime фильтр
+  { code: 'createdAt', name: 'Дата создания', type: 'datetime', filtrable: true, dateTimeFilterType: 'period' },
 ] as const;
 
 export const ApiKeysBlocks: IBlock[] = [
@@ -60,7 +60,7 @@ export const ApiKeysBlockDetails: IEntityResponse['blockDetails'] = [
         editable: true,
         path: 'status',
         type: 'select',
-        selectUrl: '/v1/project/api-keys/statuses',
+        selectUrl: '/v1/api-keys/statuses',
 
         required: true,
       },

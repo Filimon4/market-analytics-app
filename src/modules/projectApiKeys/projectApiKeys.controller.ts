@@ -12,7 +12,7 @@ import { TenantGuard } from 'src/shared/tenant/guards/tenant.guard';
 import { ICreateEntityResponse } from 'src/common/interfaces/ientity.interface';
 import { CreateApiKeyDto } from './dto/createApiKey.dto';
 
-@Controller('project/api-keys')
+@Controller('api-keys')
 @UseGuards(JwtAuthGuard, TenantGuard)
 export class ProjectApiKeyController {
   constructor(

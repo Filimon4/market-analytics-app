@@ -11,6 +11,12 @@ export interface ITableColumn {
    * Перекрывает code для получения пути значение в обхекте. Используется при вложенных объектах
    */
   path?: string;
+  /**
+   * Фильтрафия
+   *
+   * Вид фильтра datetime типа
+   */
+  dateTimeFilterType?: 'period' | 'exact';
 }
 
 export interface ITableListResponse<T> {
@@ -19,4 +25,9 @@ export interface ITableListResponse<T> {
   page: number;
   total: number;
   maxPage: number;
+}
+
+export interface ITableColumnFilterDatetimePeriod {
+  from: string;
+  to: string;
 }
