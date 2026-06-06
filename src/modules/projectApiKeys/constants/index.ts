@@ -15,7 +15,7 @@ export const ApiKeysColumns: ITableColumn[] = [
     filtrable: true,
     path: 'status.code',
   },
-  { code: 'expiresAt', name: 'Срок дейтсвия', type: 'datetime', filtrable: true, dateTimeFilterType: 'period' }, // TODO: Добавить datetime фильтр
+  { code: 'expiresAt', name: 'Срок дейтсвия', type: 'datetime', filtrable: true, dateTimeFilterType: 'period' },
   { code: 'createdAt', name: 'Дата создания', type: 'datetime', filtrable: true, dateTimeFilterType: 'period' },
 ] as const;
 
