@@ -9,7 +9,7 @@ export const InvitationColumns: ITableColumn[] = [
     code: 'invitedBy',
     name: 'Кем приглашен',
     type: 'string',
-    filtrable: false,
+    filtrable: true,
     path: 'invite.user.email',
   },
   {
@@ -19,7 +19,7 @@ export const InvitationColumns: ITableColumn[] = [
     filtrable: true,
     constantList: Object.values($Enums.InvitationStatus),
   },
-  { code: 'expiresAt', name: 'Срок действия', type: 'datetime', filtrable: false },
+  { code: 'expiresAt', name: 'Срок действия', type: 'datetime', filtrable: true, dateTimeFilterType: 'period' },
   { code: 'acceptedAt', name: 'Принято', type: 'datetime', filtrable: false },
   { code: 'createdAt', name: 'Дата создания', type: 'datetime', filtrable: false },
 ];

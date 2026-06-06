@@ -1,4 +1,6 @@
 import { $Enums } from '@prisma/client';
+import { ITableColumnFilterDatetimePeriod } from '@src/common/interfaces/itable.interface';
+import { IsDatetimePeriod } from '@src/common/utils/classValidator/IsDatetimePeriod';
 import { Type } from 'class-transformer';
 import { IsIn, IsNotEmpty, IsNumber, IsOptional, IsString, Max, Min, ValidateNested } from 'class-validator';
 
@@ -10,6 +12,15 @@ export class InvitationFilterDto {
   @IsOptional()
   @IsString()
   email?: string;
+
+  @IsOptional()
+  @ValidateNested()
+  @IsDatetimePeriod()
+  expiresAt?: ITableColumnFilterDatetimePeriod;
+
+  @IsOptional()
+  @IsString()
+  invitedBy?: string;
 }
 
 export class InvitationListDto {

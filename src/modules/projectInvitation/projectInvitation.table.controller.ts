@@ -41,6 +41,23 @@ export class ProjectInvitationTableController {
       };
     }
 
+    if (dto.filter.expiresAt) {
+      whereInvitationInput.expiresAt = {
+        gte: dto.filter.expiresAt.from,
+        lte: dto.filter.expiresAt.to,
+      };
+    }
+
+    if (dto.filter.invitedBy) {
+      whereInvitationInput.invite = {
+        user: {
+          email: {
+            contains: dto.filter.invitedBy,
+          },
+        },
+      };
+    }
+
     const total = await this.prismaService.invitation.count({ where: whereInvitationInput });
     const invitationsData = await this.prismaService.invitation.findMany({
       where: whereInvitationInput,
