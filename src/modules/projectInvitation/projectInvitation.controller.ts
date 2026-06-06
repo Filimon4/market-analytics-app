@@ -7,6 +7,7 @@ import {
   HttpStatus,
   Logger,
   Param,
+  ParseIntPipe,
   ParseEnumPipe,
   Patch,
   Post,
@@ -41,22 +42,22 @@ export class ProjectInvitationController {
     return { result: token };
   }
 
-  @Post('/:token/resend')
+  @Post('/:id/resend')
   @HttpCode(HttpStatus.CREATED)
   @RequirePermissions('PROJECT_SEND_INVITE')
   @UseGuards(JwtAuthGuard, TenantGuard)
-  async resend(@CurrentTenant() projectId: number, @Param('token') token: string, @User() user: UserDB) {
-    await this.invitationService.resend(projectId, token, user);
+  async resend(@CurrentTenant() projectId: number, @User() user: UserDB, @Param('id', ParseIntPipe) id: number) {
+    await this.invitationService.resend(projectId, id, user);
 
     return { result: true };
   }
 
-  @Patch('/:token/cancel')
+  @Patch('/:id/cancel')
   @HttpCode(HttpStatus.OK)
   @RequirePermissions('PROJECT_CANCEL_INVITE')
   @UseGuards(JwtAuthGuard, TenantGuard)
-  async cancel(@CurrentTenant() projectId: number, @User() user: UserDB, @Param('token') token: string) {
-    await this.invitationService.cancel(projectId, token, user);
+  async cancel(@CurrentTenant() projectId: number, @User() user: UserDB, @Param('id', ParseIntPipe) id: number) {
+    await this.invitationService.cancel(projectId, id, user);
 
     return { result: true };
   }
@@ -96,5 +97,14 @@ export class ProjectInvitationController {
     const invitation = await this.invitationService.getByToken(token, user);
 
     return { result: invitation };
+  }
+
+  @Get('actions/:id')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtAuthGuard, TenantGuard)
+  async getAvailableActions(@CurrentTenant() projectId: number, @Param('id', ParseIntPipe) invitationId: number) {
+    const availableActions = await this.invitationService.getAvailableActions(projectId, invitationId);
+
+    return { result: availableActions };
   }
 }

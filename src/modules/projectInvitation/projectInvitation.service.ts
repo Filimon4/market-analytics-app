@@ -13,6 +13,7 @@ import { $Enums, Prisma, User as UserDB } from '@prisma/client';
 import { ConfigService } from '@nestjs/config';
 import { InvitationListDto } from './dto/infitationLIst.dto';
 import { randomUUID } from 'crypto';
+import { EInvitationAvailableAction } from './enum/action.enum';
 
 @Injectable()
 export class InvitationService {
@@ -96,7 +97,7 @@ export class InvitationService {
     return invitation.token;
   }
 
-  async resend(projectId: number, token: string, user: UserDB) {
+  async resend(projectId: number, id: number, user: UserDB) {
     const membership = await this.prismaService.userToProject.findFirst({
       where: { projectId: projectId, userId: user.id },
       include: { userRole: true },
@@ -107,7 +108,7 @@ export class InvitationService {
     }
 
     const existingInvitation = await this.prismaService.invitation.findFirst({
-      where: { token, projectId },
+      where: { id, projectId },
     });
 
     if (!existingInvitation) {
@@ -126,6 +127,19 @@ export class InvitationService {
 
     if (potentialInvitation) {
       throw new ConflictException('Already there is an invitation');
+    }
+
+    const potentialUser = await this.prismaService.userToProject.findFirst({
+      where: {
+        projectId: projectId,
+        user: {
+          email: existingInvitation.email,
+        },
+      },
+    });
+
+    if (potentialUser) {
+      throw new ConflictException('This user alread in the project');
     }
 
     if (existingInvitation && ['ACCEPTED', 'DECLINED'].includes(existingInvitation.status)) {
@@ -269,7 +283,7 @@ export class InvitationService {
     return true;
   }
 
-  async cancel(projectId: number, token: string, user: UserDB) {
+  async cancel(projectId: number, id: number, user: UserDB) {
     this.logger.debug(`user: ${JSON.stringify(user)}`);
 
     const membership = await this.prismaService.userToProject.findFirst({
@@ -282,7 +296,7 @@ export class InvitationService {
     }
 
     const invitation = await this.prismaService.invitation.findFirst({
-      where: { token, invitedById: membership.id },
+      where: { id, invitedById: membership.id },
     });
 
     this.logger.debug(`invitation: ${JSON.stringify(invitation)}`);
@@ -335,6 +349,41 @@ export class InvitationService {
     }
 
     return invitation;
+  }
+
+  async getAvailableActions(projectId: number, invitationId: number) {
+    const invitation = await this.prismaService.invitation.findFirst({
+      where: {
+        projectId,
+        id: invitationId,
+      },
+      select: {
+        id: true,
+        status: true,
+        expiresAt: true,
+      },
+    });
+
+    if (!invitation) {
+      throw new NotFoundException('There is no invitation');
+    }
+
+    const isExpiredByDate = invitation.status === 'PENDING' && new Date() > invitation.expiresAt;
+    const actualStatus = isExpiredByDate ? $Enums.InvitationStatus.EXPIRED : invitation.status;
+    const actionsByStatus: Record<$Enums.InvitationStatus, EInvitationAvailableAction[]> = {
+      PENDING: [EInvitationAvailableAction.cancel, EInvitationAvailableAction.resend],
+      EXPIRED: [EInvitationAvailableAction.resend],
+      CANCELLED: [EInvitationAvailableAction.resend],
+      DECLINED: [EInvitationAvailableAction.resend],
+      ACCEPTED: [],
+    };
+
+    return {
+      id: invitation.id.toString(),
+      status: invitation.status,
+      actualStatus,
+      actions: actionsByStatus[actualStatus],
+    };
   }
 
   /**
