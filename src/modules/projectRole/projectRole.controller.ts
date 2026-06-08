@@ -66,7 +66,7 @@ export class ProjectRoleController {
           select: {
             granted: true,
             permissionId: true,
-            persmission: {
+            permission: {
               select: {
                 code: true,
               },

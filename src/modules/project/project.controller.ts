@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   Body,
+  ConflictException,
   Controller,
   Get,
   HttpCode,
@@ -21,6 +22,7 @@ import { CurrentTenant } from 'src/shared/tenant/decorators/current-tenant.decor
 import { GetPanelDto } from './dto/getPanel.dto';
 import { UpdateProjectDto } from './dto/updateProject.dto';
 import { ProjectService } from './project.service';
+import { TreeBuilder } from '@src/common/utils/treeBuilder';
 
 @Controller('project')
 @UseGuards(JwtAuthGuard, TenantGuard)
@@ -85,72 +87,75 @@ export class ProjectController {
   @Get('panel')
   async getPanel(@Query() roleDto: GetPanelDto) {
     // TODO: Переделать это
-    const panel = [
-      {
-        name: 'Маркетинг',
-        code: 'PANEL_MARKETING',
-        icon: '/icons/marketing.png',
-        children: [
-          { name: 'Стратегии', code: 'PANEL_MARKETING_STRATEGY', url: '/marketing/strategies' },
-          { name: 'Каналы трафика', code: 'PANEL_MARKETING_CHANNELS', url: '/marketing/channels' },
-          {
-            name: 'Результаты трафика',
-            code: 'PANEL_MARKETING_CHANNELS_PERFORMANCE',
-            url: '/marketing/channels/performances',
-          },
-        ],
-      },
-      {
-        name: 'Проект',
-        code: 'PANEL_PROJECTS',
-        icon: '/icons/project.png',
-        children: [
-          { name: 'Разработчику', code: 'PANEL_PROJECTS_DEVELOPER', url: '/projects/developer' },
-          { name: 'Апи ключи', code: 'PANEL_PROJECTS_API_KEYS', url: '/projects/apikeys' },
-          { name: 'Пользователи', code: 'PANEL_PROJECTS_USERS', url: '/projects/users' },
-          { name: 'Роли', code: 'PANEL_PROJECTS_ROLES', url: '/projects/roles' },
-          { name: 'Приглашения', code: 'PANEL_PROJECTS_INVITE', url: '/projects/invitations' }, // TODO: Сделать страницу
-          { name: 'Виды канала трафика', code: 'PANEL_PROJECTS_TYPE_CHANNEL_SOURCE', url: '/projects/channelsources' }, // TODO: Сделать страницу
-        ],
-      },
-    ];
+    // const panel = [
+    //   {
+    //     name: 'Маркетинг',
+    //     code: 'PANEL_MARKETING',
+    //     icon: '/icons/marketing.png',
+    //     children: [
+    //       { name: 'Стратегии', code: 'PANEL_MARKETING_STRATEGY', url: '/marketing/strategies' },
+    //       { name: 'Каналы трафика', code: 'PANEL_MARKETING_CHANNELS', url: '/marketing/channels' },
+    //       {
+    //         name: 'Результаты трафика',
+    //         code: 'PANEL_MARKETING_CHANNELS_PERFORMANCE',
+    //         url: '/marketing/channels/performances',
+    //       },
+    //     ],
+    //   },
+    //   {
+    //     name: 'Проект',
+    //     code: 'PANEL_PROJECTS',
+    //     icon: '/icons/project.png',
+    //     children: [
+    //       { name: 'Разработчику', code: 'PANEL_PROJECTS_DEVELOPER', url: '/projects/developer' },
+    //       { name: 'Апи ключи', code: 'PANEL_PROJECTS_API_KEYS', url: '/projects/apikeys' },
+    //       { name: 'Пользователи', code: 'PANEL_PROJECTS_USERS', url: '/projects/users' },
+    //       { name: 'Роли', code: 'PANEL_PROJECTS_ROLES', url: '/projects/roles' },
+    //       { name: 'Приглашения', code: 'PANEL_PROJECTS_INVITE', url: '/projects/invitations' },
+    //       { name: 'Виды канала трафика', code: 'PANEL_PROJECTS_TYPE_CHANNEL_SOURCE', url: '/projects/channelsources' },
+    //     ],
+    //   },
+    // ];
 
-    const role = await this.prismaService.rolePermission.findMany({
-      where: {
-        userRole: {
-          id: roleDto.roleId,
-        },
-      },
-      select: {
-        granted: true,
-        persmission: {
-          select: {
-            code: true,
-          },
-        },
-      },
-    });
+    const panel = await this.prismaService.$queryRaw<
+      { granted: boolean; id: number; code: string; icon: string; url: string; parentId: number }[]
+    >`
+      select rp."granted", p.id, p."name", p.code, p."iconUrl" as icon, p."navigationUrl" as url, p."parentId"
+      from "RolePermission" rp 
+      inner join "Role" r on r.id = rp."roleId" 
+      inner join "Permission" p on rp."permissionId" = p.id 
+      where r.id = 16 and rp."granted" = true and p."systemType" = 'panel'
+      order by p."parentId" desc, p."panelOrder" asc;
+    `;
 
-    this.logger.debug(`role: ${JSON.stringify(role)}`);
+    this.logger.debug(`panel: ${JSON.stringify(panel)}`);
+
+    const panelTree = [];
+    const nodeMap = new Map<number, {}>();
+
+    for (const item of panel) {
+      nodeMap.set(item.id, { ...item, children: [] });
+    }
+    for (const item of panel) {
+      const node = nodeMap.get(item.id)!;
+      if (!item.granted) continue;
+      if (item.parentId === null) {
+        panelTree.push(node);
+      } else {
+        const parent = nodeMap.get(item.parentId);
+        if (parent) {
+          // @ts-ignore
+          parent.children!.push(node);
+        }
+      }
+    }
+
+    if (panelTree.length > 1) {
+      throw new ConflictException('Panel cannot have multiple root objects');
+    }
 
     return {
-      result: role.length
-        ? panel
-            .filter((elem) => {
-              const permission = role.find((per) => per.persmission.code === elem.code);
-              return permission ? permission.granted : false;
-            })
-            .map((elem) => {
-              return {
-                ...elem,
-                children: elem.children.filter((perChildren) => {
-                  const permission = role.find((per) => per.persmission.code === perChildren.code);
-
-                  return permission ? permission.granted : false;
-                }),
-              };
-            })
-        : [],
+      result: panelTree[0].children!,
     };
   }
 

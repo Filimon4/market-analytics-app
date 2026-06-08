@@ -5,7 +5,7 @@ model RolePermission {
   granted           Boolean
 
   userRole          Role       @relation(fields: [roleId], references: [id])
-  persmission       Permission @relation(fields: [permissionId], references: [id])
+  permission        Permission @relation(fields: [permissionId], references: [id])
 
   @@unique([roleId, permissionId])
 }

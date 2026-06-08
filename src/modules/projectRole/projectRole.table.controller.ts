@@ -100,7 +100,7 @@ export class ProjectRoleTableController {
         rolePermission: {
           select: {
             id: true,
-            persmission: {
+            permission: {
               select: {
                 id: true,
                 code: true,

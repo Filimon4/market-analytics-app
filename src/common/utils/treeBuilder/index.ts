@@ -17,7 +17,7 @@ export class TreeBuilder {
 
     // 1. Создаём все узлы
     for (const item of data) {
-      const p = item.persmission;
+      const p = item.permission;
 
       const node: TreeNode = {
         key: p.code,
@@ -32,7 +32,7 @@ export class TreeBuilder {
 
     // 2. Привязываем детей (сохраняем порядок из массива с бэка)
     for (const item of data) {
-      const p = item.persmission;
+      const p = item.permission;
       const node = nodeMap.get(p.id)!;
 
       if (p.parentId === null) {

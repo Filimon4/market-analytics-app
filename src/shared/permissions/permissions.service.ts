@@ -18,7 +18,7 @@ export class PermissionsService {
             rolePermission: {
               where: { granted: true },
               include: {
-                persmission: {
+                permission: {
                   select: { code: true },
                 },
               },
@@ -32,6 +32,6 @@ export class PermissionsService {
       return null;
     }
 
-    return membership.userRole.rolePermission.map((rp) => rp.persmission.code);
+    return membership.userRole.rolePermission.map((rp) => rp.permission.code);
   }
 }

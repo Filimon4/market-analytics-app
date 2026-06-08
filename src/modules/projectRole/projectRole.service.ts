@@ -106,7 +106,7 @@ export class ProjectRoleService {
               AND: {
                 roleId: dto.id,
                 AND: {
-                  persmission: {
+                  permission: {
                     code: String(node.key),
                   },
                 },
