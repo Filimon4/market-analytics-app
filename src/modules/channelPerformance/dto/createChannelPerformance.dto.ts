@@ -1,16 +1,32 @@
 import { Type } from 'class-transformer';
-import { IsString, IsNotEmpty, IsNumber, IsDate, IsOptional, IsPositive } from 'class-validator';
+import {
+  IsDate,
+  IsInt,
+  IsNotEmpty,
+  IsNumber,
+  IsObject,
+  IsOptional,
+  IsPositive,
+  IsString,
+  Min,
+  ValidateNested,
+} from 'class-validator';
+
+export class CreateChannelPerformanceChannelDto {
+  @IsNotEmpty()
+  @IsString()
+  id: string;
+
+  @IsNotEmpty()
+  @IsString()
+  code: string;
+}
 
 export class CreateChannelPerformanceDto {
   @IsNotEmpty()
-  @Type(() => BigInt)
-  @IsNumber()
-  @IsPositive()
-  channelId: bigint;
-
-  @IsString()
-  @IsNotEmpty()
-  name: string;
+  @ValidateNested()
+  @Type(() => CreateChannelPerformanceChannelDto)
+  channel: CreateChannelPerformanceChannelDto;
 
   @IsNotEmpty()
   @Type(() => Date)
@@ -25,25 +41,34 @@ export class CreateChannelPerformanceDto {
   @IsOptional()
   @Type(() => Number)
   @IsNumber()
-  impressions?: number = 0;
+  @Min(0)
+  spend?: number;
 
   @IsOptional()
   @Type(() => Number)
-  @IsNumber()
-  clicks?: number = 0;
+  @IsInt()
+  @Min(0)
+  impressions?: number;
 
   @IsOptional()
   @Type(() => Number)
-  @IsNumber()
-  spend?: number = 0;
+  @IsInt()
+  @Min(0)
+  clicks?: number;
 
   @IsOptional()
   @Type(() => Number)
-  @IsNumber()
-  conversions?: number = 0;
+  @IsInt()
+  @Min(0)
+  conversions?: number;
 
   @IsOptional()
   @Type(() => Number)
-  @IsNumber()
-  revenue?: number = 0;
+  @IsInt()
+  @Min(0)
+  leads?: number;
+
+  @IsOptional()
+  @IsObject()
+  ufMetrics?: Record<string, any>;
 }

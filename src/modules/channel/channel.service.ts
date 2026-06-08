@@ -57,31 +57,17 @@ export class ChannelService {
     });
   }
 
-  async list(projectId: number, includeDeleted = false) {
+  async list(projectId: number, deleted = false) {
     return this.prisma.channel.findMany({
       where: {
         strategy: {
           projectId,
         },
-        ...(includeDeleted ? {} : { deleted: false }),
+        deleted,
       },
       select: {
         id: true,
         name: true,
-        deleted: true,
-        createdAt: true,
-        strategy: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-        trafficSource: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
       },
       orderBy: {
         id: 'asc',
