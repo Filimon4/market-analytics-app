@@ -1,7 +1,7 @@
 model metricChannel {
   id        BigInt     @id @default(autoincrement())
   name      String
-  ast       Json        @default("{}")
+  formala   String     @default("")
   code      String
   deleted   Boolean     @default(false)
 
