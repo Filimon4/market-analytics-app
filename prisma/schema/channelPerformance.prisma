@@ -9,9 +9,10 @@ model ChannelPerformance {
   leads       Int       @default(0)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
-  ufMetrics   Json      @default("{}")
   deleted     Boolean   @default(false)
 
   channelId   BigInt
   channel     Channel   @relation(fields: [channelId], references: [id])
+
+  channelPerformanceMetricResults ChannelPerformanceMetricResult[]
 }

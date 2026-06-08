@@ -1,4 +1,4 @@
-model metricChannel {
+model MetricChannel {
   id        BigInt     @id @default(autoincrement())
   name      String
   formala   String     @default("")
@@ -8,5 +8,7 @@ model metricChannel {
   channelId BigInt
   channel   Channel     @relation(fields: [channelId], references: [id])
 
-  metricToUfChannels metricToUfChannel[]
+  metricToUfChannels MetricToUfChannel[]
+
+  channelPerformanceMetricResults ChannelPerformanceMetricResult[]
 }

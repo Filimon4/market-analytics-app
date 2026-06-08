@@ -1,0 +1,10 @@
+model ChannelPerformanceMetricResult {
+    channelPerformanceId    BigInt
+    metricChannelId         BigInt
+    value                   Int                 @default(0)
+
+    channelPerformance      ChannelPerformance  @relation(fields: [channelPerformanceId], references: [id])
+    channelMetric           MetricChannel       @relation(fields: [metricChannelId], references: [id])
+
+    @@id([channelPerformanceId, metricChannelId])
+}

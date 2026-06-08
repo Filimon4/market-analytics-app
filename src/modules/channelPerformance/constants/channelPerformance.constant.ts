@@ -121,7 +121,6 @@ export const ChannelPerformancesSelect: Prisma.ChannelPerformanceSelect = {
   clicks: true,
   conversions: true,
   leads: true,
-  ufMetrics: true,
   createdAt: true,
   deleted: true,
   channel: {

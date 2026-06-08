@@ -1,4 +1,4 @@
-model ufChannel {
+model UfChannel {
   id        BigInt     @id @default(autoincrement())
   type      String
   value     Json
@@ -9,5 +9,5 @@ model ufChannel {
   channelId BigInt
   channel   Channel     @relation(fields: [channelId], references: [id])
 
-  metricToUfChannels metricToUfChannel[]
+  metricToUfChannels MetricToUfChannel[]
 }

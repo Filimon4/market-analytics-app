@@ -9,6 +9,6 @@ model Channel {
   strategy              Strategy              @relation(fields: [strategyId], references: [id])
   channelPerformances   ChannelPerformance[]
   trafficSource         ChannelSource         @relation(fields: [trafficSourceId], references: [id])
-  ufChannels            ufChannel[]
-  metricChannels        metricChannel[]
+  ufChannels            UfChannel[]
+  metricChannels        MetricChannel[]
 }

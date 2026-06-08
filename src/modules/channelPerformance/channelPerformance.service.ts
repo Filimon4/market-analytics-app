@@ -2,6 +2,7 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { PrismaService } from '@src/common/db/prisma.service';
 import { CreateChannelPerformanceDto } from './dto/createChannelPerformance.dto';
 import { UpdateChannelPerformanceDto } from './dto/updateChannelPerformance.dto';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class ChannelPerformanceService {
@@ -37,7 +38,6 @@ export class ChannelPerformanceService {
         clicks: dto.clicks ?? 0,
         conversions: dto.conversions ?? 0,
         leads: dto.leads ?? 0,
-        ufMetrics: dto.ufMetrics ?? {},
       },
       select: { id: true },
     });
@@ -83,7 +83,6 @@ export class ChannelPerformanceService {
         clicks: true,
         conversions: true,
         leads: true,
-        ufMetrics: true,
         createdAt: true,
         updatedAt: true,
         deleted: true,
@@ -111,19 +110,47 @@ export class ChannelPerformanceService {
       await this.resolveChannel(projectId, Number(dto.channel.id));
     }
 
+    const dataChannelPerformance: Prisma.ChannelPerformanceUpdateInput = {};
+
+    if (dto.channel) {
+      dataChannelPerformance.channel = {
+        connect: {
+          id: BigInt(dto.channel.id),
+        },
+      };
+    }
+
+    if (dto.clicks) {
+      dataChannelPerformance.clicks = dto.clicks;
+    }
+
+    if (dto.conversions) {
+      dataChannelPerformance.conversions = dto.conversions;
+    }
+
+    if (dto.endDate) {
+      dataChannelPerformance.endDate = dto.endDate;
+    }
+
+    if (dto.startDate) {
+      dataChannelPerformance.startDate = dto.startDate;
+    }
+
+    if (dto.spend) {
+      dataChannelPerformance.spend = dto.spend;
+    }
+
+    if (dto.impressions) {
+      dataChannelPerformance.impressions = dto.impressions;
+    }
+
+    if (dto.leads) {
+      dataChannelPerformance.leads = dto.leads;
+    }
+
     await this.prisma.channelPerformance.update({
       where: { id },
-      data: {
-        ...(dto.channel !== undefined ? { channelId: BigInt(dto.channel.id) } : {}),
-        ...(dto.startDate !== undefined ? { startDate: dto.startDate } : {}),
-        ...(dto.endDate !== undefined ? { endDate: dto.endDate } : {}),
-        ...(dto.spend !== undefined ? { spend: dto.spend } : {}),
-        ...(dto.impressions !== undefined ? { impressions: dto.impressions } : {}),
-        ...(dto.clicks !== undefined ? { clicks: dto.clicks } : {}),
-        ...(dto.conversions !== undefined ? { conversions: dto.conversions } : {}),
-        ...(dto.leads !== undefined ? { leads: dto.leads } : {}),
-        ...(dto.ufMetrics !== undefined ? { ufMetrics: dto.ufMetrics } : {}),
-      },
+      data: dataChannelPerformance,
       select: { id: true },
     });
   }
