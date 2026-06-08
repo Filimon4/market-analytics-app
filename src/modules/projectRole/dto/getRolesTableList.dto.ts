@@ -1,5 +1,6 @@
 import { Transform, Type } from 'class-transformer';
 import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString, Max, Min, ValidateNested } from 'class-validator';
+import { toOptionalBoolean } from 'src/common/utils/transformers/to-boolean.transformer';
 
 export class RolesTableFilterDto {
   @IsOptional()
@@ -11,22 +12,12 @@ export class RolesTableFilterDto {
   title?: string;
 
   @IsOptional()
-  @Transform(({ value }) => {
-    if (!value) return undefined;
-    if (value === '1' || value === 'true') return true;
-
-    return false;
-  })
+  @Transform(toOptionalBoolean)
   @IsBoolean()
   default?: boolean;
 
   @IsOptional()
-  @Transform(({ value }) => {
-    if (!value) return undefined;
-    if (value === '1' || value === 'true') return true;
-
-    return false;
-  })
+  @Transform(toOptionalBoolean)
   @IsBoolean()
   deleted?: boolean;
 }

@@ -1,5 +1,6 @@
 import { Transform, Type } from 'class-transformer';
 import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString, Max, Min, ValidateNested } from 'class-validator';
+import { toBoolean } from 'src/common/utils/transformers/to-boolean.transformer';
 
 export class UsersToProjectTableRoleDto {
   @IsNotEmpty()
@@ -10,7 +11,7 @@ export class UsersToProjectTableRoleDto {
 
 export class UsersToProjectTableListFilterDto {
   @IsOptional()
-  @Transform(({ value }) => value === '1' || value === 'true')
+  @Transform(toBoolean)
   @IsBoolean()
   blocked?: boolean;
 

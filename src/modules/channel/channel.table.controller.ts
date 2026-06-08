@@ -103,7 +103,17 @@ export class ChannelTableController {
       result: {
         blocks: ChannelsBlocks,
         blockDetails: ChannelsBlockDetails,
-        data: channelData,
+        data: {
+          ...channelData,
+          strategy: {
+            ...channelData.strategy,
+            code: channelData.strategy.name,
+          },
+          trafficSource: {
+            ...channelData.trafficSource,
+            code: channelData.trafficSource.name,
+          },
+        },
       },
     };
   }

@@ -36,6 +36,10 @@ export class ChannelSourceService {
       orderBy: {
         id: 'asc',
       },
+      select: {
+        id: true,
+        name: true,
+      },
     });
   }
 

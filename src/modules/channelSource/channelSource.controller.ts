@@ -1,4 +1,17 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { ChannelSourceService } from './channelSource.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { TenantGuard } from 'src/shared/tenant/guards/tenant.guard';
@@ -24,11 +37,16 @@ export class ChannelSourceController {
     };
   }
 
-  @Get()
+  @Get('select')
   async list(@Query() dto: GetChannelSourceListDto) {
     const list = await this.channelSourceService.list(dto.includeDeleted);
 
-    return { result: list };
+    return {
+      result: list.map((chnl) => ({
+        id: chnl.id,
+        code: chnl.name,
+      })),
+    };
   }
 
   @Get(':id')

@@ -41,11 +41,16 @@ export class StrategyController {
     };
   }
 
-  @Get()
+  @Get('select')
   async list(@CurrentTenant() projectId: number, @Query() dto: GetStrategyListDto) {
     const list = await this.strategyService.list(projectId, dto.includeDeleted);
 
-    return { result: list };
+    return {
+      result: list.map((str) => ({
+        id: str.id,
+        code: str.name,
+      })),
+    };
   }
 
   @Get(':id')
