@@ -1,7 +1,23 @@
-export interface IBlockIndentifier {
-  blockCode: string;
+// #region Actions
+export interface IActionButton {
+  title: string;
+  code: string;
+  size: 'small' | 'medium' | 'large';
 }
 
+export interface IActionLogicButton extends IActionButton {
+  type: 'logic';
+}
+
+export interface IActionDirectButton extends IActionButton {
+  type: 'directRequest';
+  requestUrl: string;
+}
+
+export type IBlockAction = IActionLogicButton | IActionDirectButton;
+// #endregion
+
+// #region Blocks
 export interface ITreeBlock extends IBlock {
   blockType: 'tree';
 }
@@ -18,11 +34,20 @@ export interface IAnalyticBlock extends IBlock {
 
 export interface IMetricBlock extends IBlock {
   blockType: 'metrics';
+  tableUrl: string;
+  tableColumns: {
+    key: string;
+    title: string;
+    path: string;
+  }[];
+  entityUrl: string;
+  entityActions?: IBlockAction[];
 }
 
 export interface IBlock {
   code: string;
   name: string;
+  actions?: IBlockAction[];
   /**
    * Добавление
    *
@@ -32,6 +57,9 @@ export interface IBlock {
 }
 
 export type TEntityBlock = ITreeBlock | ITableBlock | IAnalyticBlock | IMetricBlock;
+// #endregion
+
+// #region Block Details
 
 export interface IField {
   title: string;
@@ -67,17 +95,29 @@ export interface IField {
   createDefault?: boolean | string | number;
 }
 
-export interface IBlockDetail extends IBlockIndentifier {
+export interface IBlockIndentifier {
+  blockCode: string;
+}
+
+export interface ITableBlockDetail extends IBlockIndentifier {
   fields: IField[];
 }
 
-export interface IBlockTreeDetail extends IBlockIndentifier {
+export interface ITreeBlockDetail extends IBlockIndentifier {
   treePath: string;
 }
 
+export interface IMetricsBlockDetail {
+  fields: IField[];
+}
+
+export type TEntityBlockDetail = (ITableBlockDetail | ITreeBlockDetail)[] | IMetricsBlockDetail;
+
+// #endregion
+
 export interface IEntityResponse<B = Record<string, any>> {
   blocks: TEntityBlock[];
-  blockDetails: (IBlockDetail | IBlockTreeDetail)[];
+  blockDetails: TEntityBlockDetail;
   data: B;
 }
 

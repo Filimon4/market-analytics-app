@@ -11,6 +11,46 @@ export const ChannelSourcesColumns: ITableColumn[] = [
 
 export const ChannelSourcesBlocks: TEntityBlock[] = [
   { code: 'main', name: 'Источник трафика', columnCapacity: 5, maxColumns: 2, blockType: 'table' },
+  {
+    code: 'main',
+    name: 'Метрики',
+    blockType: 'metrics',
+    tableUrl: '',
+    actions: [
+      {
+        title: 'Добавить новую метрику',
+        code: 'addNewMetric',
+        size: 'medium',
+        type: 'logic',
+      },
+      {
+        title: 'Обновить метрики по трафику',
+        code: 'addNewMetric',
+        size: 'medium',
+        type: 'directRequest',
+        requestUrl: '', // TODO: Добавить ссылку
+      },
+    ],
+    entityUrl: '', // TODO: Добавить ссылку
+    tableColumns: [
+      {
+        key: 'id',
+        title: 'Инд.',
+        path: 'id',
+      },
+      {
+        key: 'name',
+        title: 'Название',
+        path: 'name',
+      },
+      {
+        key: 'value',
+        title: 'Значение',
+        path: 'value',
+      },
+    ],
+  },
+  { code: 'main', name: 'Аналитика', blockType: 'analytics' },
 ];
 
 export const ChannelSourcesBlockDetails: IEntityResponse['blockDetails'] = [

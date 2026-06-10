@@ -1,5 +1,5 @@
 import { Prisma } from '@prisma/client';
-import { TEntityBlock, IEntityResponse } from 'src/common/interfaces/ientity.interface';
+import { TEntityBlock, IEntityResponse, ITableBlockDetail } from 'src/common/interfaces/ientity.interface';
 import { ITableColumn } from 'src/common/interfaces/itable.interface';
 
 export const ChannelsColumns: ITableColumn[] = [
@@ -26,12 +26,57 @@ export const ChannelsColumns: ITableColumn[] = [
 ] as const;
 
 export const ChannelsBlocks: TEntityBlock[] = [
-  { code: 'main', name: 'Канал трафика', columnCapacity: 5, maxColumns: 2, blockType: 'table' },
-  { code: 'metrics', name: 'Метрики', blockType: 'metrics', createHide: true },
+  {
+    code: 'main',
+    name: 'Канал трафика',
+    columnCapacity: 5,
+    maxColumns: 2,
+    blockType: 'table',
+  },
+  {
+    code: 'metrics',
+    name: 'Метрики',
+    blockType: 'metrics',
+    tableUrl: 'v1/channels/:parentId/metrics/table/list',
+    createHide: true,
+    actions: [
+      {
+        title: 'Обновить метрики по трафику',
+        code: 'updateMetricsOfChannel',
+        size: 'medium',
+        type: 'directRequest',
+        requestUrl: '', // TODO: Добавить ссылку
+      },
+      {
+        title: 'Добавить новую метрику',
+        code: 'addNewMetric',
+        size: 'medium',
+        type: 'logic',
+      },
+    ],
+    entityUrl: '', // TODO: Добавить ссылку
+    tableColumns: [
+      {
+        key: 'id',
+        title: 'Инд.',
+        path: 'id',
+      },
+      {
+        key: 'name',
+        title: 'Название',
+        path: 'name',
+      },
+      {
+        key: 'value',
+        title: 'Значение',
+        path: 'value',
+      },
+    ],
+  },
   { code: 'analytics', name: 'Аналитика', blockType: 'analytics', createHide: true },
 ];
 
-export const ChannelsBlockDetails: IEntityResponse['blockDetails'] = [
+export const ChannelsBlockDetails: ITableBlockDetail[] = [
   {
     blockCode: 'main',
     fields: [

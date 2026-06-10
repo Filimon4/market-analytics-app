@@ -86,37 +86,6 @@ export class ProjectController {
 
   @Get('panel')
   async getPanel(@Query() roleDto: GetPanelDto) {
-    // TODO: Переделать это
-    // const panel = [
-    //   {
-    //     name: 'Маркетинг',
-    //     code: 'PANEL_MARKETING',
-    //     icon: '/icons/marketing.png',
-    //     children: [
-    //       { name: 'Стратегии', code: 'PANEL_MARKETING_STRATEGY', url: '/marketing/strategies' },
-    //       { name: 'Каналы трафика', code: 'PANEL_MARKETING_CHANNELS', url: '/marketing/channels' },
-    //       {
-    //         name: 'Результаты трафика',
-    //         code: 'PANEL_MARKETING_CHANNELS_PERFORMANCE',
-    //         url: '/marketing/channels/performances',
-    //       },
-    //     ],
-    //   },
-    //   {
-    //     name: 'Проект',
-    //     code: 'PANEL_PROJECTS',
-    //     icon: '/icons/project.png',
-    //     children: [
-    //       { name: 'Разработчику', code: 'PANEL_PROJECTS_DEVELOPER', url: '/projects/developer' },
-    //       { name: 'Апи ключи', code: 'PANEL_PROJECTS_API_KEYS', url: '/projects/apikeys' },
-    //       { name: 'Пользователи', code: 'PANEL_PROJECTS_USERS', url: '/projects/users' },
-    //       { name: 'Роли', code: 'PANEL_PROJECTS_ROLES', url: '/projects/roles' },
-    //       { name: 'Приглашения', code: 'PANEL_PROJECTS_INVITE', url: '/projects/invitations' },
-    //       { name: 'Виды канала трафика', code: 'PANEL_PROJECTS_TYPE_CHANNEL_SOURCE', url: '/projects/channelsources' },
-    //     ],
-    //   },
-    // ];
-
     const panel = await this.prismaService.$queryRaw<
       { granted: boolean; id: number; code: string; icon: string; url: string; parentId: number }[]
     >`

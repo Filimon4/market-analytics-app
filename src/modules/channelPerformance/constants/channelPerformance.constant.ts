@@ -25,7 +25,40 @@ export const ChannelPerformancesColumns: ITableColumn[] = [
 
 export const ChannelPerformancesBlocks: TEntityBlock[] = [
   { code: 'main', name: 'Результативность канала', columnCapacity: 6, maxColumns: 2, blockType: 'table' },
-  { code: 'metrics', name: 'Метрики', blockType: 'metrics', createHide: true },
+  {
+    code: 'metrics',
+    name: 'Метрики',
+    blockType: 'metrics',
+    tableUrl: '',
+    createHide: true,
+    actions: [
+      {
+        title: 'Обновить метрики',
+        code: 'updateMetricsOfChannel',
+        size: 'medium',
+        type: 'directRequest',
+        requestUrl: '', // TODO: Добавить ссылку
+      },
+    ],
+    entityUrl: '', // TODO: Добавить ссылку
+    tableColumns: [
+      {
+        key: 'id',
+        title: 'Инд.',
+        path: 'id',
+      },
+      {
+        key: 'name',
+        title: 'Название',
+        path: 'name',
+      },
+      {
+        key: 'value',
+        title: 'Значение',
+        path: 'value',
+      },
+    ],
+  },
 ];
 
 export const ChannelPerformancesBlockDetails: IEntityResponse['blockDetails'] = [

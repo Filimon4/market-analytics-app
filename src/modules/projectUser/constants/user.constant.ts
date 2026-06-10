@@ -1,5 +1,5 @@
 import { Prisma } from '@prisma/client';
-import { IBlockDetail, TEntityBlock } from 'src/common/interfaces/ientity.interface';
+import { ITableBlockDetail, TEntityBlock } from 'src/common/interfaces/ientity.interface';
 import { ITableColumn } from 'src/common/interfaces/itable.interface';
 
 export const UsersToProjectSelect: Prisma.UserToProjectSelect = {
@@ -32,7 +32,7 @@ export const UserToProjectBlocks: TEntityBlock[] = [
   { code: 'main', name: 'Пользователь', columnCapacity: 5, maxColumns: 2, blockType: 'table' },
 ];
 
-export const UserToProjectBlockDetails: IBlockDetail[] = [
+export const UserToProjectBlockDetails: ITableBlockDetail[] = [
   {
     blockCode: 'main',
     fields: [

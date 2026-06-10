@@ -27,6 +27,13 @@ export interface ITableListResponse<T> {
   maxPage: number;
 }
 
+export interface IMetricsTableListResponse<T> {
+  data: T[];
+  page: number;
+  total: number;
+  maxPage: number;
+}
+
 export interface ITableColumnFilterDatetimePeriod {
   from: string;
   to: string;
