@@ -1,7 +1,7 @@
 model MetricChannel {
   id        BigInt     @id @default(autoincrement())
   name      String
-  formala   String     @default("")
+  formula   String     @default("")
   code      String
   deleted   Boolean     @default(false)
 

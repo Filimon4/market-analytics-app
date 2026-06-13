@@ -29,8 +29,12 @@ export const ChannelPerformancesBlocks: TEntityBlock[] = [
     code: 'metrics',
     name: 'Метрики',
     blockType: 'metrics',
-    tableUrl: '',
     createHide: true,
+    baseEntityUrl: '',
+    // TODO: Доделать
+    metricUrls: {
+      tableUrl: '',
+    },
     actions: [
       {
         title: 'Обновить метрики',
@@ -40,7 +44,6 @@ export const ChannelPerformancesBlocks: TEntityBlock[] = [
         requestUrl: '', // TODO: Добавить ссылку
       },
     ],
-    entityUrl: '', // TODO: Добавить ссылку
     tableColumns: [
       {
         key: 'id',

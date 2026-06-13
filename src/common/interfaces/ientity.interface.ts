@@ -34,14 +34,16 @@ export interface IAnalyticBlock extends IBlock {
 
 export interface IMetricBlock extends IBlock {
   blockType: 'metrics';
-  tableUrl: string;
   tableColumns: {
     key: string;
     title: string;
     path: string;
   }[];
-  entityUrl: string;
   entityActions?: IBlockAction[];
+  metricUrls: {
+    tableUrl: string; // Список объектов
+  };
+  baseEntityUrl: string;
 }
 
 export interface IBlock {
@@ -107,11 +109,11 @@ export interface ITreeBlockDetail extends IBlockIndentifier {
   treePath: string;
 }
 
-export interface IMetricsBlockDetail {
+export interface IMetricsBlockDetail extends IBlockIndentifier {
   fields: IField[];
 }
 
-export type TEntityBlockDetail = (ITableBlockDetail | ITreeBlockDetail)[] | IMetricsBlockDetail;
+export type TEntityBlockDetail = (ITableBlockDetail | ITreeBlockDetail | IMetricsBlockDetail)[];
 
 // #endregion
 

@@ -1,0 +1,24 @@
+---
+description: 
+alwaysApply: true
+---
+
+# Database Migration Consent
+
+The agent is strictly prohibited from creating new database migrations (e.g., using `prisma migrate dev`, `prisma migrate deploy`, or any other migration tool) without first obtaining explicit agreement from the user.
+
+## Guidelines
+
+- **Always Ask First**: Before running any command that generates or applies a migration, you must explain what changes will be made and ask for the user's permission.
+- **Prisma Specifics**: This applies to `npx prisma migrate dev`, `npx prisma migrate deploy`, and any other command that modifies the `prisma/migrations` directory or the database schema.
+- **Explain the Impact**: When asking for consent, briefly describe what schema changes are being introduced (e.g., "Adding a `bio` field to the `User` table").
+
+## Examples
+
+### ❌ BAD
+"I've updated the schema and created a migration for you."
+(Agent runs `npx prisma migrate dev --name add_bio` without asking)
+
+### ✅ GOOD
+"I have updated the `schema.prisma` file to add a `bio` field to the `User` model. Would you like me to create and apply a migration for these changes now?"
+(Agent waits for user response before running any migration commands)

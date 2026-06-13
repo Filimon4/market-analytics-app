@@ -37,7 +37,10 @@ export const ChannelsBlocks: TEntityBlock[] = [
     code: 'metrics',
     name: 'Метрики',
     blockType: 'metrics',
-    tableUrl: 'v1/channels/:parentId/metrics/table/list',
+    metricUrls: {
+      tableUrl: 'v1/channels/:parentId/metrics/table/list',
+    },
+    baseEntityUrl: 'metrics',
     createHide: true,
     actions: [
       {
@@ -49,12 +52,11 @@ export const ChannelsBlocks: TEntityBlock[] = [
       },
       {
         title: 'Добавить новую метрику',
-        code: 'addNewMetric',
+        code: 'new',
         size: 'medium',
         type: 'logic',
       },
     ],
-    entityUrl: '', // TODO: Добавить ссылку
     tableColumns: [
       {
         key: 'id',

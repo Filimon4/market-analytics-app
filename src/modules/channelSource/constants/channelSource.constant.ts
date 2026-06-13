@@ -15,7 +15,11 @@ export const ChannelSourcesBlocks: TEntityBlock[] = [
     code: 'main',
     name: 'Метрики',
     blockType: 'metrics',
-    tableUrl: '',
+    // TODO: Доделать
+    metricUrls: {
+      tableUrl: '',
+    },
+    baseEntityUrl: '',
     actions: [
       {
         title: 'Добавить новую метрику',
@@ -31,7 +35,6 @@ export const ChannelSourcesBlocks: TEntityBlock[] = [
         requestUrl: '', // TODO: Добавить ссылку
       },
     ],
-    entityUrl: '', // TODO: Добавить ссылку
     tableColumns: [
       {
         key: 'id',

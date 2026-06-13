@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, NotFoundException, Param, ParseIntPipe, Post, UseGuards } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '@src/common/db/prisma.service';
 import { IApiResultResponse } from 'src/common/interfaces/api.interface';
@@ -7,9 +7,15 @@ import { CurrentTenant } from 'src/shared/tenant/decorators/current-tenant.decor
 import { TenantGuard } from 'src/shared/tenant/guards/tenant.guard';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { GetChannelMetricsTableListDto } from './dto/getChannelMetricsTableList.dto';
-import { MetricsChannelSelect } from './constants/matricChannel.constant';
+import {
+  MetricsChannelBlockDetails,
+  MetricsChannelBlocks,
+  MetricsChannelSelect,
+} from './constants/matricChannel.constant';
 import { TMetricsChannelGetPayload } from './types/metricChannel.type';
+import { IEntityResponse } from '@src/common/interfaces/ientity.interface';
 
+// TODO: Добавить поле value с итогом формулы
 @Controller('channels/:channelId/metrics/table')
 @UseGuards(JwtAuthGuard, TenantGuard)
 export class MetricsChannelTableController {
@@ -47,7 +53,43 @@ export class MetricsChannelTableController {
   }
 
   @Get('create')
-  async getTableCreate() {
-    return {};
+  async getTableCreate(): Promise<IApiResultResponse<Pick<IEntityResponse, 'blockDetails' | 'blocks'>>> {
+    return {
+      result: {
+        blocks: MetricsChannelBlocks,
+        blockDetails: MetricsChannelBlockDetails,
+      },
+    };
+  }
+
+  @Get(':id')
+  async getTableEntity(
+    @CurrentTenant() projectId: number,
+    @Param('channelId', ParseIntPipe) channelId: number,
+    @Param('id') id: string,
+  ): Promise<IApiResultResponse<IEntityResponse>> {
+    const channelData = await this.prismaService.metricChannel.findFirst({
+      where: {
+        id: BigInt(id),
+        channel: {
+          id: channelId,
+        },
+      },
+      select: MetricsChannelSelect,
+    });
+
+    if (!channelData) {
+      throw new NotFoundException('Channel metric not found');
+    }
+
+    return {
+      result: {
+        blocks: MetricsChannelBlocks,
+        blockDetails: MetricsChannelBlockDetails,
+        data: {
+          ...channelData,
+        },
+      },
+    };
   }
 }
