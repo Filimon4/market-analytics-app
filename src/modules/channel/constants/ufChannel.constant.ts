@@ -53,6 +53,14 @@ export const UfChannelsBlockDetails: TEntityBlockDetail = [
         type: 'string',
 
         createEditable: false,
+        createDefault: '',
+      },
+      {
+        title: 'Обязательное',
+        editable: true,
+        path: 'required',
+        type: 'boolean',
+        createDefault: false,
       },
       {
         title: 'Удалена',

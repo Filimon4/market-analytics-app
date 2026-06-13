@@ -7,6 +7,7 @@ import { MetricsChannelController } from './metricsChannel.controller';
 import { MetricsChannelService } from './metricsChannel.service';
 import { UfChannelsService } from './ufChannels.service';
 import { UfChannelsController } from './ufChannels.controller';
+import { UfChannelsTableController } from './ufChannels.table.controller';
 
 @Module({
   controllers: [
@@ -15,6 +16,7 @@ import { UfChannelsController } from './ufChannels.controller';
     MetricsChannelController,
     MetricsChannelTableController,
     UfChannelsController,
+    UfChannelsTableController,
   ],
   providers: [ChannelService, MetricsChannelService, UfChannelsService],
 })
