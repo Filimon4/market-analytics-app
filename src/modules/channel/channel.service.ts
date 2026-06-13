@@ -2,6 +2,8 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { CreateChannelDto } from './dto/createChannel.dto';
 import { PrismaService } from '@src/common/db/prisma.service';
 import { UpdateChannelDto } from './dto/updateChannel.dto';
+import { MetricChannel, Prisma } from '@prisma/client';
+import { evaluate } from 'mathjs';
 
 @Injectable()
 export class ChannelService {
@@ -215,5 +217,93 @@ export class ChannelService {
         id: true,
       },
     });
+  }
+
+  async updateMetrics(projectId: number, channelId: bigint) {
+    const channelPerformances = await this.prisma.channelPerformance.findMany({
+      where: {
+        channelId,
+      },
+      include: {
+        channelPerformanceMetricResults: {
+          include: {
+            channelMetric: true,
+          },
+        },
+      },
+    });
+
+    const metrics = await this.prisma.metricChannel.findMany({
+      where: {
+        channelId,
+      },
+    });
+
+    for (const channelPerformance of channelPerformances) {
+      const existMetrics = channelPerformance.channelPerformanceMetricResults.map(
+        (metricResult) => metricResult.channelMetric,
+      );
+
+      if (existMetrics.length) {
+        for (const metric of existMetrics) {
+          const data = {
+            channelPerformanceId: channelPerformance.id,
+            metricChannelId: metric.id,
+            value: await this.calcChannelMetric(metric),
+          };
+
+          await this.prisma.channelPerformanceMetricResult.update({
+            data,
+            where: {
+              channelPerformanceId_metricChannelId: {
+                metricChannelId: metric.id,
+                channelPerformanceId: channelPerformance.id,
+              },
+            },
+          });
+        }
+      }
+
+      const unexistMetrics = metrics.filter(
+        (metric) =>
+          !channelPerformance.channelPerformanceMetricResults.find(
+            (metricResult) => metricResult.metricChannelId === metric.id,
+          ),
+      );
+
+      if (unexistMetrics.length) {
+        const data = await Promise.all(
+          unexistMetrics.map(async (metric) => ({
+            channelPerformanceId: channelPerformance.id,
+            metricChannelId: metric.id,
+            value: await this.calcChannelMetric(metric),
+          })),
+        );
+
+        await this.prisma.channelPerformanceMetricResult.createMany({
+          data,
+        });
+      }
+    }
+  }
+
+  private async calcChannelMetric(metricChannel: Pick<MetricChannel, 'formula' | 'id'>) {
+    const ufChannel = await this.prisma.metricToUfChannel.findMany({
+      where: {
+        metricId: metricChannel.id,
+      },
+      include: {
+        ufChannel: true,
+      },
+    });
+
+    const mathScope = ufChannel.length
+      ? ufChannel.reduce((acc, ufCh) => {
+          acc[ufCh.ufChannel.code] = ufCh.ufChannel.value;
+          return acc;
+        }, {})
+      : {};
+
+    return evaluate(metricChannel.formula, mathScope);
   }
 }

@@ -48,7 +48,7 @@ export const ChannelsBlocks: TEntityBlock[] = [
         code: 'updateMetricsOfChannel',
         size: 'medium',
         type: 'directRequest',
-        requestUrl: '', // TODO: Добавить ссылку
+        requestUrl: 'v1/channels/:entityId/update-metrics', // TODO: Добавить ссылку
       },
       {
         title: 'Добавить новую метрику',
