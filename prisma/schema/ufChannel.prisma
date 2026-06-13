@@ -1,10 +1,11 @@
 model UfChannel {
-  id        BigInt     @id @default(autoincrement())
+  id        BigInt      @id @default(autoincrement())
   type      String
-  value     Json
+  value     Json        @default("{}")
   name      String
   code      String
   required  Boolean     @default(false)
+  deleted   Boolean     @default(false)
 
   channelId BigInt
   channel   Channel     @relation(fields: [channelId], references: [id])

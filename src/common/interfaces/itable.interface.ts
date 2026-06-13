@@ -27,7 +27,7 @@ export interface ITableListResponse<T> {
   maxPage: number;
 }
 
-export interface IMetricsTableListResponse<T> {
+export interface IListEntityTableListResponse<T> {
   data: T[];
   page: number;
   total: number;

@@ -1,5 +1,5 @@
 import { Prisma } from '@prisma/client';
-import { TEntityBlock, IEntityResponse, ITableBlockDetail } from 'src/common/interfaces/ientity.interface';
+import { TEntityBlock, ITableBlockDetail } from 'src/common/interfaces/ientity.interface';
 import { ITableColumn } from 'src/common/interfaces/itable.interface';
 
 export const ChannelsColumns: ITableColumn[] = [
@@ -34,9 +34,59 @@ export const ChannelsBlocks: TEntityBlock[] = [
     blockType: 'table',
   },
   {
+    code: 'properties',
+    name: 'Свойства',
+    blockType: 'listEntity',
+    metricUrls: {
+      tableUrl: 'v1/channels/:parentId/uf-channels/table/list',
+    },
+    baseEntityUrl: 'uf-channels',
+    createHide: true,
+    actions: [
+      {
+        title: 'Добавить новое свойство',
+        code: 'new',
+        size: 'medium',
+        type: 'logic',
+      },
+    ],
+    tableColumns: [
+      {
+        key: 'id',
+        title: 'Инд.',
+        path: 'id',
+      },
+      {
+        key: 'name',
+        title: 'Название',
+        path: 'name',
+      },
+      {
+        key: 'code',
+        title: 'Код',
+        path: 'code',
+      },
+      {
+        key: 'value',
+        title: 'Значение',
+        path: 'value',
+      },
+      {
+        key: 'type',
+        title: 'Тип',
+        path: 'type',
+      },
+      {
+        key: 'required',
+        title: 'Обязательное',
+        path: 'required',
+      },
+    ],
+  },
+  {
     code: 'metrics',
     name: 'Метрики',
-    blockType: 'metrics',
+    blockType: 'listEntity',
     metricUrls: {
       tableUrl: 'v1/channels/:parentId/metrics/table/list',
     },
@@ -48,7 +98,7 @@ export const ChannelsBlocks: TEntityBlock[] = [
         code: 'updateMetricsOfChannel',
         size: 'medium',
         type: 'directRequest',
-        requestUrl: 'v1/channels/:entityId/update-metrics', // TODO: Добавить ссылку
+        requestUrl: 'v1/channels/:entityId/update-metrics',
       },
       {
         title: 'Добавить новую метрику',
@@ -69,13 +119,12 @@ export const ChannelsBlocks: TEntityBlock[] = [
         path: 'name',
       },
       {
-        key: 'value',
-        title: 'Значение',
-        path: 'value',
+        key: 'code',
+        title: 'Код',
+        path: 'code',
       },
     ],
   },
-  { code: 'analytics', name: 'Аналитика', blockType: 'analytics', createHide: true },
 ];
 
 export const ChannelsBlockDetails: ITableBlockDetail[] = [

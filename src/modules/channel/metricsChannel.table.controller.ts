@@ -2,11 +2,10 @@ import { Body, Controller, Get, NotFoundException, Param, ParseIntPipe, Post, Us
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '@src/common/db/prisma.service';
 import { IApiResultResponse } from 'src/common/interfaces/api.interface';
-import { IMetricsTableListResponse } from 'src/common/interfaces/itable.interface';
+import { IListEntityTableListResponse } from 'src/common/interfaces/itable.interface';
 import { CurrentTenant } from 'src/shared/tenant/decorators/current-tenant.decorator';
 import { TenantGuard } from 'src/shared/tenant/guards/tenant.guard';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { GetChannelMetricsTableListDto } from './dto/getChannelMetricsTableList.dto';
 import {
   MetricsChannelBlockDetails,
   MetricsChannelBlocks,
@@ -14,8 +13,8 @@ import {
 } from './constants/matricChannel.constant';
 import { TMetricsChannelGetPayload } from './types/metricChannel.type';
 import { IEntityResponse } from '@src/common/interfaces/ientity.interface';
+import { GetMetricsChannelTableListDto } from './dtoMetrics/getMetricsChannelTableList.dto';
 
-// TODO: Добавить поле value с итогом формулы
 @Controller('channels/:channelId/metrics/table')
 @UseGuards(JwtAuthGuard, TenantGuard)
 export class MetricsChannelTableController {
@@ -24,12 +23,12 @@ export class MetricsChannelTableController {
   @Post('list')
   async getTableList(
     @CurrentTenant() projectId: number,
-    @Param('channelId', ParseIntPipe) channelId: number,
-    @Body() dto: GetChannelMetricsTableListDto,
-  ): Promise<IApiResultResponse<IMetricsTableListResponse<TMetricsChannelGetPayload>>> {
+    @Param('channelId') channelId: string,
+    @Body() dto: GetMetricsChannelTableListDto,
+  ): Promise<IApiResultResponse<IListEntityTableListResponse<TMetricsChannelGetPayload>>> {
     const whereInput: Prisma.MetricChannelWhereInput = {
       channel: {
-        id: channelId,
+        id: BigInt(channelId),
       },
     };
 
@@ -65,14 +64,14 @@ export class MetricsChannelTableController {
   @Get(':id')
   async getTableEntity(
     @CurrentTenant() projectId: number,
-    @Param('channelId', ParseIntPipe) channelId: number,
+    @Param('channelId') channelId: string,
     @Param('id') id: string,
   ): Promise<IApiResultResponse<IEntityResponse>> {
     const channelData = await this.prismaService.metricChannel.findFirst({
       where: {
         id: BigInt(id),
         channel: {
-          id: channelId,
+          id: BigInt(channelId),
         },
       },
       select: MetricsChannelSelect,
@@ -81,6 +80,8 @@ export class MetricsChannelTableController {
     if (!channelData) {
       throw new NotFoundException('Channel metric not found');
     }
+
+    // TODO FEATURE: добавить удаление и востановелние. Динамически
 
     return {
       result: {

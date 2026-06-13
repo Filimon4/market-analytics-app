@@ -8,7 +8,7 @@ import { UpdateMetricsChannelDto } from './dtoMetrics/updateMetricsChannel.dto';
 export class MetricsChannelService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async create(channelId: number, dto: CreateMetricsChannelDto) {
+  async create(channelId: bigint, dto: CreateMetricsChannelDto) {
     const createData: Prisma.MetricChannelCreateInput = {
       code: dto.code,
       name: dto.name,
@@ -29,7 +29,7 @@ export class MetricsChannelService {
     });
   }
 
-  async update(channelId: number, metricChannelId: number, dto: UpdateMetricsChannelDto) {
+  async update(channelId: bigint, metricChannelId: bigint, dto: UpdateMetricsChannelDto) {
     const metricChannel = await this.getById(channelId, metricChannelId);
 
     if (metricChannel.deleted) {
@@ -64,7 +64,31 @@ export class MetricsChannelService {
     });
   }
 
-  async getById(channelId: number, id: number) {
+  delete(channelId: bigint, metricChannelId: bigint) {
+    return this.prismaService.metricChannel.update({
+      where: {
+        id: metricChannelId,
+        channelId,
+      },
+      data: {
+        deleted: true,
+      },
+    });
+  }
+
+  restore(channelId: bigint, metricChannelId: bigint) {
+    return this.prismaService.metricChannel.update({
+      where: {
+        id: metricChannelId,
+        channelId,
+      },
+      data: {
+        deleted: false,
+      },
+    });
+  }
+
+  private async getById(channelId: bigint, id: bigint) {
     return this.prismaService.metricChannel.findFirst({
       where: {
         id: id,

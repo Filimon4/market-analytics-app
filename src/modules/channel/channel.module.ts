@@ -5,9 +5,17 @@ import { ChannelTableController } from './channel.table.controller';
 import { MetricsChannelTableController } from './metricsChannel.table.controller';
 import { MetricsChannelController } from './metricsChannel.controller';
 import { MetricsChannelService } from './metricsChannel.service';
+import { UfChannelsService } from './ufChannels.service';
+import { UfChannelsController } from './ufChannels.controller';
 
 @Module({
-  controllers: [ChannelController, ChannelTableController, MetricsChannelController, MetricsChannelTableController],
-  providers: [ChannelService, MetricsChannelService],
+  controllers: [
+    ChannelController,
+    ChannelTableController,
+    MetricsChannelController,
+    MetricsChannelTableController,
+    UfChannelsController,
+  ],
+  providers: [ChannelService, MetricsChannelService, UfChannelsService],
 })
 export class ChannelModule {}

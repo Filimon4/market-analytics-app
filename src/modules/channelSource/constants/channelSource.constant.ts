@@ -14,7 +14,7 @@ export const ChannelSourcesBlocks: TEntityBlock[] = [
   {
     code: 'main',
     name: 'Метрики',
-    blockType: 'metrics',
+    blockType: 'listEntity',
     // TODO: Доделать
     metricUrls: {
       tableUrl: '',

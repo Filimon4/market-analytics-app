@@ -28,7 +28,7 @@ export const ChannelPerformancesBlocks: TEntityBlock[] = [
   {
     code: 'metrics',
     name: 'Метрики',
-    blockType: 'metrics',
+    blockType: 'listEntity',
     createHide: true,
     baseEntityUrl: '',
     // TODO: Доделать

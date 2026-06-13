@@ -1,5 +1,5 @@
 import { Prisma } from '@prisma/client';
-import { IMetricsBlockDetail, TEntityBlock, TEntityBlockDetail } from '@src/common/interfaces/ientity.interface';
+import { TEntityBlock, TEntityBlockDetail } from '@src/common/interfaces/ientity.interface';
 
 export const MetricsChannelBlocks: TEntityBlock[] = [
   {

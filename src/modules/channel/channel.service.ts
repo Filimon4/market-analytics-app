@@ -297,6 +297,7 @@ export class ChannelService {
       },
     });
 
+    // TODO: Добавить все поля из результатов метрики и все ufChannel
     const mathScope = ufChannel.length
       ? ufChannel.reduce((acc, ufCh) => {
           acc[ufCh.ufChannel.code] = ufCh.ufChannel.value;

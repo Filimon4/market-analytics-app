@@ -36,37 +36,6 @@ export class ProjectApiKeyService {
     }));
   }
 
-  // TODO: After tenant id. Проверить все права и т.п.
-  // @UseGuards(RoleGuard('2'))
-  // async create(user: User, dto: CreateApiKeyDto) {
-  //   const key = `api_${Date.now()}_${randomUUID()}`;
-
-  //   const apiKey = await this.prismaService.apiKey.create({
-  //     data: {
-  //       name: dto.name,
-  //       key: key,
-  //       scope: dto.permissions,
-  //       expiresAt: dto.expiresAt,
-  //       project: {
-  //         connect: {
-  //           id:
-  //         }
-  //       },
-  //       status: {
-  //         connect: {
-  //           id: dto.statusId,
-  //         },
-  //       },
-  //     },
-  //   });
-
-  //   return {
-  //     ...apiKey,
-  //     id: apiKey.id.toString(),
-  //     createdBy: apiKey.createdBy.toString(),
-  //   };
-  // }
-
   async update(dto: UpdateApiKeyDto) {
     const updateData: Prisma.ApiKeyUpdateInput = {};
 
