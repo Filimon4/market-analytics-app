@@ -8,6 +8,7 @@ import {
   Param,
   Patch,
   Post,
+  Put,
   Query,
   UseGuards,
 } from '@nestjs/common';
@@ -74,6 +75,14 @@ export class ChannelPerformanceController {
   @HttpCode(HttpStatus.OK)
   async restore(@CurrentTenant() projectId: number, @Param('id') id: string) {
     await this.service.restore(projectId, BigInt(id));
+
+    return { result: true };
+  }
+
+  @Put(':entityId/update-metrics')
+  @HttpCode(HttpStatus.OK)
+  async updateMetrics(@CurrentTenant() projectId: number, @Param('entityId') entityId: string) {
+    await this.service.recalculateMetrics(projectId, BigInt(entityId));
 
     return { result: true };
   }

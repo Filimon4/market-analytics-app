@@ -12,7 +12,7 @@ export class MetricsChannelService {
     const createData: Prisma.MetricChannelCreateInput = {
       code: dto.code,
       name: dto.name,
-      formula: dto.formula,
+      formula: JSON.stringify(dto.formula),
       channel: {
         connect: {
           id: channelId,
@@ -43,24 +43,51 @@ export class MetricsChannelService {
     }
 
     if (dto.formula) {
-      metricChannelData.formula = dto.formula;
+      metricChannelData.formula = JSON.stringify(dto.formula);
     }
 
     if (dto.name) {
       metricChannelData.name = dto.name;
     }
 
-    await this.prismaService.metricChannel.update({
-      where: {
-        id: metricChannelId,
-        channel: {
-          id: channelId,
+    await this.prismaService.$transaction(async (tx) => {
+      await tx.metricChannel.update({
+        where: {
+          id: metricChannelId,
+          channel: {
+            id: channelId,
+          },
         },
-      },
-      data: metricChannelData,
-      select: {
-        id: true,
-      },
+        data: metricChannelData,
+        select: {
+          id: true,
+        },
+      });
+
+      if (dto.formula) {
+        const formulaValues = dto.formula.map((item) => item.value);
+
+        const matchedUfChannels = await tx.ufChannel.findMany({
+          where: {
+            channelId,
+            code: { in: formulaValues },
+          },
+          select: { id: true },
+        });
+
+        await tx.metricToUfChannel.deleteMany({
+          where: { metricId: metricChannelId },
+        });
+
+        if (matchedUfChannels.length > 0) {
+          await tx.metricToUfChannel.createMany({
+            data: matchedUfChannels.map((uf) => ({
+              metricId: metricChannelId,
+              ufChannelId: uf.id,
+            })),
+          });
+        }
+      }
     });
   }
 

@@ -26,14 +26,13 @@ export const ChannelPerformancesColumns: ITableColumn[] = [
 export const ChannelPerformancesBlocks: TEntityBlock[] = [
   { code: 'main', name: 'Результативность канала', columnCapacity: 6, maxColumns: 2, blockType: 'table' },
   {
-    code: 'metrics',
-    name: 'Метрики',
+    code: 'properties',
+    name: 'Свойства',
     blockType: 'listEntity',
     createHide: true,
     baseEntityUrl: '',
-    // TODO: Доделать
     metricUrls: {
-      tableUrl: '',
+      tableUrl: 'v1/channel-performances/:parentId/properties/table/list',
     },
     actions: [
       {
@@ -41,19 +40,57 @@ export const ChannelPerformancesBlocks: TEntityBlock[] = [
         code: 'updateMetricsOfChannel',
         size: 'medium',
         type: 'directRequest',
-        requestUrl: '', // TODO: Добавить ссылку
+        requestUrl: 'v1/channel-performances/:entityId/update-metrics',
+        refreshTable: true,
       },
     ],
     tableColumns: [
       {
-        key: 'id',
-        title: 'Инд.',
-        path: 'id',
+        key: 'name',
+        title: 'Название',
+        path: 'name',
       },
+      {
+        key: 'code',
+        title: 'Код',
+        path: 'code',
+      },
+      {
+        key: 'value',
+        title: 'Значение',
+        path: 'value',
+      },
+    ],
+  },
+  {
+    code: 'metrics',
+    name: 'Метрики',
+    blockType: 'viewListEntity',
+    createHide: true,
+    baseEntityUrl: '',
+    metricUrls: {
+      tableUrl: 'v1/channel-performances/:parentId/metrics/table/list',
+    },
+    actions: [
+      {
+        title: 'Обновить метрики',
+        code: 'updateMetricsOfChannel',
+        size: 'medium',
+        type: 'directRequest',
+        requestUrl: 'v1/channel-performances/:entityId/update-metrics',
+        refreshTable: true,
+      },
+    ],
+    tableColumns: [
       {
         key: 'name',
         title: 'Название',
         path: 'name',
+      },
+      {
+        key: 'code',
+        title: 'Код',
+        path: 'code',
       },
       {
         key: 'value',

@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, MaxLength } from 'class-validator';
+import { IsArray, IsNotEmpty, IsString, MaxLength } from 'class-validator';
 
 export class CreateMetricsChannelDto {
   @IsNotEmpty()
@@ -7,8 +7,8 @@ export class CreateMetricsChannelDto {
   name: string;
 
   @IsNotEmpty()
-  @IsString()
-  formula: string;
+  @IsArray()
+  formula: { label: string; value: string }[];
 
   @IsNotEmpty()
   @IsString()
