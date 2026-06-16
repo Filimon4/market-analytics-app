@@ -15,4 +15,5 @@ model ChannelPerformance {
   channel     Channel   @relation(fields: [channelId], references: [id])
 
   channelPerformanceMetricResults ChannelPerformanceMetricResult[]
+  channelPerformanceUfChannelResults ChannelPerformanceUfChannelResult[]
 }

@@ -69,10 +69,16 @@ export type TEntityBlock = ITreeBlock | ITableBlock | IAnalyticBlock | IMetricBl
 export interface IField {
   title: string;
   editable: boolean;
-  type: 'string' | 'number' | 'boolean' | 'date' | 'datetime' | 'select';
+  type: 'string' | 'number' | 'boolean' | 'date' | 'datetime' | 'select' | 'constants' | 'formula';
   path: string;
   editPath?: string;
 
+  /**
+   * Поле для formula
+   *
+   * Получение данных для формулы
+   */
+  formulaOperatorsUrl?: string;
   /**
    * Поле для select
    *

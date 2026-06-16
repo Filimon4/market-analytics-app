@@ -1,0 +1,10 @@
+model ChannelPerformanceUfChannelResult {
+    channelPerformanceId    BigInt
+    ufChannelId             BigInt
+    value                   Json?               
+
+    channelPerformance      ChannelPerformance  @relation(fields: [channelPerformanceId], references: [id])
+    ufChannel               UfChannel       @relation(fields: [ufChannelId], references: [id])
+
+    @@id([channelPerformanceId, ufChannelId])
+}

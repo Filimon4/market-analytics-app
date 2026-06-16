@@ -1,7 +1,6 @@
 model UfChannel {
   id        BigInt      @id @default(autoincrement())
   type      String
-  value     Json        @default("{}")
   name      String
   code      String
   required  Boolean     @default(false)
@@ -11,4 +10,6 @@ model UfChannel {
   channel   Channel     @relation(fields: [channelId], references: [id])
 
   metricToUfChannels MetricToUfChannel[]
+
+  channelPerformanceUfChannelResults ChannelPerformanceUfChannelResult[]
 }

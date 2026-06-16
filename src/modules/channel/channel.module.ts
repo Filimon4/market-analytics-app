@@ -8,6 +8,7 @@ import { MetricsChannelService } from './metricsChannel.service';
 import { UfChannelsService } from './ufChannels.service';
 import { UfChannelsController } from './ufChannels.controller';
 import { UfChannelsTableController } from './ufChannels.table.controller';
+import { FormulaController } from './formula/formula.controller';
 
 @Module({
   controllers: [
@@ -17,6 +18,7 @@ import { UfChannelsTableController } from './ufChannels.table.controller';
     MetricsChannelTableController,
     UfChannelsController,
     UfChannelsTableController,
+    FormulaController,
   ],
   providers: [ChannelService, MetricsChannelService, UfChannelsService],
 })

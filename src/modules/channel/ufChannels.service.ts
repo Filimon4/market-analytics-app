@@ -51,10 +51,6 @@ export class UfChannelsService {
       updateData.name = dto.name;
     }
 
-    if (dto.value) {
-      updateData.value = dto.value;
-    }
-
     if (dto.required) {
       updateData.required = dto.required;
     }
