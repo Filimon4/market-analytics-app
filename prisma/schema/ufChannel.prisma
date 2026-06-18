@@ -3,7 +3,6 @@ model UfChannel {
   type      String
   name      String
   code      String
-  required  Boolean     @default(false)
   deleted   Boolean     @default(false)
 
   channelId BigInt

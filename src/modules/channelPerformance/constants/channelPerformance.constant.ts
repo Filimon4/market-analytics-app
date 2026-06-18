@@ -30,17 +30,17 @@ export const ChannelPerformancesBlocks: TEntityBlock[] = [
     name: 'Свойства',
     blockType: 'listEntity',
     createHide: true,
-    baseEntityUrl: '',
+    baseEntityUrl: 'properties',
     metricUrls: {
       tableUrl: 'v1/channel-performances/:parentId/properties/table/list',
     },
     actions: [
       {
-        title: 'Обновить метрики',
-        code: 'updateMetricsOfChannel',
+        title: 'Обновить свойства',
+        code: 'updateUfOfChannel',
         size: 'medium',
         type: 'directRequest',
-        requestUrl: 'v1/channel-performances/:entityId/update-metrics',
+        requestUrl: 'v1/channel-performances/:entityId/update-uf',
         refreshTable: true,
       },
     ],

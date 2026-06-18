@@ -47,13 +47,6 @@ export const UfChannelsBlockDetails: TEntityBlockDetail = [
         required: true,
       },
       {
-        title: 'Обязательное',
-        editable: true,
-        path: 'required',
-        type: 'boolean',
-        createDefault: false,
-      },
-      {
         title: 'Удалена',
         editable: false,
         path: 'deleted',
@@ -69,6 +62,5 @@ export const UfChannelsSelect: Prisma.UfChannelSelect = {
   type: true,
   name: true,
   code: true,
-  required: true,
   deleted: true,
 };

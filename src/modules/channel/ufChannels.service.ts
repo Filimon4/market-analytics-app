@@ -13,7 +13,6 @@ export class UfChannelsService {
       code: dto.code,
       name: dto.name,
       type: dto.type,
-      required: dto.required,
       channel: {
         connect: {
           id: channelId,
@@ -49,10 +48,6 @@ export class UfChannelsService {
 
     if (dto.name) {
       updateData.name = dto.name;
-    }
-
-    if (dto.required) {
-      updateData.required = dto.required;
     }
 
     await this.prismaService.ufChannel.update({
