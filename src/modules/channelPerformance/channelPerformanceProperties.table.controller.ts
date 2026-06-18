@@ -90,7 +90,12 @@ export class ChannelPerformancePropertiesTableController {
       result: {
         blocks: ChannelPerformancePropertiesBlocks,
         blockDetails: ChannelPerformancePropertiesBlockDetails,
-        data: channelData,
+        data: {
+          id: channelData.ufChannel.id,
+          value: channelData.value,
+          name: channelData.ufChannel.name,
+          code: channelData.ufChannel.code,
+        },
       },
     };
   }

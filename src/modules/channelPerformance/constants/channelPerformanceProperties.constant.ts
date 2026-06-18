@@ -11,19 +11,19 @@ export const ChannelPerformancePropertiesBlockDetails: IEntityResponse['blockDet
       {
         title: 'Инд.',
         editable: false,
-        path: 'ufChannel.id',
+        path: 'id',
         type: 'string',
       },
       {
         title: 'Название',
         editable: false,
-        path: 'ufChannel.name',
+        path: 'name',
         type: 'string',
       },
       {
         title: 'Код',
         editable: false,
-        path: 'ufChannel.code',
+        path: 'code',
         type: 'string',
       },
       {

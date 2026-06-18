@@ -266,5 +266,50 @@ export class ChannelPerformanceService {
     }
   }
 
-  async updateUf(projectId: number, id: bigint) {}
+  async updateUf(projectId: number, id: bigint) {
+    const record = await this.prisma.channelPerformance.findFirst({
+      where: {
+        id,
+        channel: { strategy: { projectId } },
+      },
+      select: {
+        id: true,
+        deleted: true,
+        channelId: true,
+      },
+    });
+
+    if (!record) {
+      throw new NotFoundException('Channel performance record not found');
+    }
+
+    if (record.deleted) {
+      throw new ConflictException('Channel performance was deleted');
+    }
+
+    const ufChannels = await this.prisma.ufChannel.findMany({
+      where: {
+        channelId: record.channelId,
+        deleted: false,
+      },
+      select: { id: true },
+    });
+
+    for (const ufChannel of ufChannels) {
+      await this.prisma.channelPerformanceUfChannelResult.upsert({
+        where: {
+          channelPerformanceId_ufChannelId: {
+            channelPerformanceId: id,
+            ufChannelId: ufChannel.id,
+          },
+        },
+        create: {
+          channelPerformanceId: id,
+          ufChannelId: ufChannel.id,
+          value: Prisma.JsonNull,
+        },
+        update: {},
+      });
+    }
+  }
 }

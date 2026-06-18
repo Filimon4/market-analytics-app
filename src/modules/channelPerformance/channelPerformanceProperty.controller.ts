@@ -4,7 +4,7 @@ import { TenantGuard } from 'src/shared/tenant/guards/tenant.guard';
 import { ChannelPerformancePropertyService } from './channelPerformanceProperty.service';
 import { UpdatePerformancePropertyDto } from './dtoProperty/updatePerformanceProperty.dto';
 
-@Controller('channel-performances/:channelId/properites')
+@Controller('channel-performances/:channelId/properties')
 @UseGuards(JwtAuthGuard, TenantGuard)
 export class ChannelPerformancePropertyController {
   constructor(private readonly service: ChannelPerformancePropertyService) {}

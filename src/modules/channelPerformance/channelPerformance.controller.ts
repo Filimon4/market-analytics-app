@@ -86,4 +86,12 @@ export class ChannelPerformanceController {
 
     return { result: true };
   }
+
+  @Put(":entityId/update-uf")
+  @HttpCode(HttpStatus.OK)
+  async updateUf(@CurrentTenant() projectId: number, @Param('entityId') entityId: string) {
+    await this.service.updateUf(projectId, BigInt(entityId));
+
+    return { result: true };
+  }
 }
