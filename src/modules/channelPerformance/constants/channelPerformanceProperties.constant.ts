@@ -21,12 +21,6 @@ export const ChannelPerformancePropertiesBlockDetails: IEntityResponse['blockDet
         type: 'string',
       },
       {
-        title: 'Код',
-        editable: false,
-        path: 'code',
-        type: 'string',
-      },
-      {
         title: 'Значение',
         editable: true,
         path: 'value',

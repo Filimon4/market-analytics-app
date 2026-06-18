@@ -10,7 +10,6 @@ export class UfChannelsService {
 
   async create(channelId: bigint, dto: CreateUfChannelsDto) {
     const createData: Prisma.UfChannelCreateInput = {
-      code: dto.code,
       name: dto.name,
       type: dto.type,
       channel: {
@@ -37,10 +36,6 @@ export class UfChannelsService {
     }
 
     const updateData: Prisma.UfChannelUpdateInput = {};
-
-    if (dto.code) {
-      updateData.code = dto.code;
-    }
 
     if (dto.type) {
       updateData.type = dto.type;

@@ -14,6 +14,7 @@ import {
 import { TMetricsChannelGetPayload } from './types/metricChannel.type';
 import { IEntityResponse } from '@src/common/interfaces/ientity.interface';
 import { GetMetricsChannelTableListDto } from './dtoMetrics/getMetricsChannelTableList.dto';
+import { denormalizeFormulaItems, NormalizedFormulaItem } from '@src/modules/channel/formula/formula.helpers';
 
 @Controller('channels/:channelId/metrics/table')
 @UseGuards(JwtAuthGuard, TenantGuard)
@@ -81,7 +82,23 @@ export class MetricsChannelTableController {
       throw new NotFoundException('Channel metric not found');
     }
 
+    const ufChannel = await this.prismaService.ufChannel.findMany({
+      where: {
+        channelId: BigInt(channelId),
+      },
+    });
+
+    const ufChannelMap = ufChannel.reduce((acc, ufCh) => {
+      acc.set(ufCh.id, ufCh);
+      return acc;
+    }, new Map());
+
     // TODO FEATURE: добавить удаление и востановелние. Динамически
+
+    const denormolizedFormula = denormalizeFormulaItems(
+      JSON.parse(channelData.formula) as NormalizedFormulaItem[],
+      ufChannelMap,
+    );
 
     return {
       result: {
@@ -89,7 +106,7 @@ export class MetricsChannelTableController {
         blockDetails: MetricsChannelBlockDetails,
         data: {
           ...channelData,
-          formula: channelData.formula ? JSON.parse(channelData.formula) : '',
+          formula: denormolizedFormula,
         },
       },
     };

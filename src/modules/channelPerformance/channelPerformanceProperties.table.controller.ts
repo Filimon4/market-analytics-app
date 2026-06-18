@@ -35,7 +35,6 @@ export class ChannelPerformancePropertiesTableController {
           select: {
             id: true,
             name: true,
-            code: true,
           },
         },
       },
@@ -49,7 +48,6 @@ export class ChannelPerformancePropertiesTableController {
           id: d.ufChannel.id,
           value: d.value,
           name: d.ufChannel.name,
-          code: d.ufChannel.code,
         })),
         page: dto.page,
         total,
@@ -75,7 +73,6 @@ export class ChannelPerformancePropertiesTableController {
           select: {
             id: true,
             name: true,
-            code: true,
           },
         },
         value: true,
@@ -94,7 +91,6 @@ export class ChannelPerformancePropertiesTableController {
           id: channelData.ufChannel.id,
           value: channelData.value,
           name: channelData.ufChannel.name,
-          code: channelData.ufChannel.code,
         },
       },
     };

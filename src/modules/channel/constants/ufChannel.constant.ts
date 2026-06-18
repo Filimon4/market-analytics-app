@@ -29,14 +29,6 @@ export const UfChannelsBlockDetails: TEntityBlockDetail = [
 
         required: true,
       },
-      {
-        title: 'Код',
-        editable: true,
-        path: 'code',
-        type: 'string',
-
-        required: true,
-      },
       // TODO: Переделать на select
       {
         title: 'Тип',
@@ -61,6 +53,5 @@ export const UfChannelsSelect: Prisma.UfChannelSelect = {
   id: true,
   type: true,
   name: true,
-  code: true,
   deleted: true,
 };

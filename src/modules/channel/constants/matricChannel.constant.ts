@@ -39,14 +39,6 @@ export const MetricsChannelBlockDetails: TEntityBlockDetail = [
         createEditable: false,
       },
       {
-        title: 'Код',
-        editable: true,
-        path: 'code',
-        type: 'string',
-
-        required: true,
-      },
-      {
         title: 'Удалена',
         editable: false,
         path: 'deleted',
@@ -60,7 +52,6 @@ export const MetricsChannelBlockDetails: TEntityBlockDetail = [
 export const MetricsChannelSelect: Prisma.MetricChannelSelect = {
   id: true,
   name: true,
-  code: true,
   deleted: true,
   formula: true,
 };

@@ -1,5 +1,4 @@
-import { Type } from 'class-transformer';
-import { IsBoolean, IsNotEmpty, IsString, MaxLength } from 'class-validator';
+import { IsNotEmpty, IsString, MaxLength } from 'class-validator';
 
 export class CreateUfChannelsDto {
   @IsNotEmpty()
@@ -10,8 +9,4 @@ export class CreateUfChannelsDto {
   @IsNotEmpty()
   @IsString()
   type: string;
-
-  @IsNotEmpty()
-  @IsString()
-  code: string;
 }

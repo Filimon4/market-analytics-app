@@ -3,6 +3,7 @@ import { CreateMetricsChannelDto } from './dtoMetrics/createMetricsChannel.dto';
 import { PrismaService } from '@src/common/db/prisma.service';
 import { Prisma } from '@prisma/client';
 import { UpdateMetricsChannelDto } from './dtoMetrics/updateMetricsChannel.dto';
+import { NormalizedFormulaItem, normalizeFormulaItems } from '@src/modules/channel/formula/formula.helpers';
 
 @Injectable()
 export class MetricsChannelService {
@@ -10,7 +11,6 @@ export class MetricsChannelService {
 
   async create(channelId: bigint, dto: CreateMetricsChannelDto) {
     const createData: Prisma.MetricChannelCreateInput = {
-      code: dto.code,
       name: dto.name,
       channel: {
         connect: {
@@ -37,18 +37,8 @@ export class MetricsChannelService {
 
     const metricChannelData: Prisma.MetricChannelUpdateInput = {};
 
-    if (dto.code) {
-      metricChannelData.code = dto.code;
-    }
-
     if (dto.formula) {
-      const normilizedFormula: {
-        code: string; //
-        value: string;
-        type: 'uf-channel' | 'operator';
-      }[] = [];
-
-      metricChannelData.formula = JSON.stringify(dto.formula);
+      metricChannelData.formula = JSON.stringify(normalizeFormulaItems(dto.formula));
     }
 
     if (dto.name) {
@@ -56,7 +46,7 @@ export class MetricsChannelService {
     }
 
     await this.prismaService.$transaction(async (tx) => {
-      await tx.metricChannel.update({
+      const savedMetric = await tx.metricChannel.update({
         where: {
           id: metricChannelId,
           channel: {
@@ -66,19 +56,25 @@ export class MetricsChannelService {
         data: metricChannelData,
         select: {
           id: true,
+          formula: true,
         },
       });
 
-      if (dto.formula) {
-        const formulaValues = dto.formula.map((item) => item.value);
+      if (savedMetric.formula) {
+        const formulaValues = JSON.parse(savedMetric.formula) as NormalizedFormulaItem[];
 
-        const matchedUfChannels = await tx.ufChannel.findMany({
+        const ufChannels = await tx.ufChannel.findMany({
           where: {
             channelId,
-            code: { in: formulaValues },
           },
-          select: { id: true },
         });
+
+        const matchedUfChannels = ufChannels.filter((uf) =>
+          formulaValues
+            .filter((form) => form.fType === 'uf-channel')
+            .map((form) => form.ufChannelId)
+            .includes(String(uf.id)),
+        );
 
         await tx.metricToUfChannel.deleteMany({
           where: { metricId: metricChannelId },

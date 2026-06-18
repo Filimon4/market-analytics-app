@@ -244,7 +244,7 @@ export class ChannelPerformanceService {
       try {
         resultValue = evaluate(formulaStr, scope);
       } catch (e) {
-        this.logger.error(`Error evaluating formula for metric ${metric.code}: ${e.message}`);
+        this.logger.error(`Error evaluating formula for metric ${metric.name}: ${e.message}`);
       }
 
       await this.prisma.channelPerformanceMetricResult.upsert({

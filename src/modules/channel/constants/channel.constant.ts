@@ -62,11 +62,6 @@ export const ChannelsBlocks: TEntityBlock[] = [
         path: 'name',
       },
       {
-        key: 'code',
-        title: 'Код',
-        path: 'code',
-      },
-      {
         key: 'value',
         title: 'Значение',
         path: 'value',
@@ -117,11 +112,6 @@ export const ChannelsBlocks: TEntityBlock[] = [
         key: 'name',
         title: 'Название',
         path: 'name',
-      },
-      {
-        key: 'code',
-        title: 'Код',
-        path: 'code',
       },
     ],
   },

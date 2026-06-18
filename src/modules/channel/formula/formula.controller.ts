@@ -3,6 +3,7 @@ import { JwtAuthGuard } from '@src/modules/auth/guards/jwt-auth.guard';
 import { TenantGuard } from '@src/shared/tenant/guards/tenant.guard';
 import { ChannelPerformanceOperators, DefaultOperators } from './constants/operators';
 import { PrismaService } from '@src/common/db/prisma.service';
+import { FormulaPaletteItem } from '@src/modules/channel/formula/formula.helpers';
 
 @Controller({ path: 'channels/metrics/:metricId/formulas', version: '1' })
 @UseGuards(JwtAuthGuard, TenantGuard)
@@ -16,13 +17,25 @@ export class FormulaController {
         label: 'Стандартные операции',
         key: 'defaults',
         color: '#224F7A',
-        children: DefaultOperators,
+        children: DefaultOperators.map(
+          (item: Omit<FormulaPaletteItem, 'fType'>) =>
+            ({
+              ...item,
+              fType: 'operator',
+            }) as FormulaPaletteItem,
+        ),
       },
       {
         label: 'Поля канала трафика',
         key: 'channelPerformanceOperators',
         color: '#B269FF',
-        children: ChannelPerformanceOperators,
+        children: ChannelPerformanceOperators.map(
+          (item: Omit<FormulaPaletteItem, 'fType'>) =>
+            ({
+              ...item,
+              fType: 'builtin',
+            }) as FormulaPaletteItem,
+        ),
       },
     ];
 
@@ -34,7 +47,6 @@ export class FormulaController {
       select: {
         id: true,
         name: true,
-        code: true,
         channel: {
           include: {
             ufChannels: true,
@@ -50,7 +62,8 @@ export class FormulaController {
         color: '#FFB269',
         children: ufChannel.channel.ufChannels.map((uf) => ({
           label: uf.name,
-          value: uf.code,
+          value: String(uf.id),
+          fType: 'uf-channel',
         })),
       });
     }

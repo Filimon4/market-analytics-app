@@ -1,4 +1,6 @@
-export const DefaultOperators: { label: string; value: string }[] = [
+import { FormulaPaletteItem } from '@src/modules/channel/formula/formula.helpers';
+
+export const DefaultOperators: Omit<FormulaPaletteItem, 'fType'>[] = [
   {
     label: ')',
     value: 'close_parenthesis',
@@ -33,7 +35,7 @@ export const DefaultOperators: { label: string; value: string }[] = [
   },
 ];
 
-export const ChannelPerformanceOperators: { label: string; value: string }[] = [
+export const ChannelPerformanceOperators: Omit<FormulaPaletteItem, 'fType'>[] = [
   {
     label: 'Клики',
     value: 'clicks',

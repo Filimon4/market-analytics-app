@@ -34,7 +34,6 @@ export class ChannelPerformanceMetricsTableController {
         channelMetric: {
           select: {
             name: true,
-            code: true,
           },
         },
       },
@@ -47,7 +46,6 @@ export class ChannelPerformanceMetricsTableController {
         data: data.map((d) => ({
           value: d.value,
           name: d.channelMetric.name,
-          code: d.channelMetric.code,
         })),
         page: dto.page,
         total,
