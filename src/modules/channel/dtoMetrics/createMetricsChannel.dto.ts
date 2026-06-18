@@ -7,10 +7,6 @@ export class CreateMetricsChannelDto {
   name: string;
 
   @IsNotEmpty()
-  @IsArray()
-  formula: { label: string; value: string }[];
-
-  @IsNotEmpty()
   @IsString()
   code: string;
 }

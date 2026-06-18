@@ -2,7 +2,6 @@ model UfChannel {
   id        BigInt      @id @default(autoincrement())
   type      String
   name      String
-  code      String
   deleted   Boolean     @default(false)
 
   channelId BigInt

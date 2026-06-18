@@ -2,7 +2,6 @@ model MetricChannel {
   id        BigInt     @id @default(autoincrement())
   name      String
   formula   String     @default("")
-  code      String
   deleted   Boolean     @default(false)
 
   channelId BigInt

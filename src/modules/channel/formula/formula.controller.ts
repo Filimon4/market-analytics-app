@@ -4,13 +4,13 @@ import { TenantGuard } from '@src/shared/tenant/guards/tenant.guard';
 import { ChannelPerformanceOperators, DefaultOperators } from './constants/operators';
 import { PrismaService } from '@src/common/db/prisma.service';
 
-@Controller({ path: 'channels/:channelId/formulas', version: '1' })
+@Controller({ path: 'channels/metrics/:metricId/formulas', version: '1' })
 @UseGuards(JwtAuthGuard, TenantGuard)
 export class FormulaController {
   constructor(protected readonly prismaService: PrismaService) {}
 
   @Get()
-  async getOperators(@Param('channelId') channelId: string) {
+  async getOperators(@Param('metricId') metricId: string) {
     const groups = [
       {
         label: 'Стандартные операции',
@@ -26,24 +26,29 @@ export class FormulaController {
       },
     ];
 
-    const ufChannel = await this.prismaService.ufChannel.findMany({
+    const ufChannel = await this.prismaService.metricChannel.findUnique({
       where: {
-        channelId: BigInt(channelId),
+        id: BigInt(metricId),
         deleted: false,
       },
       select: {
         id: true,
         name: true,
         code: true,
+        channel: {
+          include: {
+            ufChannels: true,
+          },
+        },
       },
     });
 
-    if (ufChannel.length) {
+    if (ufChannel) {
       groups.push({
         label: 'Свойства канала трафика',
         key: 'properties',
         color: '#FFB269',
-        children: ufChannel.map((uf) => ({
+        children: ufChannel.channel.ufChannels.map((uf) => ({
           label: uf.name,
           value: uf.code,
         })),

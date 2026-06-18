@@ -34,9 +34,9 @@ export const MetricsChannelBlockDetails: TEntityBlockDetail = [
         editable: true,
         path: 'formula',
         type: 'formula',
-        formulaOperatorsUrl: 'v1/channels/:parentId/formulas',
+        formulaOperatorsUrl: 'v1/channels/metrics/:parentId/formulas',
 
-        required: true,
+        createEditable: false,
       },
       {
         title: 'Код',

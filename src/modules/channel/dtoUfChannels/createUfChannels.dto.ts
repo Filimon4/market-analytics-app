@@ -14,9 +14,4 @@ export class CreateUfChannelsDto {
   @IsNotEmpty()
   @IsString()
   code: string;
-
-  @IsNotEmpty()
-  @Type(() => Boolean)
-  @IsBoolean()
-  required: boolean;
 }

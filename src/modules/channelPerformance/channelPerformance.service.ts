@@ -225,7 +225,7 @@ export class ChannelPerformanceService {
     };
 
     for (const ufResult of record.channelPerformanceUfChannelResults) {
-      scope[ufResult.ufChannel.code] = ufResult.value;
+      scope[ufResult.ufChannel.name] = ufResult.value;
     }
 
     for (const metric of record.channel.metricChannels) {

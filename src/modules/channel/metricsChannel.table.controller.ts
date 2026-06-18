@@ -89,7 +89,7 @@ export class MetricsChannelTableController {
         blockDetails: MetricsChannelBlockDetails,
         data: {
           ...channelData,
-          formula: JSON.parse(channelData.formula),
+          formula: channelData.formula ? JSON.parse(channelData.formula) : '',
         },
       },
     };

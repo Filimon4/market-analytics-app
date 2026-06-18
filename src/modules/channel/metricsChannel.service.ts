@@ -12,7 +12,6 @@ export class MetricsChannelService {
     const createData: Prisma.MetricChannelCreateInput = {
       code: dto.code,
       name: dto.name,
-      formula: JSON.stringify(dto.formula),
       channel: {
         connect: {
           id: channelId,
@@ -43,6 +42,12 @@ export class MetricsChannelService {
     }
 
     if (dto.formula) {
+      const normilizedFormula: {
+        code: string; //
+        value: string;
+        type: 'uf-channel' | 'operator';
+      }[] = [];
+
       metricChannelData.formula = JSON.stringify(dto.formula);
     }
 
