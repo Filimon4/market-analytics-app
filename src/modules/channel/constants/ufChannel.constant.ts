@@ -29,15 +29,6 @@ export const UfChannelsBlockDetails: TEntityBlockDetail = [
 
         required: true,
       },
-      // TODO: Переделать на select
-      {
-        title: 'Тип',
-        editable: true,
-        path: 'type',
-        type: 'string',
-
-        required: true,
-      },
       {
         title: 'Удалена',
         editable: false,

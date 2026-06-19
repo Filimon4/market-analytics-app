@@ -239,7 +239,6 @@ export class ChannelPerformanceService {
       },
     );
 
-    // TODO: Новые метрики не будут добавлятся
     for (const metric of record.channel.metricChannels) {
       const resultValue = metric.formula
         ? (evaluate(buildFormulaExpression(JSON.parse(metric.formula), ufChannelMap), scope) as number)
