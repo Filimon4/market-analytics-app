@@ -1,4 +1,4 @@
-import { FormulaPaletteItem } from '@src/modules/channel/formula/formula.helpers';
+import { FormulaPaletteItem } from '@src/shared/formula/formula.helpers';
 
 export const DefaultOperators: Omit<FormulaPaletteItem, 'fType'>[] = [
   {

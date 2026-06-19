@@ -2,8 +2,9 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { CreateChannelDto } from './dto/createChannel.dto';
 import { PrismaService } from '@src/common/db/prisma.service';
 import { UpdateChannelDto } from './dto/updateChannel.dto';
-import { MetricChannel, Prisma } from '@prisma/client';
+import { ChannelPerformance, MetricChannel, Prisma } from '@prisma/client';
 import { evaluate } from 'mathjs';
+import { buildFormulaExpression } from '@src/shared/formula/formula.helpers';
 
 @Injectable()
 export class ChannelService {
@@ -222,83 +223,100 @@ export class ChannelService {
   async updateMetrics(projectId: number, channelId: bigint) {
     const channelPerformances = await this.prisma.channelPerformance.findMany({
       where: {
-        channelId,
+        channel: {
+          id: channelId,
+          strategy: {
+            projectId,
+          },
+        },
+        deleted: false,
       },
       include: {
+        channel: {
+          include: {
+            metricChannels: {
+              where: { deleted: false },
+            },
+          },
+        },
         channelPerformanceMetricResults: {
           include: {
             channelMetric: true,
           },
         },
-      },
-    });
-
-    const metrics = await this.prisma.metricChannel.findMany({
-      where: {
-        channelId,
+        channelPerformanceUfChannelResults: {
+          include: {
+            ufChannel: true,
+          },
+        },
       },
     });
 
     for (const channelPerformance of channelPerformances) {
-      const existMetrics = channelPerformance.channelPerformanceMetricResults.map(
-        (metricResult) => metricResult.channelMetric,
-      );
+      for (const metric of channelPerformance.channel.metricChannels) {
+        const data = {
+          channelPerformanceId: channelPerformance.id,
+          metricChannelId: metric.id,
+          value: await this.calcChannelMetric(channelPerformance, metric),
+        };
 
-      if (existMetrics.length) {
-        for (const metric of existMetrics) {
-          const data = {
-            channelPerformanceId: channelPerformance.id,
-            metricChannelId: metric.id,
-            value: await this.calcChannelMetric(metric),
-          };
-
-          await this.prisma.channelPerformanceMetricResult.update({
-            data,
-            where: {
-              channelPerformanceId_metricChannelId: {
-                metricChannelId: metric.id,
-                channelPerformanceId: channelPerformance.id,
-              },
+        await this.prisma.channelPerformanceMetricResult.upsert({
+          where: {
+            channelPerformanceId_metricChannelId: {
+              metricChannelId: metric.id,
+              channelPerformanceId: channelPerformance.id,
             },
-          });
-        }
-      }
-
-      const unexistMetrics = metrics.filter(
-        (metric) =>
-          !channelPerformance.channelPerformanceMetricResults.find(
-            (metricResult) => metricResult.metricChannelId === metric.id,
-          ),
-      );
-
-      if (unexistMetrics.length) {
-        const data = await Promise.all(
-          unexistMetrics.map(async (metric) => ({
-            channelPerformanceId: channelPerformance.id,
-            metricChannelId: metric.id,
-            value: await this.calcChannelMetric(metric),
-          })),
-        );
-
-        await this.prisma.channelPerformanceMetricResult.createMany({
-          data,
+          },
+          update: {
+            value: data.value,
+          },
+          create: data,
         });
       }
     }
   }
 
-  private async calcChannelMetric(metricChannel: Pick<MetricChannel, 'formula' | 'id'>) {
-    const ufChannel = await this.prisma.metricToUfChannel.findMany({
-      where: {
-        metricId: metricChannel.id,
-      },
+  private async calcChannelMetric(
+    channelPerformance: Prisma.ChannelPerformanceGetPayload<{
       include: {
-        ufChannel: true,
+        channelPerformanceMetricResults: {
+          include: {
+            channelMetric: true;
+          };
+        };
+        channelPerformanceUfChannelResults: {
+          include: {
+            ufChannel: true;
+          };
+        };
+      };
+    }>,
+    metricChannel: Pick<MetricChannel, 'formula' | 'id'>,
+  ) {
+    if (!metricChannel.formula) return 0;
+
+    const ufChannel = channelPerformance.channelPerformanceUfChannelResults.flatMap((cpu) => ({
+      ...cpu.ufChannel,
+      value: cpu.value,
+    }));
+    const ufChannelMap = ufChannel.reduce((acc, uf) => {
+      acc.set(uf.id, uf);
+      return acc;
+    }, new Map());
+    const scope: Record<string, any> = ufChannel.reduce(
+      (acc, uf) => {
+        acc[uf.name] = uf.value;
+        return acc;
       },
-    });
+      {
+        spend: channelPerformance.spend,
+        impressions: channelPerformance.impressions,
+        clicks: channelPerformance.clicks,
+        conversions: channelPerformance.conversions,
+        leads: channelPerformance.leads,
+      },
+    );
 
-    // TODO: Добавить все поля из результатов метрики и все ufChannel
-
-    return evaluate(metricChannel.formula, {});
+    return evaluate(buildFormulaExpression(JSON.parse(metricChannel.formula), ufChannelMap), scope) as number;
   }
 }

@@ -95,7 +95,10 @@ export function denormalizeFormulaItems(
   });
 }
 
-export function buildFormulaExpression(items: NormalizedFormulaItem[], ufChannelMap: Map<string, string>): string {
+export function buildFormulaExpression(
+  items: NormalizedFormulaItem[],
+  ufChannelMap: Map<bigint, { value: string }>,
+): string {
   return items
     .map((item) => {
       switch (item.fType) {
@@ -106,7 +109,7 @@ export function buildFormulaExpression(items: NormalizedFormulaItem[], ufChannel
         case 'uf-number':
           return item.value;
         case 'uf-channel':
-          return ufChannelMap.get(item.ufChannelId) ?? '';
+          return ufChannelMap.get(BigInt(item.ufChannelId))?.value ?? '';
       }
     })
     .filter((token): token is string => Boolean(token))

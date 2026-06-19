@@ -3,6 +3,7 @@ import { PrismaService } from '@src/common/db/prisma.service';
 import { CreateChannelPerformanceDto } from './dto/createChannelPerformance.dto';
 import { UpdateChannelPerformanceDto } from './dto/updateChannelPerformance.dto';
 import { Prisma } from '@prisma/client';
+import { buildFormulaExpression } from '@src/shared/formula/formula.helpers';
 import { evaluate } from 'mathjs';
 
 @Injectable()
@@ -216,36 +217,33 @@ export class ChannelPerformanceService {
       throw new ConflictException('Channel performsance was deleted');
     }
 
-    const scope: Record<string, any> = {
-      spend: record.spend,
-      impressions: record.impressions,
-      clicks: record.clicks,
-      conversions: record.conversions,
-      leads: record.leads,
-    };
+    const ufChannel = record.channelPerformanceUfChannelResults.flatMap((cpu) => ({
+      ...cpu.ufChannel,
+      value: cpu.value,
+    }));
+    const ufChannelMap = ufChannel.reduce((acc, uf) => {
+      acc.set(uf.id, uf);
+      return acc;
+    }, new Map());
+    const scope: Record<string, any> = ufChannel.reduce(
+      (acc, uf) => {
+        acc[uf.name] = uf.value;
+        return acc;
+      },
+      {
+        spend: record.spend,
+        impressions: record.impressions,
+        clicks: record.clicks,
+        conversions: record.conversions,
+        leads: record.leads,
+      },
+    );
 
-    for (const ufResult of record.channelPerformanceUfChannelResults) {
-      scope[ufResult.ufChannel.name] = ufResult.value;
-    }
-
+    // TODO: Новые метрики не будут добавлятся
     for (const metric of record.channel.metricChannels) {
-      let formulaStr = '';
-      try {
-        const formulaItems = JSON.parse(metric.formula) as { label: string; value: string }[];
-        formulaStr = formulaItems.map((item) => item.label).join(' ');
-      } catch (e) {
-        this.logger.error(`recalculateMetrics | ${metric} | ${e}`);
-        formulaStr = null;
-      }
-
-      if (!formulaStr) continue;
-
-      let resultValue = 0;
-      try {
-        resultValue = evaluate(formulaStr, scope);
-      } catch (e) {
-        this.logger.error(`Error evaluating formula for metric ${metric.name}: ${e.message}`);
-      }
+      const resultValue = metric.formula
+        ? (evaluate(buildFormulaExpression(JSON.parse(metric.formula), ufChannelMap), scope) as number)
+        : 0;
 
       await this.prisma.channelPerformanceMetricResult.upsert({
         where: {

@@ -3,7 +3,7 @@ import { CreateMetricsChannelDto } from './dtoMetrics/createMetricsChannel.dto';
 import { PrismaService } from '@src/common/db/prisma.service';
 import { Prisma } from '@prisma/client';
 import { UpdateMetricsChannelDto } from './dtoMetrics/updateMetricsChannel.dto';
-import { NormalizedFormulaItem, normalizeFormulaItems } from '@src/modules/channel/formula/formula.helpers';
+import { NormalizedFormulaItem, normalizeFormulaItems } from '@src/shared/formula/formula.helpers';
 
 @Injectable()
 export class MetricsChannelService {

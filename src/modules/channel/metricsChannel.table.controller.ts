@@ -14,7 +14,7 @@ import {
 import { TMetricsChannelGetPayload } from './types/metricChannel.type';
 import { IEntityResponse } from '@src/common/interfaces/ientity.interface';
 import { GetMetricsChannelTableListDto } from './dtoMetrics/getMetricsChannelTableList.dto';
-import { denormalizeFormulaItems, NormalizedFormulaItem } from '@src/modules/channel/formula/formula.helpers';
+import { denormalizeFormulaItems, NormalizedFormulaItem } from '@src/shared/formula/formula.helpers';
 
 @Controller('channels/:channelId/metrics/table')
 @UseGuards(JwtAuthGuard, TenantGuard)
@@ -95,10 +95,8 @@ export class MetricsChannelTableController {
 
     // TODO FEATURE: добавить удаление и востановелние. Динамически
 
-    const denormolizedFormula = denormalizeFormulaItems(
-      JSON.parse(channelData.formula) as NormalizedFormulaItem[],
-      ufChannelMap,
-    );
+    const parsedFormula = channelData.formula ? JSON.parse(channelData.formula) : [];
+    const denormolizedFormula = denormalizeFormulaItems(parsedFormula as NormalizedFormulaItem[], ufChannelMap) || '';
 
     return {
       result: {
