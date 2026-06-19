@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Param, ParseIntPipe, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { CurrentTenant } from '@src/shared/tenant/decorators/current-tenant.decorator';
 import { IApiResultResponse } from '@src/common/interfaces/api.interface';
 import { ICreateEntityResponse } from '@src/common/interfaces/ientity.interface';

@@ -11,7 +11,6 @@ export class UfChannelsService {
   async create(channelId: bigint, dto: CreateUfChannelsDto) {
     const createData: Prisma.UfChannelCreateInput = {
       name: dto.name,
-      type: dto.type,
       channel: {
         connect: {
           id: channelId,
@@ -36,10 +35,6 @@ export class UfChannelsService {
     }
 
     const updateData: Prisma.UfChannelUpdateInput = {};
-
-    if (dto.type) {
-      updateData.type = dto.type;
-    }
 
     if (dto.name) {
       updateData.name = dto.name;

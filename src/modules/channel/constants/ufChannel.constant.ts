@@ -51,7 +51,6 @@ export const UfChannelsBlockDetails: TEntityBlockDetail = [
 
 export const UfChannelsSelect: Prisma.UfChannelSelect = {
   id: true,
-  type: true,
   name: true,
   deleted: true,
 };

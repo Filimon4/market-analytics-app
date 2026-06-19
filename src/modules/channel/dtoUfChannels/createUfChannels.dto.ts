@@ -5,8 +5,4 @@ export class CreateUfChannelsDto {
   @IsString()
   @MaxLength(255)
   name: string;
-
-  @IsNotEmpty()
-  @IsString()
-  type: string;
 }

@@ -66,16 +66,6 @@ export const ChannelsBlocks: TEntityBlock[] = [
         title: 'Значение',
         path: 'value',
       },
-      {
-        key: 'type',
-        title: 'Тип',
-        path: 'type',
-      },
-      {
-        key: 'required',
-        title: 'Обязательное',
-        path: 'required',
-      },
     ],
   },
   {
