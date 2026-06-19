@@ -1,0 +1,23 @@
+model Report {
+    id              BigInt   @id @default(autoincrement())
+    projectId       BigInt
+    reportTypeId    BigInt
+    createdById     BigInt
+    name            String
+    slug            String @unique
+
+    dateFrom        DateTime?
+    daetTo          DateTime?
+    visibility      ReportVisibility  @default(PROJECT)
+    
+    config          Json @default("{}")
+
+    version         Int @default(1)
+    
+    createdAt       DateTime @default(now())
+    updatedAt       DateTime @updatedAt
+    deleted         Boolean @default(false)
+    
+    reportType      ReportType @relation(fields: [reportTypeId], references: [id], onDelete: Restrict)
+    createdBy       UserToProject @relation(fields: [createdById], references: [id], onDelete: Cascade)
+}

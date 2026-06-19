@@ -1,0 +1,13 @@
+model ReportType {
+    id            BigInt   @id @default(autoincrement())
+    code String @unique
+    name String
+    description String?
+    category String
+    configSchema Json
+    defaultConfig Json?
+    createdAt     DateTime @default(now())
+    updatedAt     DateTime @updatedAt
+
+    reports Report[]
+}

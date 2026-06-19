@@ -11,4 +11,6 @@ model UserToProject {
   project     Project       @relation(fields: [projectId], references: [id])
 
   invitations Invitation[]
+
+  reports Report[]
 }
