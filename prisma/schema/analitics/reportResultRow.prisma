@@ -1,0 +1,10 @@
+model ReportResultRow {
+  id             BigInt   @id @default(autoincrement())
+  reportResultId BigInt
+  rowIndex       Int
+  data           Json
+
+  reportResult   ReportResult @relation(fields: [reportResultId], references: [id], onDelete: Cascade)
+
+  @@index([reportResultId, rowIndex])
+}

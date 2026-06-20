@@ -20,6 +20,7 @@ import { TENANT_CLS_NAME, TENANT_HEADER_NAME, TRACE_HEADER_NAME } from 'src/comm
 import { randomUUID } from 'crypto';
 import { LoggerModule } from 'market-logger/logger';
 import { ChannelSourceModule } from 'src/modules/channelSource/channelSource.module';
+import { ReportModule } from '@src/modules/report/report.module';
 
 @Module({
   imports: [
@@ -55,6 +56,8 @@ import { ChannelSourceModule } from 'src/modules/channelSource/channelSource.mod
     ProjectRoleModule,
 
     ProjectInvitationModule,
+
+    ReportModule,
   ],
   providers: [
     {

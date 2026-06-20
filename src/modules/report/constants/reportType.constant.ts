@@ -2,18 +2,19 @@ import { Prisma } from '@prisma/client';
 import { IEntityResponse, TEntityBlock } from 'src/common/interfaces/ientity.interface';
 import { ITableColumn } from 'src/common/interfaces/itable.interface';
 
-export const ChannelSourcesColumns: ITableColumn[] = [
+export const ReportTypesColumns: ITableColumn[] = [
   { code: 'id', name: 'Инд.', type: 'number', filtrable: false },
+  { code: 'code', name: 'Код', type: 'string', filtrable: true },
   { code: 'name', name: 'Название', type: 'string', filtrable: true },
+  { code: 'description', name: 'Описание', type: 'string', filtrable: true },
   { code: 'createdAt', name: 'Дата создания', type: 'datetime', filtrable: true, dateTimeFilterType: 'period' },
-  { code: 'deleted', name: 'Удален', type: 'boolean', filtrable: true },
 ] as const;
 
-export const ChannelSourcesBlocks: TEntityBlock[] = [
-  { code: 'main', name: 'Источник трафика', columnCapacity: 5, maxColumns: 2, blockType: 'table' },
+export const ReportTypesBlocks: TEntityBlock[] = [
+  { code: 'main', name: 'Тип отчета', columnCapacity: 6, maxColumns: 2, blockType: 'table' },
 ];
 
-export const ChannelSourcesBlockDetails: IEntityResponse['blockDetails'] = [
+export const ReportTypesBlockDetails: IEntityResponse['blockDetails'] = [
   {
     blockCode: 'main',
     fields: [
@@ -24,9 +25,23 @@ export const ChannelSourcesBlockDetails: IEntityResponse['blockDetails'] = [
         type: 'string',
       },
       {
+        title: 'Код',
+        editable: true,
+        path: 'code',
+        type: 'string',
+        required: true,
+      },
+      {
         title: 'Название',
         editable: true,
         path: 'name',
+        type: 'string',
+        required: true,
+      },
+      {
+        title: 'Описание',
+        editable: true,
+        path: 'description',
         type: 'string',
         required: true,
       },
@@ -36,20 +51,16 @@ export const ChannelSourcesBlockDetails: IEntityResponse['blockDetails'] = [
         path: 'createdAt',
         type: 'datetime',
       },
-      {
-        title: 'Удален',
-        editable: false,
-        path: 'deleted',
-        type: 'boolean',
-        createDefault: false,
-      },
     ],
   },
 ];
 
-export const ChannelSourcesSelect: Prisma.ChannelSourceSelect = {
+export const ReportTypesSelect: Prisma.ReportTypeSelect = {
   id: true,
+  code: true,
   name: true,
+  description: true,
+  configSchema: true,
+  detailConfig: true,
   createdAt: true,
-  deleted: true,
 };

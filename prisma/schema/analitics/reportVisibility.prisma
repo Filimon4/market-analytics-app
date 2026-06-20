@@ -1,5 +1,4 @@
 enum ReportVisibility {
   PRIVATE
   PROJECT
-  PUBLIC
 }

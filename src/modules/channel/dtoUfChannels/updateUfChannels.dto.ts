@@ -1,4 +1,4 @@
-import { PartialType } from '@nestjs/swagger';
+import { PartialType } from '@nestjs/mapped-types';
 import { CreateUfChannelsDto } from './createUfChannels.dto';
 import { IsNotEmpty, IsString } from 'class-validator';
 

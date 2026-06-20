@@ -22,7 +22,6 @@ import { CurrentTenant } from 'src/shared/tenant/decorators/current-tenant.decor
 import { GetPanelDto } from './dto/getPanel.dto';
 import { UpdateProjectDto } from './dto/updateProject.dto';
 import { ProjectService } from './project.service';
-import { TreeBuilder } from '@src/common/utils/treeBuilder';
 
 @Controller('project')
 @UseGuards(JwtAuthGuard, TenantGuard)
