@@ -1,3 +1,4 @@
+// TODO BUG: Добавить projectId, что бы доступы были по проекту
 model Permission {
   id                Int @id @default(autoincrement())
   name              String  

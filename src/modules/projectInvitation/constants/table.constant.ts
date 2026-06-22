@@ -25,7 +25,27 @@ export const InvitationColumns: ITableColumn[] = [
 ];
 
 export const InvitationBlocks: TEntityBlock[] = [
-  { code: 'main', name: 'Приглашение', columnCapacity: 5, maxColumns: 2, blockType: 'table' },
+  {
+    code: 'main',
+    name: 'Приглашение',
+    columnCapacity: 5,
+    maxColumns: 2,
+    blockType: 'table',
+    actions: [
+      {
+        title: 'Отправить заного',
+        code: 'resend',
+        size: 'medium',
+        type: 'logic',
+      },
+      {
+        title: 'Отменить',
+        code: 'cancel',
+        size: 'medium',
+        type: 'logic',
+      },
+    ],
+  },
 ];
 
 export const InvitationBlockDetails: IEntityResponse['blockDetails'] = [

@@ -38,10 +38,6 @@ export class ReportTableController {
       whereInput.slug = { contains: dto.filter.slug, mode: 'insensitive' };
     }
 
-    if (dto.filter?.reportType) {
-      whereInput.reportTypeId = BigInt(dto.filter.reportType.id);
-    }
-
     if (dto.filter?.visibility) {
       whereInput.visibility = dto.filter.visibility;
     }

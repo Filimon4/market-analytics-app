@@ -13,6 +13,7 @@ import { AuthPublicModule } from './modules/auth/auth.public.module';
 import { LoggerService } from 'market-logger/logger';
 import { ClsService } from 'nestjs-cls';
 
+// TODO FEATURE: Можно добавить knex что бы писать либы для миграций, что бы делать добавление доступов и т.п.
 // TODO FEATURE: Добавить поля link что бы переходить по полю на другую сущность
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {

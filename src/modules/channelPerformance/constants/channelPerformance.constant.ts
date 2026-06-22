@@ -24,7 +24,27 @@ export const ChannelPerformancesColumns: ITableColumn[] = [
 ] as const;
 
 export const ChannelPerformancesBlocks: TEntityBlock[] = [
-  { code: 'main', name: 'Результативность канала', columnCapacity: 6, maxColumns: 2, blockType: 'table' },
+  {
+    code: 'main',
+    name: 'Результативность канала',
+    columnCapacity: 6,
+    maxColumns: 2,
+    blockType: 'table',
+    actions: [
+      {
+        title: 'Востановить',
+        code: 'restore',
+        size: 'medium',
+        type: 'logic',
+      },
+      {
+        title: 'Архивировать',
+        code: 'archive',
+        size: 'medium',
+        type: 'logic',
+      },
+    ],
+  },
   {
     code: 'properties',
     name: 'Свойства',

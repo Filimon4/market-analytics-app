@@ -5,16 +5,6 @@ import { Transform, Type } from 'class-transformer';
 import { IsBoolean, IsIn, IsNotEmpty, IsNumber, IsOptional, IsString, Max, Min, ValidateNested } from 'class-validator';
 import { toOptionalBoolean } from 'src/common/utils/transformers/to-boolean.transformer';
 
-export class ReportsTableReportTypeFilterDto {
-  @IsNotEmpty()
-  @IsString()
-  id: string;
-
-  @IsNotEmpty()
-  @IsString()
-  code: string;
-}
-
 export class ReportsTableFilterDto {
   @IsOptional()
   @IsString()
@@ -23,11 +13,6 @@ export class ReportsTableFilterDto {
   @IsOptional()
   @IsString()
   slug?: string;
-
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => ReportsTableReportTypeFilterDto)
-  reportType?: ReportsTableReportTypeFilterDto;
 
   @IsOptional()
   @IsIn(Object.values($Enums.ReportVisibility))

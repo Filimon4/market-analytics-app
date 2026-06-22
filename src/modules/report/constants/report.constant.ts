@@ -29,6 +29,7 @@ export const ReportsColumns: ITableColumn[] = [
 
 export const ReportsBlocks: TEntityBlock[] = [
   { code: 'main', name: 'Отчет', columnCapacity: 6, maxColumns: 2, blockType: 'table' },
+  { code: 'reportBuilder', name: 'Построитель отчёта', blockType: 'reportBuilder' },
 ];
 
 export const ReportsBlockDetails: IEntityResponse['blockDetails'] = [
@@ -114,16 +115,8 @@ export const ReportsSelect: Prisma.ReportSelect = {
   dateFrom: true,
   dateTo: true,
   visibility: true,
-  config: true,
   createdAt: true,
   deleted: true,
-  reportType: {
-    select: {
-      id: true,
-      code: true,
-      name: true,
-    },
-  },
   createdBy: {
     select: {
       id: true,

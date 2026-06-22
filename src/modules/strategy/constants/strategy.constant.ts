@@ -11,8 +11,41 @@ export const StrategiesColumns: ITableColumn[] = [
 ] as const;
 
 export const StrategiesBlocks: TEntityBlock[] = [
-  { code: 'main', name: 'Стратегия', columnCapacity: 5, maxColumns: 2, blockType: 'table' },
-  { code: 'analytics', name: 'Аналитика', blockType: 'analytics', createHide: true },
+  {
+    code: 'main',
+    name: 'Стратегия',
+    columnCapacity: 5,
+    maxColumns: 2,
+    blockType: 'table',
+    actions: [
+      {
+        title: 'Востановить',
+        code: 'restore',
+        size: 'medium',
+        type: 'logic',
+      },
+      {
+        title: 'Удалить',
+        code: 'delete',
+        size: 'medium',
+        type: 'logic',
+      },
+    ],
+  },
+  {
+    code: 'analytics',
+    name: 'Аналитика',
+    blockType: 'analytics',
+    createHide: true,
+    actions: [
+      {
+        title: 'Добавить отчёт',
+        code: 'addReport',
+        size: 'medium',
+        type: 'logic',
+      },
+    ],
+  },
 ];
 
 export const StrategiesBlockDetails: IEntityResponse['blockDetails'] = [

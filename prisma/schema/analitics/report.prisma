@@ -7,14 +7,12 @@ model Report {
     dateTo          DateTime?
     visibility      ReportVisibility  @default(PROJECT)
     
-    config          Json @default("{}")
-    
     createdAt       DateTime @default(now())
     updatedAt       DateTime @updatedAt
     deleted         Boolean @default(false)
+
+    config          Json    @default("{}")
     
-    reportTypeId    BigInt
-    reportType      ReportType @relation(fields: [reportTypeId], references: [id], onDelete: Restrict)
     createdById     BigInt
     createdBy       UserToProject @relation(fields: [createdById], references: [id], onDelete: Cascade)
     projectId       BigInt

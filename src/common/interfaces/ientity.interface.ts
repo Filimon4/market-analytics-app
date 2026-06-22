@@ -49,6 +49,10 @@ export interface IAnalyticBlock extends IBlock {
   blockType: 'analytics';
 }
 
+export interface IReportBuilderBlock extends IBlock {
+  blockType: 'reportBuilder';
+}
+
 export interface IMetricBlock extends IListEntityBlock {
   tableColumns: {
     key: string;
@@ -62,7 +66,7 @@ export interface IMetricBlock extends IListEntityBlock {
   baseEntityUrl: string;
 }
 
-export type TEntityBlock = ITreeBlock | ITableBlock | IAnalyticBlock | IMetricBlock;
+export type TEntityBlock = ITreeBlock | ITableBlock | IAnalyticBlock | IMetricBlock | IReportBuilderBlock;
 // #endregion
 
 // #region Block Details

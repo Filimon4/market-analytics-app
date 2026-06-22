@@ -1,8 +1,42 @@
 import { ITableBlockDetail, TEntityBlock } from 'src/common/interfaces/ientity.interface';
 
 export const UserBlocks: TEntityBlock[] = [
-  { name: 'Пользователь', code: 'main', columnCapacity: 5, maxColumns: 2, blockType: 'table' },
-  { name: 'Проект', code: 'project', columnCapacity: 5, maxColumns: 1, blockType: 'table' },
+  {
+    name: 'Пользователь',
+    code: 'main',
+    columnCapacity: 5,
+    maxColumns: 2,
+    blockType: 'table',
+    actions: [
+      {
+        title: 'Выйти',
+        code: 'logout',
+        size: 'medium',
+        type: 'logic',
+      },
+    ],
+  },
+  {
+    name: 'Проект',
+    code: 'project',
+    columnCapacity: 5,
+    maxColumns: 1,
+    blockType: 'table',
+    actions: [
+      {
+        title: 'Поменять проект',
+        code: 'changeProject',
+        size: 'medium',
+        type: 'logic',
+      },
+      {
+        title: 'Добавить новый',
+        code: 'addProject',
+        size: 'medium',
+        type: 'logic',
+      },
+    ],
+  },
 ];
 
 export const UserBlockDetails: ITableBlockDetail[] = [

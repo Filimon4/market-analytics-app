@@ -17,7 +17,6 @@ export class ReportService {
         dateFrom: dto.dateFrom,
         dateTo: dto.dateTo,
         visibility: dto.visibility.code,
-        config: {},
         project: {
           connect: {
             id: projectId,
@@ -26,11 +25,6 @@ export class ReportService {
         createdBy: {
           connect: {
             id: user.id,
-          },
-        },
-        reportType: {
-          connect: {
-            id: dto.reportType.id,
           },
         },
       },
@@ -50,14 +44,6 @@ export class ReportService {
 
     if (dto.dateTo) {
       reportData.dateTo = dto.dateTo;
-    }
-
-    if (dto.reportType) {
-      reportData.reportType = {
-        connect: {
-          id: dto.reportType.id,
-        },
-      };
     }
 
     if (dto.slug) {

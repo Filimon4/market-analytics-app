@@ -11,8 +11,41 @@ export const RolesColumns: ITableColumn[] = [
 ] as const;
 
 export const RolesBlocks: TEntityBlock[] = [
-  { code: 'main', name: 'Роль', columnCapacity: 5, maxColumns: 2, blockType: 'table' },
-  { code: 'permissions', name: 'Доступы', blockType: 'tree', createHide: true },
+  {
+    code: 'main',
+    name: 'Роль',
+    columnCapacity: 5,
+    maxColumns: 2,
+    blockType: 'table',
+    actions: [
+      {
+        title: 'Востановить',
+        code: 'restore',
+        size: 'medium',
+        type: 'logic',
+      },
+      {
+        title: 'Удалить',
+        code: 'delete',
+        size: 'medium',
+        type: 'logic',
+      },
+    ],
+  },
+  {
+    code: 'permissions',
+    name: 'Доступы',
+    blockType: 'tree',
+    createHide: true,
+    actions: [
+      {
+        title: 'Добавить доступы',
+        code: 'addPermission',
+        size: 'medium',
+        type: 'logic',
+      },
+    ],
+  },
 ];
 
 export const RolesBlockDetails: IEntityResponse['blockDetails'] = [

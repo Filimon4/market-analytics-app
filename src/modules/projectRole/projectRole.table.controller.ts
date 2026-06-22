@@ -73,7 +73,10 @@ export class ProjectRoleTableController {
   async getTableCreate(): Promise<IApiResultResponse<Pick<IEntityResponse, 'blocks' | 'blockDetails'>>> {
     return {
       result: {
-        blocks: RolesBlocks,
+        blocks: RolesBlocks.map((block) => ({
+          ...block,
+          actions: [],
+        })),
         blockDetails: RolesBlockDetails,
       },
     };

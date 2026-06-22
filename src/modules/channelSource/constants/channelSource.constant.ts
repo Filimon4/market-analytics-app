@@ -10,7 +10,27 @@ export const ChannelSourcesColumns: ITableColumn[] = [
 ] as const;
 
 export const ChannelSourcesBlocks: TEntityBlock[] = [
-  { code: 'main', name: 'Источник трафика', columnCapacity: 5, maxColumns: 2, blockType: 'table' },
+  {
+    code: 'main',
+    name: 'Источник трафика',
+    columnCapacity: 5,
+    maxColumns: 2,
+    blockType: 'table',
+    actions: [
+      {
+        title: 'Архивировать',
+        code: 'archive',
+        size: 'medium',
+        type: 'logic',
+      },
+      {
+        title: 'Востановить',
+        code: 'restore',
+        size: 'medium',
+        type: 'logic',
+      },
+    ],
+  },
 ];
 
 export const ChannelSourcesBlockDetails: IEntityResponse['blockDetails'] = [

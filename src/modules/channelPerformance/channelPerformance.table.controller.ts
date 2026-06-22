@@ -76,7 +76,10 @@ export class ChannelPerformanceTableController {
   async getTableCreate(): Promise<IApiResultResponse<Pick<IEntityResponse, 'blocks' | 'blockDetails'>>> {
     return {
       result: {
-        blocks: ChannelPerformancesBlocks,
+        blocks: ChannelPerformancesBlocks.map((block) => ({
+          ...block,
+          actions: [],
+        })),
         blockDetails: ChannelPerformancesBlockDetails,
       },
     };
