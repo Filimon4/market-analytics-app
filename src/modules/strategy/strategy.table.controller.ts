@@ -7,7 +7,12 @@ import { ITableListResponse } from 'src/common/interfaces/itable.interface';
 import { CurrentTenant } from 'src/shared/tenant/decorators/current-tenant.decorator';
 import { TenantGuard } from 'src/shared/tenant/guards/tenant.guard';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { StrategiesBlockDetails, StrategiesBlocks, StrategiesColumns, StrategiesSelect } from './constants/strategy.constant';
+import {
+  StrategiesBlockDetails,
+  StrategiesBlocks,
+  StrategiesColumns,
+  StrategiesSelect,
+} from './constants/strategy.constant';
 import { GetStrategiesTableListDto } from './dto/getStrategiesTableList.dto';
 import { TStrategyGetPayload } from './types/strategy.type';
 
@@ -68,7 +73,10 @@ export class StrategyTableController {
   async getTableCreate(): Promise<IApiResultResponse<Pick<IEntityResponse, 'blocks' | 'blockDetails'>>> {
     return {
       result: {
-        blocks: StrategiesBlocks,
+        blocks: StrategiesBlocks.map((block) => ({
+          ...block,
+          actions: [],
+        })),
         blockDetails: StrategiesBlockDetails,
       },
     };

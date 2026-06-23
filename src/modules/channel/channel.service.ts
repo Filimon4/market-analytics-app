@@ -317,6 +317,12 @@ export class ChannelService {
       },
     );
 
-    return evaluate(buildFormulaExpression(JSON.parse(metricChannel.formula), ufChannelMap), scope) as number;
+    const buildedFormula = buildFormulaExpression(JSON.parse(metricChannel.formula), ufChannelMap);
+
+    try {
+      return evaluate(buildedFormula, scope) as number;
+    } catch (error) {
+      return null;
+    }
   }
 }

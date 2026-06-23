@@ -21,6 +21,7 @@ import { IApiResultResponse } from 'src/common/interfaces/api.interface';
 import { ICreateEntityResponse } from 'src/common/interfaces/ientity.interface';
 import { UpdateStrategyDto } from './dto/updateStrategy.dto';
 import { GetStrategyListDto } from './dto/getStrategyList.dto';
+import { GetStrategyStatisticsDto } from './dto/getStrategyStatistics.dto';
 
 @Controller('strategies')
 @UseGuards(JwtAuthGuard, TenantGuard)
@@ -49,8 +50,21 @@ export class StrategyController {
       result: list.map((str) => ({
         id: str.id,
         code: str.name,
+        description: str.description,
+        createdAt: str.createdAt,
       })),
     };
+  }
+
+  @Get(':id/statistics')
+  async getStatistics(
+    @CurrentTenant() projectId: number,
+    @Param('id', ParseIntPipe) id: number,
+    @Query() dto: GetStrategyStatisticsDto,
+  ) {
+    const statistics = await this.strategyService.getStatistics(projectId, id, dto);
+
+    return { result: statistics };
   }
 
   @Get(':id')
