@@ -5,7 +5,6 @@ model ChannelPerformance {
   spend       Float     @default(0)
   impressions Int       @default(0)
   clicks      Int       @default(0)
-  conversions Int       @default(0)
   leads       Int       @default(0)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt

@@ -40,7 +40,6 @@ export class ChannelPerformanceService {
         spend: dto.spend ?? 0,
         impressions: dto.impressions ?? 0,
         clicks: dto.clicks ?? 0,
-        conversions: dto.conversions ?? 0,
         leads: dto.leads ?? 0,
       },
       select: { id: true },
@@ -60,7 +59,6 @@ export class ChannelPerformanceService {
         spend: true,
         impressions: true,
         clicks: true,
-        conversions: true,
         leads: true,
         createdAt: true,
         deleted: true,
@@ -85,7 +83,6 @@ export class ChannelPerformanceService {
         spend: true,
         impressions: true,
         clicks: true,
-        conversions: true,
         leads: true,
         createdAt: true,
         updatedAt: true,
@@ -126,10 +123,6 @@ export class ChannelPerformanceService {
 
     if (dto.clicks) {
       dataChannelPerformance.clicks = dto.clicks;
-    }
-
-    if (dto.conversions) {
-      dataChannelPerformance.conversions = dto.conversions;
     }
 
     if (dto.endDate) {
@@ -234,7 +227,6 @@ export class ChannelPerformanceService {
         spend: record.spend,
         impressions: record.impressions,
         clicks: record.clicks,
-        conversions: record.conversions,
         leads: record.leads,
       },
     );

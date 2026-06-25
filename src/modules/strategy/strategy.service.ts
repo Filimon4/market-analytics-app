@@ -34,7 +34,7 @@ export class StrategyService {
     });
   }
 
-  async getById(projectId: number, strategyId: number) {
+  async getById(projectId: bigint, strategyId: bigint) {
     const strategy = await this.prismaService.strategy.findFirst({
       where: {
         id: strategyId,
@@ -49,7 +49,7 @@ export class StrategyService {
     return strategy;
   }
 
-  async getStatistics(projectId: number, strategyId: number, dto: GetStrategyStatisticsDto) {
+  async getStatistics(projectId: bigint, strategyId: bigint, dto: GetStrategyStatisticsDto) {
     const strategy = await this.getById(projectId, strategyId);
     const from = dto.from ? new Date(dto.from) : undefined;
     const to = dto.to ? new Date(dto.to) : undefined;
@@ -124,7 +124,6 @@ export class StrategyService {
           spend: true,
           impressions: true,
           clicks: true,
-          conversions: true,
           leads: true,
         },
       }),
@@ -142,7 +141,6 @@ export class StrategyService {
     const spend = performanceTotals._sum.spend ?? 0;
     const impressions = performanceTotals._sum.impressions ?? 0;
     const clicks = performanceTotals._sum.clicks ?? 0;
-    const conversions = performanceTotals._sum.conversions ?? 0;
     const leads = performanceTotals._sum.leads ?? 0;
 
     return {
@@ -173,14 +171,13 @@ export class StrategyService {
         spend,
         impressions,
         clicks,
-        conversions,
         leads,
       },
     };
   }
 
-  async update(projectId: number, dto: UpdateStrategyDto) {
-    const strategy = await this.getById(projectId, dto.id);
+  async update(projectId: bigint, id: bigint, dto: UpdateStrategyDto) {
+    const strategy = await this.getById(projectId, id);
 
     if (strategy.deleted) {
       throw new BadRequestException('Cannot update deleted strategy');
@@ -188,7 +185,7 @@ export class StrategyService {
 
     await this.prismaService.strategy.update({
       where: {
-        id: dto.id,
+        id,
       },
       data: {
         name: dto.name,
@@ -200,7 +197,7 @@ export class StrategyService {
     });
   }
 
-  async delete(projectId: number, strategyId: number) {
+  async delete(projectId: bigint, strategyId: bigint) {
     const strategy = await this.getById(projectId, strategyId);
 
     if (strategy.deleted) {
@@ -220,7 +217,7 @@ export class StrategyService {
     });
   }
 
-  async restore(projectId: number, strategyId: number) {
+  async restore(projectId: bigint, strategyId: bigint) {
     const strategy = await this.getById(projectId, strategyId);
 
     if (!strategy.deleted) {

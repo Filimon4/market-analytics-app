@@ -69,7 +69,6 @@ export function denormalizeFormulaItems(
           clicks: 'Клики',
           impressions: 'Кол-во просмотров',
           spend: 'Общие траты',
-          conversions: 'Конверсия',
           leads: 'Кол-во лидов',
         };
         return [

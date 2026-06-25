@@ -6,7 +6,6 @@ import {
   IsNumber,
   IsObject,
   IsOptional,
-  IsPositive,
   IsString,
   Min,
   ValidateNested,
@@ -55,12 +54,6 @@ export class CreateChannelPerformanceDto {
   @IsInt()
   @Min(0)
   clicks?: number;
-
-  @IsOptional()
-  @Type(() => Number)
-  @IsInt()
-  @Min(0)
-  conversions?: number;
 
   @IsOptional()
   @Type(() => Number)

@@ -32,20 +32,6 @@ export const StrategiesBlocks: TEntityBlock[] = [
       },
     ],
   },
-  {
-    code: 'analytics',
-    name: 'Аналитика',
-    blockType: 'analytics',
-    createHide: true,
-    actions: [
-      {
-        title: 'Добавить отчёт',
-        code: 'addReport',
-        size: 'medium',
-        type: 'logic',
-      },
-    ],
-  },
 ];
 
 export const StrategiesBlockDetails: IEntityResponse['blockDetails'] = [

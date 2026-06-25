@@ -58,42 +58,42 @@ export class StrategyController {
 
   @Get(':id/statistics')
   async getStatistics(
-    @CurrentTenant() projectId: number,
+    @CurrentTenant() projectId: bigint,
     @Param('id', ParseIntPipe) id: number,
     @Query() dto: GetStrategyStatisticsDto,
   ) {
-    const statistics = await this.strategyService.getStatistics(projectId, id, dto);
+    const statistics = await this.strategyService.getStatistics(projectId, BigInt(id), dto);
 
     return { result: statistics };
   }
 
   @Get(':id')
-  async getById(@CurrentTenant() projectId: number, @Param('id', ParseIntPipe) id: number) {
-    const strategy = await this.strategyService.getById(projectId, id);
+  async getById(@CurrentTenant() projectId: bigint, @Param('id') id: string) {
+    const strategy = await this.strategyService.getById(projectId, BigInt(id));
 
     return { result: strategy };
   }
 
-  @Patch()
+  @Patch(':id')
   @HttpCode(HttpStatus.OK)
-  async update(@CurrentTenant() projectId: number, @Body() dto: UpdateStrategyDto) {
-    await this.strategyService.update(projectId, dto);
+  async update(@CurrentTenant() projectId: bigint, @Param('id') id: string, @Body() dto: UpdateStrategyDto) {
+    await this.strategyService.update(projectId, BigInt(id), dto);
 
     return { result: true };
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
-  async delete(@CurrentTenant() projectId: number, @Param('id', ParseIntPipe) id: number) {
-    await this.strategyService.delete(projectId, id);
+  async delete(@CurrentTenant() projectId: bigint, @Param('id') id: string) {
+    await this.strategyService.delete(projectId, BigInt(id));
 
     return { result: true };
   }
 
   @Patch(':id/restore')
   @HttpCode(HttpStatus.OK)
-  async restore(@CurrentTenant() projectId: number, @Param('id', ParseIntPipe) id: number) {
-    await this.strategyService.restore(projectId, id);
+  async restore(@CurrentTenant() projectId: bigint, @Param('id') id: string) {
+    await this.strategyService.restore(projectId, BigInt(id));
 
     return { result: true };
   }

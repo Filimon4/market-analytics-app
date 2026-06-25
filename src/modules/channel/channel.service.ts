@@ -5,6 +5,7 @@ import { UpdateChannelDto } from './dto/updateChannel.dto';
 import { ChannelPerformance, MetricChannel, Prisma } from '@prisma/client';
 import { evaluate } from 'mathjs';
 import { buildFormulaExpression } from '@src/shared/formula/formula.helpers';
+import { GetChannelListDto } from '@src/modules/channel/dto/getChannelList.dto';
 
 @Injectable()
 export class ChannelService {
@@ -60,14 +61,16 @@ export class ChannelService {
     });
   }
 
-  async list(projectId: number, deleted = false) {
-    return this.prisma.channel.findMany({
-      where: {
-        strategy: {
-          projectId,
-        },
-        deleted,
+  async list(projectId: number, dto: GetChannelListDto) {
+    const whereInput: Prisma.ChannelWhereInput = {
+      strategy: {
+        projectId,
       },
+      ...dto,
+    };
+
+    return this.prisma.channel.findMany({
+      where: whereInput,
       select: {
         id: true,
         name: true,
@@ -312,7 +315,6 @@ export class ChannelService {
         spend: channelPerformance.spend,
         impressions: channelPerformance.impressions,
         clicks: channelPerformance.clicks,
-        conversions: channelPerformance.conversions,
         leads: channelPerformance.leads,
       },
     );

@@ -49,10 +49,6 @@ export const ChannelPerformanceOperators: Omit<FormulaPaletteItem, 'fType'>[] = 
     value: 'spend',
   },
   {
-    label: 'Конверсия',
-    value: 'conversions',
-  },
-  {
     label: 'Кол-во лидов',
     value: 'leads',
   },

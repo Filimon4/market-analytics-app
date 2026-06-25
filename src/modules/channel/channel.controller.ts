@@ -43,7 +43,7 @@ export class ChannelController {
 
   @Get('select')
   async list(@CurrentTenant() projectId: number, @Query() dto: GetChannelListDto) {
-    const list = await this.channelService.list(projectId, dto.deleted);
+    const list = await this.channelService.list(projectId, dto);
 
     return { result: list.map((chnl) => ({ id: chnl.id, code: chnl.name })) };
   }

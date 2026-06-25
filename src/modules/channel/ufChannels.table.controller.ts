@@ -77,11 +77,31 @@ export class UfChannelsTableController {
       throw new NotFoundException('Uf Channel not found');
     }
 
-    // TODO FEATURE: добавить удаление и востановелние. Динамически
+    const customUfChannelsBlocks = structuredClone(UfChannelsBlocks);
+
+    if (!channelData.deleted) {
+      customUfChannelsBlocks
+        .find((block) => block.code === 'main')
+        .actions.push({
+          title: 'Удалить',
+          code: 'delete',
+          size: 'medium',
+          type: 'logic',
+        });
+    } else {
+      customUfChannelsBlocks
+        .find((block) => block.code === 'main')
+        .actions.push({
+          title: 'Востановить',
+          code: 'restore',
+          size: 'medium',
+          type: 'logic',
+        });
+    }
 
     return {
       result: {
-        blocks: UfChannelsBlocks,
+        blocks: customUfChannelsBlocks,
         blockDetails: UfChannelsBlockDetails,
         data: {
           ...channelData,

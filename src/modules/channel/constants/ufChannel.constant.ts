@@ -8,6 +8,7 @@ export const UfChannelsBlocks: TEntityBlock[] = [
     columnCapacity: 5,
     maxColumns: 2,
     blockType: 'table',
+    actions: [],
   },
 ];
 
