@@ -32,8 +32,11 @@ export class ApiKeyGuard implements CanActivate {
     req.tenantId = tenantId;
     this.cls.set(TENANT_CLS_NAME, tenantId);
 
-    if (valid.createdBy?.user) {
-      req.user = valid.createdBy.user;
+    if (valid.createdBy) {
+      req.projectUser = valid.createdBy;
+      if (valid.createdBy.user) {
+        req.user = valid.createdBy.user;
+      }
     }
 
     return true;

@@ -2,6 +2,8 @@ import { Prisma } from '@prisma/client';
 import { IEntityResponse, TEntityBlock } from 'src/common/interfaces/ientity.interface';
 import { ITableColumn } from 'src/common/interfaces/itable.interface';
 
+export const API_KEY_SCOPES_KEY = 'apiKeyScopes';
+
 export const ApiKeysColumns: ITableColumn[] = [
   { code: 'id', name: 'Инд.', type: 'number', filtrable: false },
   { code: 'name', name: 'Название ключа', type: 'string', filtrable: true },

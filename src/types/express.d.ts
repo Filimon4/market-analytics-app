@@ -1,4 +1,4 @@
-import { Prisma, User } from '@prisma/client';
+import { Prisma, User, UserToProject } from '@prisma/client';
 import 'express';
 
 type ApiKeyWithOwner = Prisma.ApiKeyGetPayload<{
@@ -15,6 +15,7 @@ declare module 'express' {
   export interface Request {
     apiKey?: ApiKeyWithOwner;
     user?: User;
+    projectUser?: UserToProject;
     tenantId?: string;
   }
 }
