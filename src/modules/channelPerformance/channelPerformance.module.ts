@@ -16,5 +16,6 @@ import { ChannelPerformancePropertyController } from './channelPerformanceProper
     ChannelPerformancePropertiesTableController,
   ],
   providers: [ChannelPerformanceService, ChannelPerformancePropertyService],
+  exports: [ChannelPerformanceService, ChannelPerformancePropertyService],
 })
 export class ChannelPerformanceModule {}

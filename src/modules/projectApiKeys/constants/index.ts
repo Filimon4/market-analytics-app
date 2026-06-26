@@ -49,6 +49,7 @@ export const ApiKeysBlockDetails: IEntityResponse['blockDetails'] = [
         path: 'key',
         type: 'string',
       },
+      // TODO: Переделать на select
       {
         title: 'Доступ апи ключа',
         editable: true,

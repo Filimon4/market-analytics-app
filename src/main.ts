@@ -10,6 +10,7 @@ import * as cookieParser from 'cookie-parser';
 import * as fs from 'fs';
 import { join } from 'path';
 import { AuthPublicModule } from './modules/auth/auth.public.module';
+import { PublicApiModule } from './modules/public/public-api.module';
 import { LoggerService } from 'market-logger/logger';
 import { ClsService } from 'nestjs-cls';
 
@@ -78,10 +79,20 @@ async function bootstrap() {
     .setTitle('API')
     .setDescription('Документация API для разработчиков')
     .setVersion('1.0')
+    .addApiKey(
+      {
+        type: 'apiKey',
+        in: 'header',
+        name: 'x-api-key',
+        description: 'API key for public endpoints',
+      },
+      'x-api-key',
+    )
+    .addSecurityRequirements('x-api-key')
     .build();
 
   const developerDocument = SwaggerModule.createDocument(app, developerConfig, {
-    include: [AuthPublicModule],
+    include: [AuthPublicModule, PublicApiModule],
   });
   SwaggerModule.setup('open-crm-api', app, developerDocument);
   // #endregion

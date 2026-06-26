@@ -21,6 +21,7 @@ import { randomUUID } from 'crypto';
 import { LoggerModule } from 'market-logger/logger';
 import { ChannelSourceModule } from 'src/modules/channelSource/channelSource.module';
 import { ReportModule } from '@src/modules/report/report.module';
+import { PublicApiModule } from 'src/modules/public/public-api.module';
 
 @Module({
   imports: [
@@ -58,6 +59,8 @@ import { ReportModule } from '@src/modules/report/report.module';
     ProjectInvitationModule,
 
     ReportModule,
+
+    PublicApiModule,
   ],
   providers: [
     {

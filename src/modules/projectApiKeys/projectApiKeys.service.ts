@@ -58,7 +58,7 @@ export class ProjectApiKeyService {
         key: apiKey,
         expiresAt: { gt: new Date() },
         status: {
-          code: 'active',
+          code: 'ready',
         },
       },
       include: {

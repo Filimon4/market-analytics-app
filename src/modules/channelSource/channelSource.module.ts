@@ -6,5 +6,6 @@ import { ChannelSourceTableController } from './channelSource.table.controller';
 @Module({
   controllers: [ChannelSourceController, ChannelSourceTableController],
   providers: [ChannelSourceService],
+  exports: [ChannelSourceService],
 })
 export class ChannelSourceModule {}

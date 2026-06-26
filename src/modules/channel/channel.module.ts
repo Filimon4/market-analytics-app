@@ -21,5 +21,6 @@ import { FormulaController } from './formula/formula.controller';
     FormulaController,
   ],
   providers: [ChannelService, MetricsChannelService, UfChannelsService],
+  exports: [ChannelService, MetricsChannelService, UfChannelsService],
 })
 export class ChannelModule {}
