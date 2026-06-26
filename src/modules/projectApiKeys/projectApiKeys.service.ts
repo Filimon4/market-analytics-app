@@ -61,6 +61,13 @@ export class ProjectApiKeyService {
           code: 'active',
         },
       },
+      include: {
+        createdBy: {
+          include: {
+            user: true,
+          },
+        },
+      },
     });
   }
 }

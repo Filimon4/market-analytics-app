@@ -6,5 +6,6 @@ import { ProjectApiKeyService } from './projectApiKeys.service';
 @Module({
   controllers: [ProjectApiKeyController, ProjectApiKeyTableController],
   providers: [ProjectApiKeyService],
+  exports: [ProjectApiKeyService],
 })
 export class ProjectApiKeyModule {}

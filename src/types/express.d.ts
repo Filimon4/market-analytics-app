@@ -1,10 +1,19 @@
-import { User } from '@prisma/client';
-import { ApiKey } from '@prismaClient/prisma';
+import { Prisma, User } from '@prisma/client';
 import 'express';
+
+type ApiKeyWithOwner = Prisma.ApiKeyGetPayload<{
+  include: {
+    createdBy: {
+      include: {
+        user: true;
+      };
+    };
+  };
+}>;
 
 declare module 'express' {
   export interface Request {
-    apiKey?: ApiKey;
+    apiKey?: ApiKeyWithOwner;
     user?: User;
     tenantId?: string;
   }

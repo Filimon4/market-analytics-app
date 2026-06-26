@@ -5,12 +5,13 @@ import { UpdateApiKeyDto } from './dto/updateApiKey.dto';
 import { ProjectApiKeyService } from './projectApiKeys.service';
 import { CurrentTenant } from 'src/shared/tenant/decorators/current-tenant.decorator';
 import { IApiResultResponse } from 'src/common/interfaces/api.interface';
-import { Prisma } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 import { PrismaService } from 'src/common/db/prisma.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { TenantGuard } from 'src/shared/tenant/guards/tenant.guard';
 import { ICreateEntityResponse } from 'src/common/interfaces/ientity.interface';
 import { CreateApiKeyDto } from './dto/createApiKey.dto';
+import { User as CurrentUser } from 'src/common/decorators/user.decorator';
 
 @Controller('api-keys')
 @UseGuards(JwtAuthGuard, TenantGuard)
@@ -45,17 +46,20 @@ export class ProjectApiKeyController {
   @Post()
   async createApiKey(
     @CurrentTenant() projectId: number,
+    @CurrentUser() user: User,
     @Body() dto: CreateApiKeyDto,
   ): Promise<IApiResultResponse<ICreateEntityResponse>> {
-    const status = await this.prismaService.apiKeyStatus.findFirst({
-      where: {
-        code: dto.status.code,
-      },
-      select: {
-        id: true,
-      },
-      take: 1,
-    });
+    const [status, membership] = await Promise.all([
+      this.prismaService.apiKeyStatus.findFirst({
+        where: { code: dto.status.code },
+        select: { id: true },
+        take: 1,
+      }),
+      this.prismaService.userToProject.findFirst({
+        where: { userId: user.id, projectId: BigInt(projectId) },
+        select: { id: true },
+      }),
+    ]);
 
     const createApiKeyInput: Prisma.ApiKeyCreateInput = {
       project: {
@@ -71,6 +75,9 @@ export class ProjectApiKeyController {
       name: dto.name,
       scope: dto.scope,
       expiresAt: dto.expiresAt,
+      createdBy: {
+        connect: { id: membership.id },
+      },
     };
 
     const apiKey = await this.prismaService.apiKey.create({
