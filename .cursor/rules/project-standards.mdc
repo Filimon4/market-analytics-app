@@ -1,0 +1,318 @@
+---
+description: Comprehensive project standards for marketing_analytics_backend — NestJS, TypeScript, Prisma, code style, scripts, and architecture conventions
+alwaysApply: true
+---
+
+# Project Standards — marketing_analytics_backend
+
+## 1. Project Context & Stack
+
+- **Runtime**: Node.js, NestJS 11, TypeScript 5.7
+- **Compiler**: SWC (`nest-cli.json` → `builder: "swc"`, typeCheck enabled)
+- **Database**: PostgreSQL via Prisma 7 with `@prisma/adapter-pg` driver adapter
+- **Auth**: Passport.js (JWT + Local strategies), API-key guard for public API
+- **Async context**: `nestjs-cls` (`ClsService`) for tenant/request-scoped state
+- **Validation**: `class-validator` + `class-transformer`, global `ValidationPipe`
+- **API docs**: `@nestjs/swagger` (plugin enabled in `nest-cli.json`)
+- **Logger**: `market-logger/logger` (`LoggerService`) — NEVER use `console.log`
+- **Tests**: Jest + `ts-jest`, e2e via Supertest
+- **URI versioning**: default version `'1'` (`api/v1/...`)
+
+---
+
+## 2. Scripts & CLI
+
+ALWAYS use the scripts from `package.json`. NEVER run raw `tsc`, `eslint`, `prettier`, or `prisma` commands directly.
+
+| Task | Command |
+|---|---|
+| Dev server | `npm run start:dev` |
+| Build | `npm run build` |
+| Type-check + lint | `npm run lint` |
+| Format code | `npm run format` |
+| Unit tests | `npm run test` |
+| E2E tests | `npm run test:e2e` |
+| Generate Prisma client | `npm run prisma:generate` |
+| Create migration (SQL only) | `npm run prisma:dev` |
+| Apply migrations to DB | `npm run prisma:deploy` |
+
+`npm run prisma:dev` runs `prisma migrate dev --create-only` — it generates the SQL file **without** applying it. ALWAYS run `npm run prisma:deploy` separately to apply.
+
+---
+
+## 3. TypeScript & Types
+
+### Path Aliases
+USE the configured path aliases — NEVER use deep relative paths (`../../../`):
+
+```typescript
+// ✅ GOOD
+import { PrismaService } from '@src/common/db/prisma.service';
+import { LoggerService } from 'market-logger/logger';
+
+// ❌ BAD
+import { PrismaService } from '../../../common/db/prisma.service';
+```
+
+Aliases defined in `tsconfig.json`:
+- `@src/*` → `./src/*`
+- `market-logger/logger` → `libs/logger/src`
+
+### Type Definitions
+ALWAYS use `interface` for object shapes (ESLint enforces `consistent-type-definitions: interface`):
+
+```typescript
+// ✅ GOOD
+interface ICreateStrategyDto { name: string; description?: string; }
+
+// ❌ BAD
+type CreateStrategyDto = { name: string; };
+```
+
+NEVER use `any`. Use `unknown`, specific types, or `Prisma.*` generated types:
+
+```typescript
+// ✅ GOOD
+const updateData: Prisma.ApiKeyUpdateInput = {};
+
+// ❌ BAD
+const updateData: any = {};
+```
+
+### Type-Only Imports
+ALWAYS use `import type` for type-only imports (ESLint enforces this):
+
+```typescript
+// ✅ GOOD
+import type { Request } from 'express';
+import { Prisma } from '@prisma/client';
+
+// ❌ BAD
+import { Request } from 'express';
+```
+
+### Other Rules
+- ALWAYS use `const` (never `var`, avoid `let` when value doesn't change)
+- NEVER use `await` inside loops — use `Promise.all` or `$transaction` instead
+- NEVER use default exports (`import/no-default-export` is enforced)
+- Unused variables prefixed with `_` are allowed: `_unusedParam`
+
+---
+
+## 4. NestJS Architecture
+
+### File & Folder Structure
+
+```
+src/
+  app/                        # AppModule
+  common/
+    constants/                # App-wide constants and env variable types
+    db/                       # PrismaService, DbModule
+    decorators/               # Shared decorators (e.g. @CurrentUser)
+    interfaces/               # Shared interfaces (IApiResultResponse, IEntityResponse)
+    utils/                    # Utilities (encryption, jwt, validators, treeBuilder)
+  modules/
+    <feature>/
+      dto/                    # DTOs with class-validator decorators
+      guards/                 # Feature-specific guards
+      decorators/             # Feature-specific decorators
+      constants/              # Feature constants (Prisma selects, table configs)
+      <feature>.module.ts
+      <feature>.service.ts
+      <feature>.controller.ts          # REST controller
+      <feature>.table.controller.ts    # Table/CRUD metadata controller (optional)
+    public/
+      controllers/            # Public API controllers (api-key authenticated)
+      public-api.module.ts
+  shared/
+    tenant/                   # Tenant decorators and utilities
+libs/
+  logger/                     # market-logger library
+prisma/
+  schema/                     # Multi-file Prisma schema (one .prisma per model)
+  migrations/                 # Migration SQL files
+```
+
+### Modules
+ALWAYS export services that other modules need:
+
+```typescript
+@Module({
+  controllers: [StrategyController],
+  providers: [StrategyService],
+  exports: [StrategyService],      // ✅ export if used by other modules
+})
+export class StrategyModule {}
+```
+
+### Dependency Injection
+ALWAYS inject dependencies via constructor with `private readonly`:
+
+```typescript
+// ✅ GOOD
+constructor(private readonly prismaService: PrismaService) {}
+
+// ❌ BAD
+@Inject(PrismaService) prismaService: PrismaService;
+```
+
+### Controllers
+ALWAYS specify `version: '1'` and the full path in `@Controller`:
+
+```typescript
+@Controller({ path: 'strategies', version: '1' })
+```
+
+Public API controllers (api-key authenticated) go in `src/modules/public/controllers/` and use `path: 'public/<resource>'`.
+
+### Guards & Scopes (Public API)
+Public API controllers ALWAYS use both guards. Scope annotation is per-method:
+
+```typescript
+@Controller({ path: 'public/strategies', version: '1' })
+@UseGuards(ApiKeyGuard, ApiKeyScopeGuard)
+export class PublicStrategyController {
+  @Get()
+  @RequireApiKeyScopes('strategies:read')
+  async list() { ... }
+
+  @Post()
+  @RequireApiKeyScopes('strategies:write')
+  async create() { ... }
+}
+```
+
+### Tenant Context
+ALWAYS extract `projectId` via `@CurrentTenant()` decorator in public API controllers. NEVER read from request headers manually.
+
+---
+
+## 5. Code Style & Formatting
+
+### Response Shape
+ALL controller methods MUST return `{ result: T }`:
+
+```typescript
+// ✅ GOOD — create
+return { result: { id: entity.id.toString() } };
+
+// ✅ GOOD — list
+return { result: list };
+
+// ✅ GOOD — update / delete / restore
+return { result: true };
+
+// ❌ BAD — raw return
+return entity;
+```
+
+Use the shared interfaces: `IApiResultResponse<T>` and `ICreateEntityResponse`.
+
+### Error Handling
+USE NestJS HTTP exceptions. NEVER throw generic `Error`:
+
+```typescript
+// ✅ GOOD
+throw new NotFoundException('Strategy not found');
+throw new BadRequestException('Cannot update deleted strategy');
+throw new UnauthorizedException('Invalid or expired API Key');
+
+// ❌ BAD
+throw new Error('not found');
+```
+
+### Soft Deletes
+Entities with a `deleted` boolean field use soft deletes. NEVER hard-delete records. Use `deleted: true` to mark as deleted, `deleted: false` to restore. ALWAYS filter `deleted: false` in list queries by default.
+
+### BigInt IDs
+Prisma models use `BigInt` IDs. ALWAYS convert to `string` before returning from a controller:
+
+```typescript
+return { result: { id: record.id.toString() } };
+```
+
+### Logging
+USE `private readonly logger = new Logger(ClassName.name)` inside classes. NEVER use `console.log`:
+
+```typescript
+// ✅ GOOD
+private readonly logger = new Logger(ApiKeyGuard.name);
+this.logger.debug('Processing...');
+this.logger.error('Failed', error);
+
+// ❌ BAD
+console.log('Processing...');
+```
+
+### Formatting Rules (Prettier / ESLint)
+- Single quotes for strings
+- 2-space indentation
+- Trailing commas everywhere
+- Max line length: 200 characters
+- Blank line required before `return`, `try`, `throw`, and block statements
+- NEVER use `else` after a `return` statement (`no-else-return`)
+- ALWAYS use object shorthand: `{ name }` not `{ name: name }`
+- ALWAYS use strict equality: `===`, never `==`
+- Imports MUST be sorted (`simple-import-sort` is enforced)
+
+---
+
+## 6. Database / Prisma
+
+### Schema
+The schema is **split into multiple files** in `prisma/schema/` — one `.prisma` file per model. NEVER add a new model to `schema.prisma` directly; create a dedicated file (e.g. `prisma/schema/newModel.prisma`).
+
+### PrismaService
+`PrismaService` lives in `src/common/db/prisma.service.ts` and is provided by `DbModule`. ALWAYS inject `PrismaService`, never instantiate `PrismaClient` directly.
+
+### Queries
+ALWAYS include a `select` clause to avoid over-fetching:
+
+```typescript
+// ✅ GOOD
+await this.prismaService.strategy.create({
+  data: { projectId, name: dto.name },
+  select: { id: true },
+});
+
+// ❌ BAD — returns all columns
+await this.prismaService.strategy.create({ data: { ... } });
+```
+
+USE `Prisma.*Input` types for typed update/where objects:
+
+```typescript
+const updateData: Prisma.ApiKeyUpdateInput = {};
+const where: Prisma.StrategyWhereInput = { id: strategyId, projectId };
+```
+
+### Transactions
+USE `prismaService.$transaction([...])` for multiple related DB operations:
+
+```typescript
+const [count, aggregate] = await this.prismaService.$transaction([
+  this.prismaService.channel.count({ where }),
+  this.prismaService.channelPerformance.aggregate({ where, _sum: { spend: true } }),
+]);
+```
+
+### Migrations
+1. Edit `.prisma` schema file(s)
+2. Run `npm run prisma:dev` → generates SQL in `prisma/migrations/` (does NOT apply)
+3. Review the generated SQL
+4. Run `npm run prisma:deploy` to apply
+5. Run `npm run prisma:generate` to regenerate the Prisma client
+
+NEVER run `prisma migrate dev` without `--create-only` in this project.
+
+### Prisma Select Constants
+Store reusable `Prisma.ModelSelect` objects as named constants in the module's `constants/index.ts`:
+
+```typescript
+export const ApiKeysSelect: Prisma.ApiKeySelect = {
+  id: true,
+  name: true,
+  status: { select: { id: true, code: true } },
+};
+```
