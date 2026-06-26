@@ -102,6 +102,8 @@ export class ProjectApiKeyTableController {
       select: ApiKeysSelect,
     });
 
+    // TODO: Сделать действия
+
     return {
       result: {
         blocks: ApiKeysBlocks,

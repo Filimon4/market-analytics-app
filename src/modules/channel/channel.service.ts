@@ -6,6 +6,7 @@ import { ChannelPerformance, MetricChannel, Prisma } from '@prisma/client';
 import { evaluate } from 'mathjs';
 import { buildFormulaExpression } from '@src/shared/formula/formula.helpers';
 import { GetChannelListDto } from '@src/modules/channel/dto/getChannelList.dto';
+import Big from 'big.js';
 
 @Injectable()
 export class ChannelService {
@@ -308,21 +309,21 @@ export class ChannelService {
     }, new Map());
     const scope: Record<string, any> = ufChannel.reduce(
       (acc, uf) => {
-        acc[uf.name] = uf.value;
+        acc[uf.name] = Number(new Big(String(uf.value)).toFixed(2));
         return acc;
       },
       {
-        spend: channelPerformance.spend,
-        impressions: channelPerformance.impressions,
-        clicks: channelPerformance.clicks,
-        leads: channelPerformance.leads,
+        spend: Number(new Big(String(channelPerformance.spend)).toFixed(2)),
+        impressions: Number(new Big(String(channelPerformance.impressions)).toFixed(2)),
+        clicks: Number(new Big(String(channelPerformance.clicks)).toFixed(2)),
+        leads: Number(new Big(String(channelPerformance.leads)).toFixed(2)),
       },
     );
 
     const buildedFormula = buildFormulaExpression(JSON.parse(metricChannel.formula), ufChannelMap);
 
     try {
-      return evaluate(buildedFormula, scope) as number;
+      return Number(new Big(String(evaluate(buildedFormula, scope))).toFixed(2));
     } catch (error) {
       return null;
     }
