@@ -88,4 +88,11 @@ export class ChannelController {
 
     return { result: true };
   }
+
+  @Get(':id/metric-entities')
+  async getMetricEntities(@CurrentTenant() projectId: number, @Param('id') id: string) {
+    const list = await this.channelService.getMetricEntities(projectId, BigInt(id));
+
+    return { result: list };
+  }
 }

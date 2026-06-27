@@ -233,7 +233,7 @@ export class ChannelPerformanceService {
     );
 
     for (const metric of record.channel.metricChannels) {
-      const resultValue = metric.formula
+      const resultValue = JSON.parse(metric.formula).length
         ? Number(
             new Big(String(evaluate(buildFormulaExpression(JSON.parse(metric.formula), ufChannelMap), scope))).toFixed(
               2,

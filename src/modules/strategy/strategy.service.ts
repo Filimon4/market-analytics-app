@@ -109,7 +109,6 @@ export class StrategyService {
       performancesTotal,
       performancesActive,
       performancesDeleted,
-      performanceTotals,
       performanceDates,
     ] = await this.prismaService.$transaction([
       this.prismaService.channel.count({ where: channelWhere }),
@@ -120,15 +119,6 @@ export class StrategyService {
       this.prismaService.channelPerformance.count({ where: { ...performanceWhere, deleted: true } }),
       this.prismaService.channelPerformance.aggregate({
         where: activePerformanceWhere,
-        _sum: {
-          spend: true,
-          impressions: true,
-          clicks: true,
-          leads: true,
-        },
-      }),
-      this.prismaService.channelPerformance.aggregate({
-        where: activePerformanceWhere,
         _min: {
           startDate: true,
         },
@@ -137,11 +127,6 @@ export class StrategyService {
         },
       }),
     ]);
-
-    const spend = performanceTotals._sum.spend ?? 0;
-    const impressions = performanceTotals._sum.impressions ?? 0;
-    const clicks = performanceTotals._sum.clicks ?? 0;
-    const leads = performanceTotals._sum.leads ?? 0;
 
     return {
       strategy: {
@@ -166,12 +151,6 @@ export class StrategyService {
           startDate: performanceDates._min.startDate,
           endDate: performanceDates._max.endDate,
         },
-      },
-      totals: {
-        spend,
-        impressions,
-        clicks,
-        leads,
       },
     };
   }

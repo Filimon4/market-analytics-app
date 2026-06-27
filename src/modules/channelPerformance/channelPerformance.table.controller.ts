@@ -31,7 +31,7 @@ export class ChannelPerformanceTableController {
     };
 
     if (dto.filter?.channel) {
-      whereInput.channelId = BigInt(dto.filter.channel.id);
+      whereInput.channelId = BigInt(dto.filter.channel);
     }
 
     if (dto.filter?.deleted !== undefined) {

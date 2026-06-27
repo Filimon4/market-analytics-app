@@ -1,24 +1,12 @@
 import { ITableColumnFilterDatetimePeriod } from '@src/common/interfaces/itable.interface';
 import { IsDatetimePeriod } from '@src/common/utils/classValidator/IsDatetimePeriod';
 import { Transform, Type } from 'class-transformer';
-import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString, Max, Min, ValidateNested } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, Max, Min, ValidateNested } from 'class-validator';
 import { toOptionalBoolean } from 'src/common/utils/transformers/to-boolean.transformer';
-
-export class CreateChannelPerformanceChannelDto {
-  @IsNotEmpty()
-  @IsString()
-  id: string;
-
-  @IsNotEmpty()
-  @IsString()
-  code: string;
-}
 
 export class ChannelPerformancesTableFilterDto {
   @IsOptional()
-  @ValidateNested()
-  @Type(() => CreateChannelPerformanceChannelDto)
-  channel: CreateChannelPerformanceChannelDto;
+  channel: string;
 
   @IsOptional()
   @Transform(toOptionalBoolean)

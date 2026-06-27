@@ -280,6 +280,36 @@ export class ChannelService {
     }
   }
 
+  async getMetricEntities(projectId: number, channelId: bigint) {
+    const [uf, metric] = await this.prisma.$transaction([
+      this.prisma.ufChannel.findMany({
+        where: {
+          channelId,
+          deleted: false,
+        },
+        select: {
+          id: true,
+          name: true,
+        },
+      }),
+      this.prisma.metricChannel.findMany({
+        where: {
+          channelId,
+          deleted: false,
+        },
+        select: {
+          id: true,
+          name: true,
+        },
+      }),
+    ]);
+
+    return {
+      uf,
+      metric,
+    };
+  }
+
   private async calcChannelMetric(
     channelPerformance: Prisma.ChannelPerformanceGetPayload<{
       include: {
