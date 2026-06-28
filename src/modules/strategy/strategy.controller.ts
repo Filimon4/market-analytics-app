@@ -22,6 +22,7 @@ import { ICreateEntityResponse } from 'src/common/interfaces/ientity.interface';
 import { UpdateStrategyDto } from './dto/updateStrategy.dto';
 import { GetStrategyListDto } from './dto/getStrategyList.dto';
 import { GetStrategyStatisticsDto } from './dto/getStrategyStatistics.dto';
+import { CreateCompareStrategyReportDto } from '@src/modules/strategy/dto/createCompareReport.dto';
 
 @Controller('strategies')
 @UseGuards(JwtAuthGuard, TenantGuard)
@@ -97,4 +98,8 @@ export class StrategyController {
 
     return { result: true };
   }
+
+  @Post('compare/report')
+  @HttpCode(HttpStatus.CREATED)
+  async createCompareReoprt(@CurrentTenant() projectId: bigint, @Body() dto: CreateCompareStrategyReportDto) {}
 }
