@@ -12,22 +12,28 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { StrategyService } from './strategy.service';
+import type { User as UserDB } from '@prisma/client';
+import { User } from '@src/common/decorators/user.decorator';
+import { IApiResultResponse } from '@src/common/interfaces/api.interface';
+import { ICreateEntityResponse } from '@src/common/interfaces/ientity.interface';
+import { CreateCompareStrategyReportDto } from '@src/modules/strategy/dto/createCompareReport.dto';
+import { CurrentTenant } from '@src/shared/tenant/decorators/current-tenant.decorator';
+import { TenantGuard } from '@src/shared/tenant/guards/tenant.guard';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { TenantGuard } from 'src/shared/tenant/guards/tenant.guard';
 import { CreateStrategyDto } from './dto/createStrategy.dto';
-import { CurrentTenant } from 'src/shared/tenant/decorators/current-tenant.decorator';
-import { IApiResultResponse } from 'src/common/interfaces/api.interface';
-import { ICreateEntityResponse } from 'src/common/interfaces/ientity.interface';
-import { UpdateStrategyDto } from './dto/updateStrategy.dto';
 import { GetStrategyListDto } from './dto/getStrategyList.dto';
 import { GetStrategyStatisticsDto } from './dto/getStrategyStatistics.dto';
-import { CreateCompareStrategyReportDto } from '@src/modules/strategy/dto/createCompareReport.dto';
+import { UpdateStrategyDto } from './dto/updateStrategy.dto';
+import { StrategyCompareReportService } from './strategyCompareReport.service';
+import { StrategyService } from './strategy.service';
 
-@Controller('strategies')
+@Controller({ path: 'strategies', version: '1' })
 @UseGuards(JwtAuthGuard, TenantGuard)
 export class StrategyController {
-  constructor(private readonly strategyService: StrategyService) {}
+  constructor(
+    private readonly strategyService: StrategyService,
+    private readonly strategyCompareReportService: StrategyCompareReportService,
+  ) {}
 
   @Post()
   async create(
@@ -68,6 +74,13 @@ export class StrategyController {
     return { result: statistics };
   }
 
+  @Get('compare/report/:id')
+  async getCompareReportById(@CurrentTenant() projectId: bigint, @Param('id') id: string) {
+    const report = await this.strategyCompareReportService.getById(projectId, BigInt(id));
+
+    return { result: report };
+  }
+
   @Get(':id')
   async getById(@CurrentTenant() projectId: bigint, @Param('id') id: string) {
     const strategy = await this.strategyService.getById(projectId, BigInt(id));
@@ -101,5 +114,15 @@ export class StrategyController {
 
   @Post('compare/report')
   @HttpCode(HttpStatus.CREATED)
-  async createCompareReoprt(@CurrentTenant() projectId: bigint, @Body() dto: CreateCompareStrategyReportDto) {}
+  async createCompareReport(
+    @CurrentTenant() projectId: bigint,
+    @User() user: UserDB,
+    @Body() dto: CreateCompareStrategyReportDto,
+  ) {
+    const report = await this.strategyCompareReportService.create(projectId, user, dto);
+
+    return {
+      result: report,
+    };
+  }
 }

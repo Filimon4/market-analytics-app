@@ -1,9 +1,9 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import type { Prisma } from '@prisma/client';
 import { PrismaService } from '@src/common/db/prisma.service';
 import { CreateStrategyDto } from './dto/createStrategy.dto';
-import { UpdateStrategyDto } from './dto/updateStrategy.dto';
-import { Prisma } from '@prisma/client';
 import { GetStrategyStatisticsDto } from './dto/getStrategyStatistics.dto';
+import { UpdateStrategyDto } from './dto/updateStrategy.dto';
 
 @Injectable()
 export class StrategyService {
