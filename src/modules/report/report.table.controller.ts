@@ -114,9 +114,24 @@ export class ReportTableController {
       throw new NotFoundException('Report not found');
     }
 
+    const configObject = JSON.parse(JSON.stringify(data.config));
+
+    const customReportBlocks = structuredClone(ReportsBlocks);
+
+    if (configObject['type'] === 'strategyCompare') {
+      customReportBlocks
+        .find((rb) => rb.code === 'main')
+        .actions.push({
+          code: 'openStrategyReport',
+          size: 'medium',
+          title: 'Открыть отчёт',
+          type: 'logic',
+        });
+    }
+
     return {
       result: {
-        blocks: ReportsBlocks,
+        blocks: customReportBlocks,
         blockDetails: ReportsBlockDetails,
         data: {
           ...data,
