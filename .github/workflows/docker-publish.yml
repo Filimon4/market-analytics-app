@@ -1,8 +1,5 @@
 name: Build & Publish Docker Image
 
-env:
-  DATABASE_URL: ''
-
 on:
   push:
     branches:
