@@ -4,18 +4,8 @@ services:
       context: .
       dockerfile: Dockerfile
     restart: unless-stopped
-    networks:
-      - backend
-
-  nginx:
-    build:
-      context: ./nginx
-      dockerfile: Dockerfile
-    restart: unless-stopped
     ports:
-      - '80:80'
-    depends_on:
-      - app
+      - '3501:80'
     networks:
       - backend
 
