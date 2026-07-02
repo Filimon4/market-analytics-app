@@ -9,6 +9,8 @@ export class ResendEmailProvider implements EmailProvider {
   private readonly logger = new Logger(ResendEmailProvider.name);
 
   constructor(private readonly configService: ConfigService) {
+    this.logger.debug(`${JSON.stringify(process.env, null, 2)}`);
+    this.logger.debug(`RESEND_API_KEY: ${this.configService.get('RESEND_API_KEY')}`);
     this.resend = new Resend(configService.getOrThrow('RESEND_API_KEY'));
   }
 
