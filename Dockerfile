@@ -22,6 +22,17 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci --omit=dev
 
+ENV DATABASE_URL=${DATABASE_URL}
+ENV HTTP_DOMAIN=${HTTP_DOMAIN}
+ENV HTTP_HOST=${HTTP_HOST}
+ENV HTTP_PORT=${HTTP_PORT}
+ENV NODE_ENV=${NODE_ENV}
+ENV HTTP_OPEN_API_PREFIX=${HTTP_OPEN_API_PREFIX}
+ENV JWT_SECRET=${JWT_SECRET}
+ENV JWT_ACCESS_EXPIRES=${JWT_ACCESS_EXPIRES}
+ENV JWT_REFRESH_EXPIRES=${JWT_REFRESH_EXPIRES}
+ENV RESEND_API_KEY=${RESEND_API_KEY}
+
 # Copy generated Prisma client (created during build stage)
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 
@@ -40,4 +51,4 @@ ENV NODE_ENV=production
 
 EXPOSE 3501
 
-CMD ["sh", "-c", "node dist/main"]
+CMD ["node", "dist/main"]
