@@ -7,8 +7,6 @@ import { EnvironmentVariablesType } from './common/constants/environment-variabl
 import './common/utils/bigint.serializer';
 // import metadata from './metadata';
 import * as cookieParser from 'cookie-parser';
-import * as fs from 'fs';
-import { join } from 'path';
 import { AuthPublicModule } from './modules/auth/auth.public.module';
 import { PublicApiModule } from './modules/public/public-api.module';
 import { LoggerService } from 'market-logger/logger';
@@ -17,12 +15,7 @@ import { ClsService } from 'nestjs-cls';
 // TODO FEATURE: Можно добавить knex что бы писать либы для миграций, что бы делать добавление доступов и т.п.
 // TODO FEATURE: Добавить поля link что бы переходить по полю на другую сущность
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
-    httpsOptions: {
-      key: fs.readFileSync(join(__dirname, '..', 'certs', 'localhost+2-key.pem')),
-      cert: fs.readFileSync(join(__dirname, '..', 'certs', 'localhost+2.pem')),
-    },
-  });
+  const app = await NestFactory.create(AppModule);
   const logger = new LoggerService(app.get(ClsService));
 
   app.use(cookieParser());
