@@ -1,5 +1,7 @@
 services:
   app:
+    env_file:
+      - .env
     environment:
       DATABASE_URL: postgresql://admin:admin@postgres:5432/postgres?schema=public
     depends_on:
