@@ -8,6 +8,8 @@ RUN npm ci
 
 COPY . .
 
+COPY /.env.example /app/.env
+
 RUN npm run prisma:generate
 RUN npm run build
 
