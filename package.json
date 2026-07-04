@@ -20,7 +20,9 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "prisma:generate": "prisma generate",
     "prisma:dev": "prisma migrate dev --create-only",
-    "prisma:deploy": "prisma migrate deploy"
+    "prisma:deploy": "prisma migrate deploy",
+    "compose:prod:build": "docker compose --env-file .env.prod up -d --force-recreate --build",
+    "compose:prod:pull:client": "docker compose up -d --force-recreate --pull always --build client"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",

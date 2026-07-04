@@ -21,8 +21,8 @@ export class UserService {
           password: dto.password,
         },
       })
-      .catch(() => {
-        throw new BadRequestException('Failed to create user');
+      .catch((error) => {
+        throw new BadRequestException(error);
       });
 
     return user;
