@@ -31,7 +31,7 @@ jobs:
             ${{ secrets.DOCKERHUB_USERNAME }}/market-analytics-server:${{ github.sha }}
             ${{ secrets.DOCKERHUB_USERNAME }}/market-analytics-server:latest
           build-args: |
-            DATABASE_URL=${{ secrets.DATABASE_URL }}
+            DATABASE_URL=${{ vars.DATABASE_URL }}
             HTTP_DOMAIN=${{ vars.HTTP_DOMAIN }}
             HTTP_HOST=${{ vars.HTTP_HOST }}
             HTTP_PORT=${{ vars.HTTP_PORT }}
@@ -41,4 +41,3 @@ jobs:
             JWT_ACCESS_EXPIRES=${{ vars.JWT_ACCESS_EXPIRES }}
             JWT_REFRESH_EXPIRES=${{ vars.JWT_REFRESH_EXPIRES }}
             RESEND_API_KEY=${{ secrets.RESEND_API_KEY }}
-    
