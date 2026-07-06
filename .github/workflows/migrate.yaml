@@ -17,4 +17,5 @@ jobs:
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
           script: |
             cd /opt/market-analytics-server
-            docker compose --env-file .env.prod -f docker-compose.prod.yml run --rm app npm run prisma:deploy
+            docker build -f Dockerfile.migrate -t market-analytics-migrate .
+            docker run --rm --env-file .env.prod market-analytics-migrate
