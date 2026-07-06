@@ -62,7 +62,7 @@ jobs:
           target: /opt/market-analytics-server
           strip_components: 0
           rm: false
-          exclude: .git,node_modules,.env,.env.*
+          overwrite: true
 
       - name: Write env file and deploy
         uses: appleboy/ssh-action@v1
