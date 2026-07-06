@@ -94,8 +94,8 @@ async function bootstrap() {
   const host = configService.get<string>(EnvironmentVariablesType.HTTP_HOST)!;
 
   await app.listen(port, host).then(() => {
-    (logger.log(`📚 Swagger доступен по адресу https://${host}:${port}${swaggerPrefixURL}`),
-      logger.log(`🚀 Приложение запущено по адресу https://${host}:${port}`));
+    (logger.log(`📚 Swagger доступен по адресу http://${host}:${port}${swaggerPrefixURL}`),
+      logger.log(`🚀 Приложение запущено по адресу http://${host}:${port}`));
   });
 }
 bootstrap();

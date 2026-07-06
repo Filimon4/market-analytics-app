@@ -115,13 +115,15 @@ export class UserService {
         },
       });
 
-      userInfo.userToProject = {
-        ...userToProjectData,
-        project: {
-          ...userToProjectData.project,
-          id: userToProjectData.project.id.toString(),
-        },
-      };
+      if (userToProjectData) {
+        userInfo.userToProject = {
+          ...userToProjectData,
+          project: {
+            ...userToProjectData.project,
+            id: userToProjectData.project.id.toString(),
+          },
+        };
+      }
     }
 
     return userInfo;

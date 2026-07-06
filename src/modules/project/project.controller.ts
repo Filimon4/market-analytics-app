@@ -83,6 +83,7 @@ export class ProjectController {
     };
   }
 
+  // TODO: Вынести в user
   @Get('panel')
   async getPanel(@Query() roleDto: GetPanelDto) {
     const panel = await this.prismaService.$queryRaw<
@@ -92,7 +93,7 @@ export class ProjectController {
       from "RolePermission" rp 
       inner join "Role" r on r.id = rp."roleId" 
       inner join "Permission" p on rp."permissionId" = p.id 
-      where r.id = 16 and rp."granted" = true and p."systemType" = 'panel'
+      where r.id = ${roleDto.roleId} and rp."granted" = true and p."systemType" = 'panel'
       order by p."parentId" desc, p."panelOrder" asc;
     `;
 
@@ -104,9 +105,10 @@ export class ProjectController {
     for (const item of panel) {
       nodeMap.set(item.id, { ...item, children: [] });
     }
+
     for (const item of panel) {
       const node = nodeMap.get(item.id)!;
-      if (!item.granted) continue;
+      if (!item || !item.granted) continue;
       if (item.parentId === null) {
         panelTree.push(node);
       } else {
@@ -123,7 +125,7 @@ export class ProjectController {
     }
 
     return {
-      result: panelTree[0].children!,
+      result: panelTree[0]?.children || [],
     };
   }
 
