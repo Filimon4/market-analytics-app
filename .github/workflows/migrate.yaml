@@ -17,5 +17,7 @@ jobs:
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
           script: |
             cd /opt/market-analytics-server
-            docker build -f Dockerfile.migrate -t market-analytics-migrate .
-            docker run --rm --env-file .env.prod market-analytics-migrate
+            docker build \
+              --build-arg DATABASE_URL="${{ vars.DATABASE_URL }}" \
+              -f Dockerfile.migrate -t market-analytics-migrate .
+            docker run --rm market-analytics-migrate
