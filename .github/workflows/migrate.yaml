@@ -20,4 +20,4 @@ jobs:
             docker build \
               --build-arg DATABASE_URL="${{ vars.DATABASE_URL }}" \
               -f Dockerfile.migrate -t market-analytics-migrate .
-            docker run --rm market-analytics-migrate
+            docker run --rm --network market-analytics-server_backend market-analytics-migrate
