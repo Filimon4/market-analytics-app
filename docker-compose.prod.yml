@@ -1,0 +1,53 @@
+services:
+  nginx:
+    image: nginx:alpine
+    restart: unless-stopped
+    ports:
+      - '80:80'
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    networks:
+      - backend
+    depends_on:
+      - app
+      - client
+
+  app:
+    image: filimmon/market-analytics-server
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - backend
+
+  client:
+    image: filimmon/market-analytics-client
+    restart: unless-stopped
+    networks:
+      - backend
+
+  postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U admin']
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - backend
+    ports:
+      - '5432:5432'
+
+volumes:
+  postgres_data:
+
+networks:
+  backend:
