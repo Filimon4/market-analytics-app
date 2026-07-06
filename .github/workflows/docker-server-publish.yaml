@@ -1,7 +1,9 @@
 name: Build and Publish server
 
 on:
-  push:
+  pull_request:
+    types:
+      - closed
     branches:
       - main
 
@@ -9,6 +11,7 @@ jobs:
   build_and_publish:
     runs-on: ubuntu-latest
     environment: prod
+    if: github.event.pull_request.merged == true
     steps:
       - name: Checkout
         uses: actions/checkout@v4
