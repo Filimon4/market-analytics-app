@@ -64,5 +64,3 @@ volumes:
 
 networks:
   backend:
-
-# Арендовать vps. Закинуть по ssh и сбильдить на сервере

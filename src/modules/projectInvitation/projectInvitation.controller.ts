@@ -11,14 +11,12 @@ import {
   ParseEnumPipe,
   Patch,
   Post,
-  Query,
   UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { TenantGuard } from 'src/shared/tenant/guards/tenant.guard';
 import { InvitationSendDto } from './dto/invitationSend.dto';
 import { CurrentTenant } from 'src/shared/tenant/decorators/current-tenant.decorator';
-import { InvitationListDto } from './dto/infitationLIst.dto';
 import { InvitationService } from './projectInvitation.service';
 import { User } from 'src/common/decorators/user.decorator';
 import { User as UserDB } from '@prisma/client';
