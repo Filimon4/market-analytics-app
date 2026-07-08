@@ -35,7 +35,7 @@ services:
       - backend
 
   client:
-    image: filimmon/market-analytics-client
+    image: market-analytics-client:test
     restart: unless-stopped
     networks:
       - backend
