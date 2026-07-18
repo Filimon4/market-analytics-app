@@ -104,7 +104,10 @@
       "<rootDir>/libs/"
     ],
     "moduleNameMapper": {
-      "^market-logger/logger(|/.*)$": "<rootDir>/libs/logger/src/$1"
-    }
+      "^market-logger/logger(|/.*)$": "<rootDir>/libs/logger/src/$1",
+      "^@src/(.*)$": "<rootDir>/src/$1",
+      "^src/(.*)$": "<rootDir>/src/$1"
+    },
+    "clearMocks": true
   }
 }

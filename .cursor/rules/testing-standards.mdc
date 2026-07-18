@@ -1,0 +1,47 @@
+---
+description: Unit testing conventions — co-located spec files, mocking strategy
+globs: **/*.spec.ts
+alwaysApply: false
+---
+
+# Unit Testing Standards
+
+## Co-location
+
+Tests ALWAYS live next to the file they test, never in a separate `test/` tree:
+
+```
+src/modules/strategy/strategy.service.ts
+src/modules/strategy/strategy.service.spec.ts   # ✅ same folder
+```
+
+Name the spec file `<original-filename>.spec.ts`. Jest already picks these up via `testRegex` in `package.json` — no per-module config needed.
+
+## Test Setup
+
+USE `Test.createTestingModule` from `@nestjs/testing` with fully mocked providers — NEVER let a unit test hit a real database or external service:
+
+```typescript
+const module: TestingModule = await Test.createTestingModule({
+  providers: [
+    StrategyService,
+    { provide: PrismaService, useValue: { strategy: { findMany: jest.fn() } } },
+  ],
+}).compile();
+```
+
+For classes with no DI container involvement (guards, strategies), instantiate directly with mocked constructor args instead of bootstrapping a module.
+
+## Mocking
+
+- Type mocks as `jest.Mocked<SomeService>` and cast plain mock objects with `as unknown as jest.Mocked<SomeService>` — never use `any`.
+- `PrismaService` and other injected services are ALWAYS mocked in unit tests — real DB access belongs in e2e tests only (out of scope for `*.spec.ts`).
+- Imports follow the same rules as source code: use `@src/*` for cross-module imports, relative imports for same-folder files.
+
+## Scope per module
+
+For each module aim to cover: services (business logic, error paths), controllers (response shape, guard usage is exercised via e2e not unit), and any custom guards/strategies with actual logic. Thin wrapper classes with no logic of their own (e.g. `class FooGuard extends AuthGuard('foo') {}`) only need a smoke test confirming they're wired correctly — don't force elaborate behavior tests on them.
+
+## Running tests
+
+Use `npm run test`, `npm run test:watch`, or `npm run test:cov` — never invoke `jest` directly.
